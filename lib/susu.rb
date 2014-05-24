@@ -1,0 +1,1 @@
+require 'susu/version'
