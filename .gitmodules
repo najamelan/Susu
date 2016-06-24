@@ -1,0 +1,3 @@
+[submodule "lib/susu"]
+	path = lib/susu
+	url = git@github.com:najamelan/susu.git
