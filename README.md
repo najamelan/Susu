@@ -1,4 +1,4 @@
-TidBits_Ruby
+TidBits Ruby
 ============
 
-A collection of ruby snippets
+Trying to make ruby bearable
