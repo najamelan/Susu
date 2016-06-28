@@ -1,0 +1,7 @@
+# Code:
+#
+lib/**/*.rb
+
+# Extra readme and documentation files
+#
+- lib/**/*.md
