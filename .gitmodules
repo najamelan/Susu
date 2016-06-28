@@ -7,3 +7,6 @@
 [submodule "lib/rush"]
 	path = lib/rush
 	url = git@github.com:najamelan/rush.git
+[submodule "lib/core_extend"]
+	path = lib/core_extend
+	url = git@github.com:najamelan/TidBits_Ruby_CoreExtend.git
