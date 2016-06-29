@@ -10,3 +10,6 @@
 [submodule "lib/core_extend"]
 	path = lib/core_extend
 	url = git@github.com:najamelan/TidBits_Ruby_CoreExtend.git
+[submodule "lib/options"]
+	path = lib/options
+	url = git@github.com:najamelan/TidBits_Ruby_Options.git
