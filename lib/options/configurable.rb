@@ -119,7 +119,19 @@ def getOpts( pointer, symbols )
 	end
 
 
-	pointer.dup
+	# Thanks Matz:
+	# https://bugs.ruby-lang.org/issues/1844
+	#
+	begin
+
+		pointer.dup
+
+	rescue TypeError
+
+		pointer
+
+	end
+
 
 end
 

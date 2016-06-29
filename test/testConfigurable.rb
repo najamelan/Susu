@@ -91,6 +91,51 @@ def testgetOptsNestedRead
 end
 
 
+def testgetOptsFixnum
+
+	a = { group: { type: 'defaults' } }
+	b = { group: { type: 3          } }
+	c = 3
+
+	t = TestHelper.new( a, b )
+
+	assert_equal( a, t.defaults )
+	assert_equal( b, t.userset  )
+	assert_equal( c, t.options( :group, :type ) )
+
+end
+
+
+def testgetOptsNil
+
+	a = { group: { type: 'defaults' } }
+	b = { group: { type: nil        } }
+	c = nil
+
+	t = TestHelper.new( a, b )
+
+	assert_equal( a, t.defaults )
+	assert_equal( b, t.userset  )
+	assert_equal( c, t.options( :group, :type ) )
+
+end
+
+
+def testgetOptsEmptyHash
+
+	a = { group: { type: 'defaults' } }
+	b = { group: { type: {}         } }
+	c = {}
+
+	t = TestHelper.new( a, b )
+
+	assert_equal( a, t.defaults )
+	assert_equal( b, t.userset  )
+	assert_equal( c, t.options( :group, :type ) )
+
+end
+
+
 def testSetOpts
 
 	a = { group: { type: 'defaults' } }
