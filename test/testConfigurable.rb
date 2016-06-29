@@ -108,6 +108,47 @@ def testSetOpts
 end
 
 
+def testSymbolizeKeysSetupOptions
+
+	a = { group:     { type:     'defaults' } }
+	b = { 'group' => { 'type' => 'userset'  } }
+	c = { group:     { type:     'userset'  } }
+
+
+	t = TestHelper.new( a, b )
+
+	assert_equal( a, t.defaults )
+	assert_equal( c, t.userset  )
+	assert_equal( c, t.options  )
+
+end
+
+
+def testSymbolizeKeysSetOpts
+
+	a = { group:     {  type:     'defaults' }  }
+	b = { 'group' => [{ 'type' => 'userset'  }] }
+	c = { group:     [{ type:     'userset'  }] }
+
+
+	t = TestHelper.new( a, b )
+	t.change( :group, [{ 'type': 'userset'  }] )
+
+	assert_equal( a, t.defaults )
+	assert_equal( c, t.userset  )
+	assert_equal( c, t.options  )
+
+
+	# Send in the main key as string
+	#
+	t = TestHelper.new( a, b )
+	t.change( 'group', [{ 'type' => 'userset' }] )
+
+	assert_equal( c, t.options  )
+
+end
+
+
 end # class  TestConfigurable
 end # module Options
 end # module TidBits

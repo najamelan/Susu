@@ -63,9 +63,9 @@ end
 protected
 def setupOptions( defaults, userset )
 
-	@defaults = defaults
-	@userset  = userset
-	@options  = defaults.recursive_merge userset
+	@defaults = defaults.deep_symbolize_keys!
+	@userset  = userset.deep_symbolize_keys!
+	@options  = @defaults.recursiveMerge @userset
 
 	self
 
@@ -83,8 +83,11 @@ end
 protected
 def setOpt( key, value )
 
-	@options[ key ] = value;
-	@userset[ key ] = value;
+	h = { key => value }.deep_symbolize_keys!
+	a = h.shift
+
+	@options[ a[ 0 ] ] = a[ 1 ];
+	@userset[ a[ 0 ] ] = a[ 1 ];
 
 	self
 
@@ -95,7 +98,7 @@ end
 # Provides a read only copy of the options object for this class.
 #
 # @param  pointer [Hash ]         The hash from which to extract values.
-# @param  symbols [Array<symbol>] The hierarchy of keys to get to the value.
+# @param  symbols [Array<Symbol>] The hierarchy of keys to get to the value.
 # @return         [Array] The currently loaded configuration for this object.
 #
 private
