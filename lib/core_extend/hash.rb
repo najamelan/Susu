@@ -5,16 +5,16 @@
 class Hash
 
 # Will merge a hash, merging all nested hashes instead of replacing the original.
-# In place version of recursive_merge
+# In place version of recursiveMerge
 #
-# @param       (see #recursive_merge)
-# @return      (see #recursive_merge)
+# @param       (see #recursiveMerge)
+# @return      (see #recursiveMerge)
 #
-def recursive_merge!( override )
+def recursiveMerge!( override )
 
 	self.merge! override do |key, a, b|
 
-		a.is_a?( Hash ) && b.is_a?( Hash ) ? a.recursive_merge!( b ) : b
+		a.is_a?( Hash ) && b.is_a?( Hash ) ? a.recursiveMerge!( b ) : b
 
 	end
 
@@ -27,12 +27,12 @@ end
 # @param       override [Hash] The hash from which to take overriding values.
 # @return               [Hash] a duplicate of self with values overriden from override.
 #
-def recursive_merge( override )
+def recursiveMerge( override )
 
 	target = dup
-	target.recursive_merge!( override )
+	target.recursiveMerge!( override )
 
 end
 
 
-end
+end # class Hash
