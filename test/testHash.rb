@@ -72,6 +72,14 @@ def testMergeNestedHash!
 end
 
 
+
+def testDig
+
+	# TODO
+
+end
+
+
 end # class  TestHash
 end # module CoreExtend
 end # module TidBits
