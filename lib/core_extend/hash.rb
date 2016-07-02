@@ -24,8 +24,8 @@ end
 
 # Will merge a hash, merging all nested hashes instead of replacing the original.
 #
-# @param       override [Hash] The hash from which to take overriding values.
-# @return               [Hash] a duplicate of self with values overriden from override.
+# @param  override [Hash] The hash from which to take overriding values.
+# @return          [Hash] a duplicate of self with values overriden from override.
 #
 def recursiveMerge( override )
 
@@ -35,12 +35,21 @@ def recursiveMerge( override )
 end
 
 
-# from: https://stackoverflow.com/a/1820492/1115652
+# Searches in nested hashes for a certain path.
 #
+# @param  path [HashKey, ...] A comma separated list of hash keys.
+# @return      [HashValue]    The value of the path requested or nil if it doesn't exist.
+#
+# @example Usage
+#   people  = { anna: { children: { kenny: { hobbies: dancing }, bibi: { age: 12 } } } }
+#   age     = people.dig( :anna, :children, :bibi, :age     ) => 12
+#   hobbies = people.dig( :anna, :children, :bibi, :hobbies ) => nil
+#
+# from: https://stackoverflow.com/a/1820492/1115652
 #
 def dig( *path )
 
-  path.inject( self ) do | location, key |
+  path.reduce( self ) do | location, key |
 
     location.respond_to?( :keys ) ? location[ key ] : nil
 
