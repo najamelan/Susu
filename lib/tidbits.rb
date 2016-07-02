@@ -6,7 +6,6 @@ module TidBits
 
 [
 	  { name: 'CoreExtend', file: 'core_extend/lib/core_extend'  } \
-	, { name: 'Git'       , file: 'git/lib/git'                  } \
 	, { name: 'Options'   , file: 'options/lib/options'          } \
 	, { name: 'Rush'      , file: 'rush/lib/rush'                } \
 	, { name: 'Susu'      , file: 'susu/lib/susu'                } \
