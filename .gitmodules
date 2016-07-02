@@ -1,9 +1,6 @@
 [submodule "lib/susu"]
 	path = lib/susu
 	url = git@github.com:najamelan/susu.git
-[submodule "lib/git"]
-	path = lib/git
-	url = git@github.com:najamelan/ruby-git.git
 [submodule "lib/rush"]
 	path = lib/rush
 	url = git@github.com:najamelan/rush.git
