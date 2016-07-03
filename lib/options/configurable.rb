@@ -63,6 +63,17 @@ end
 protected
 def setupOptions( defaults, userset )
 
+	# Accept nil values, just in case a class looks up it's own config options
+	# and the user hasn't overridden any defaults. In that case userset will be
+	# nil... Well, it's a common scenario, so let users write more elegant code
+	# by not choking on this.
+	#
+	# Doing the same for defaults is a little more questionnable, but then again
+	# it is imaginable that there are no defaults either for a certain section.
+	#
+	defaults ||= {}
+	userset  ||= {}
+
 	@defaults = defaults.deep_symbolize_keys!
 	@userset  = userset.deep_symbolize_keys!
 	@options  = @defaults.recursiveMerge @userset
