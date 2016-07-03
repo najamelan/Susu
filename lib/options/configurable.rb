@@ -7,7 +7,7 @@ module Configurable
 
 # Get the options in use for this class.
 #
-# @param  *args [Symbol] The key for which to take the value. Defaults to returning the entire options Hash. This function takes an arbitrary number of parameters representing nested hash keys.
+# @param  args [Symbol] The key for which to take the value. Defaults to returning the entire options Hash. This function takes an arbitrary number of parameters representing nested hash keys.
 # @return [Array] The default options.
 #
 # @example Usage
@@ -19,7 +19,7 @@ module Configurable
 #
 def options( *args )
 
-	getOpts @options, args
+	getOpts @options, *args
 
 end
 
@@ -32,7 +32,7 @@ end
 #
 def defaults( *args )
 
-	getOpts @defaults, args
+	getOpts @defaults, *args
 
 end
 
@@ -45,7 +45,7 @@ end
 #
 def userset( *args )
 
-	getOpts @userset, args
+	getOpts @userset, *args
 
 end
 
@@ -76,9 +76,9 @@ end
 # Allows setting an option, checking if the object is sealed.
 # Currently only supports one level of depth.
 #
-# @param name  [Symbol] The key. Only supports one level depth.
-# @param value [any] The key. Only supports one level depth.
-# @return self [Object]
+# @param  name  [Symbol] The key. Only supports one level depth.
+# @param  value [any]    The key. Only supports one level depth.
+# @return self  [Object]
 #
 protected
 def setOpt( key, value )
@@ -97,38 +97,25 @@ end
 
 # Provides a read only copy of the options object for this class.
 #
-# @param  pointer [Hash ]         The hash from which to extract values.
-# @param  symbols [Array<Symbol>] The hierarchy of keys to get to the value.
-# @return         [Array] The currently loaded configuration for this object.
+# @param   root    [Hash ]         The hash from which to extract values.
+# @param   symbols [Array<Symbol>] The hierarchy of keys to get to the value.
+# @return          [Array]         The currently loaded configuration for this object.
 #
 private
-def getOpts( pointer, symbols )
+def getOpts( root, *symbols )
 
-	symbols.each do |param|
-
-		if pointer[ param ] != nil
-
-			pointer = pointer[ param ]
-
-		else
-
-			return nil
-
-		end
-
-	end
-
+	get = root.dig( *symbols )
 
 	# Thanks Matz:
 	# https://bugs.ruby-lang.org/issues/1844
 	#
 	begin
 
-		pointer.dup
+		get.dup
 
 	rescue TypeError
 
-		pointer
+		get
 
 	end
 

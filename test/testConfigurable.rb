@@ -1,5 +1,6 @@
 require          'test/unit'
 require          'pp'
+require          'byebug'
 require_relative '../../../lib/tidbits'
 
 module TidBits
