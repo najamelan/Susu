@@ -4,6 +4,8 @@
 #
 module TidBits
 
+@@disabledModules = []
+
 [
 	  { name: 'CoreExtend', file: 'core_extend/lib/core_extend'  } \
 	, { name: 'Options'   , file: 'options/lib/options'          } \
@@ -18,7 +20,7 @@ module TidBits
 
 	rescue LoadError
 
-		puts "Submodule #{ lib[ :name ] } not present."
+		@@disabledModules.push lib
 
 	end
 
