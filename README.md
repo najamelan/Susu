@@ -1,3 +1,6 @@
+# @title Susu README
+# @author Naja Melan <najamelan ꗈ autistici ꗈ org>
+
 # susu
 
 * [Homepage](https://github.com/najamelan/susu)
