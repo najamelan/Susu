@@ -115,6 +115,10 @@ end
 private
 def getOpts( root, *symbols )
 
+	# Allows lookup by string
+	#
+	symbols.map!( &:to_sym )
+
 	get = root.dig( *symbols )
 
 	# Thanks Matz:
