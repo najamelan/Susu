@@ -76,7 +76,7 @@ def setupOptions( defaults, userset )
 
 	@defaults = defaults.deep_symbolize_keys!
 	@userset  = userset.deep_symbolize_keys!
-	@options  = @defaults.recursiveMerge @userset
+	@options  = @defaults.deep_merge @userset
 
 	self
 
