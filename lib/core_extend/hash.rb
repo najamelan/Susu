@@ -27,4 +27,18 @@ def dig( *path )
 end
 
 
+def superset?( other )
+
+	deep_merge( other ) == self
+
+end
+
+
+def subset?( other )
+
+	other.deep_merge( self ) == other
+
+end
+
+
 end # class Hash

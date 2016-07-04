@@ -10,12 +10,107 @@ module CoreExtend
 class TestHash < Test::Unit::TestCase
 
 
+def testSuperset?
+
+	data =
+	[
+			[
+				  "Completely unrelated hashes"                             \
+				, { a: 1, b: 2 }                                            \
+				, { c: 3, d: 4 }                                            \
+				, false                                                     \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "Same values, different keys"                             \
+				, { a: 1, b: 2 }                                            \
+				, { c: 1, d: 2 }                                            \
+				, false                                                     \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "Same keys, different values"                             \
+				, { a: 1, b: 2 }                                            \
+				, { a: 3, b: 4 }                                            \
+				, false                                                     \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "One corresponding, other not"                            \
+				, { a: 1, b: 2 }                                            \
+				, { a: 1, b: 4 }                                            \
+				, false                                                     \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "Identical Hashes"                                        \
+				, { a: 1, b: 2 }                                            \
+				, { a: 1, b: 2 }                                            \
+				, true                                                      \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "Actual subset"                                           \
+				, { a: 1, b: 2, c: 3 }                                      \
+				, { a: 1, b: 2       }                                      \
+				, true                                                      \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "Nested Hash"                                             \
+				, { a: 1, b: 2, c: { a: 1, b: 2 } }                         \
+				, { a: 1, b: 2                    }                         \
+				, true                                                      \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "Subset in Nested Hash"                                   \
+				, { a: 1, b: 2, c: { a: 1, b: 2 } }                         \
+				, { a: 1, b: 2, c: {       b: 2 } }                         \
+				, true                                                      \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "Empty hashes"                                            \
+				, {}                                                        \
+				, {}                                                        \
+				, true                                                      \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "Empty hashes"                                            \
+				, { a: 1 }                                                  \
+				, {}                                                        \
+				, true                                                      \
+			]                                                              \
+	]
+
+
+	data.each do | arr |
+
+		control1 = arr[ 1 ].dup
+		control2 = arr[ 2 ].dup
+
+		result   = arr[ 1 ].superset? arr[ 2 ]
+		result2  = arr[ 2 ].subset?   arr[ 1 ]
+
+		assert_equal( control1, arr[ 1 ], "\n\nTEST: " + arr.first + "\n" )
+		assert_equal( control2, arr[ 2 ], "\n\nTEST: " + arr.first + "\n" )
+
+		assert_equal( arr[ 3 ], result  , "\n\nTEST: " + arr.first + "\n" )
+		assert_equal( arr[ 3 ], result2 , "\n\nTEST: " + arr.first + "\n" )
+
+	end
+
+end
+
+
 def testMergeNestedHash!
 
 	data =
 	[
 			[
-				  "merge two empty hashes, shourld return empty hash"       \
+				  "merge two empty hashes, should return empty hash"        \
 				, {}                                                        \
 				, {}                                                        \
 				, {}                                                        \
