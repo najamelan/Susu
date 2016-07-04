@@ -1,5 +1,7 @@
 require          'test/unit'
 require          'pp'
+require 'active_support/core_ext/hash/deep_merge'
+
 require_relative '../lib/core_extend'
 
 module TidBits
@@ -59,13 +61,13 @@ def testMergeNestedHash!
 	data.each do | arr |
 
 		control = arr[ 1 ].dup
-		result  = arr[ 1 ].recursive_merge arr[ 2 ]
+		result  = arr[ 1 ].deep_merge arr[ 2 ]
 		assert_equal( control , arr[ 1 ], "\n\nTEST: " + arr[ 0 ] + "\n" )
 		assert_equal( arr[ 3 ], result  , "\n\nTEST: " + arr[ 0 ] + "\n" )
 
 		# The in place version
 		#
-		assert_equal( arr[ 3 ], arr[ 1 ].recursive_merge!( arr[ 2 ] ), "\n\nTEST: " + arr[ 0 ] + "\n" )
+		assert_equal( arr[ 3 ], arr[ 1 ].deep_merge!( arr[ 2 ] ), "\n\nTEST: " + arr[ 0 ] + "\n" )
 
 	end
 
