@@ -10,7 +10,7 @@ module CoreExtend
 class TestHash < Test::Unit::TestCase
 
 
-def testSuperset?
+def testSuperset
 
 	data =
 	[
@@ -105,7 +105,70 @@ def testSuperset?
 end
 
 
-def testMergeNestedHash!
+def testDiff
+
+	data =
+	[
+			[
+				  "diff two empty hashes"                                   \
+				, {}                                                        \
+				, {}                                                        \
+				, {}                                                        \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "identical properties"                                    \
+				, { a: 1 }                                                  \
+				, { a: 1 }                                                  \
+				, {}                                                        \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "add a property"                                          \
+				, {}                                                        \
+				, { a: 1 }                                                  \
+				, { a: 1 }                                                  \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "remove a property"                                       \
+				, { a: 1 }                                                  \
+				, {}                                                        \
+				, { a: 1 }                                                  \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+				  "change a property"                                       \
+				, { a: 1 }                                                  \
+				, { a: 2 }                                                  \
+				, { a: 1 }                                                  \
+			]                                                              \
+	]
+
+
+	data.each do | arr |
+
+		# Verify the original doesn't change
+		#
+		control = arr[ 1 ].dup
+		assert_equal( control , arr[ 1 ], "\n\nTEST: " + arr[ 0 ] + "\n" )
+
+		result  = arr[ 1 ].diff arr[ 2 ]
+		assert_equal( arr[ 3 ], result  , "\n\nTEST: " + arr[ 0 ] + "\n" )
+
+		result2 = arr[ 1 ].diff( arr[ 2 ] ).diff( arr[ 2 ] )
+		assert_equal( arr[ 1 ], result2 , "\n\nTEST: " + arr[ 0 ] + " - double diff test\n" )
+
+	end
+
+end
+
+
+
+# This actually tests an active support method, but since we already had the tests,
+# it never hurts to double check
+#
+def testMergeNestedHash
 
 	data =
 	[

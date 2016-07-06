@@ -41,4 +41,30 @@ def subset?( other )
 end
 
 
+
+# Returns a hash that represents the difference between two hashes.
+# RIP: https://github.com/rails/rails/commit/01f0c3f308542afa8fa262638d94d10420bd2e78
+#
+# NOTE: when the two hashes have different values for the same key the value for the
+# instance on which diff is called is maintained.
+#
+# @example Usage
+#
+#   {1 => 2}.diff(1 => 2)         # -> {}
+#   {1 => 2}.diff(1 => 3)         # -> {1 => 2}
+#   {}.diff(1 => 2)               # -> {1 => 2}
+#   {1 => 2, 3 => 4}.diff(1 => 2) # -> {3 => 4}
+#   a.diff( b ).diff( b ) == a    # -> true
+#
+def diff( other )
+
+	               dup.delete_if { |k, v| other[k] == v } \
+	.merge!( other.dup.delete_if { |k, v| has_key? k    } )
+
+end
+
+
+
+
+
 end # class Hash
