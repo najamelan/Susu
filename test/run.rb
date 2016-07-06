@@ -1,20 +1,45 @@
 require 'test/unit/ui/console/testrunner'
-
+require_relative '../../core_extend/lib/core_extend'
 require 'pp'
+
+
+# Turn off test unit's auto runner for those using the gem
+#
+defined?( Test::Unit::AutoRunner ) and Test::Unit::AutoRunner.need_auto_run = false
+
+
+Dir[ File.join( File.dirname( __FILE__ ), '*.rb' ) ].each do | file |
+
+	require_relative file
+
+end
+
+
 
 module TidBits
 module Susu
+class  TestSuite
 
-def self.test
 
-	suite = Test::Unit::TestSuite.new( "Susu Unit Tests" )
-	files = Dir.entries( File.dirname( __FILE__ ) )
+def self.suite
 
-	files.grep( /test.*\.rb/ ) { | file | suite << file }
+	suite =  Test::Unit::TestSuite.new( "TidBits::Susu Unit Tests" )
 
-	Test::Unit::UI::Console::TestRunner::new( suite ).start
+	# suite << TestThorfile.suite
+	suite << TestSusu.suite
+
+end
+
+
+
+def self.run
+
+	Test::Unit::UI::Console::TestRunner.run( self )
 
 end
 
-end
-end
+
+end # TestSuite
+end # Susu
+end # TidBits
+

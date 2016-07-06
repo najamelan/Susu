@@ -1,5 +1,4 @@
 require          'thor'
-require_relative 'test/run'
 
 
 class Susu < Thor
@@ -10,8 +9,9 @@ class Susu < Thor
 desc 'test', 'Run the unit tests for the Susu library'
 def test
 
-	# TidBits::Susu::test
-	exec 'ruby test/test*'
+	require_relative 'test/run'
+
+	TidBits::Susu::TestSuite.run
 
 end
 
