@@ -44,7 +44,6 @@
 module TidBits
 module Susu
 
-
 	# Change credentials of the current process on unix compatible systems
 	#
 	# The code was tested with debian jessie and ruby 2.0.0. The filesystem uid and gid seem not to be confibgurable with Process::Sys.
@@ -85,7 +84,7 @@ module Susu
 		setRuid:  true            ,
 		setSuid:  true            ,
 
-		group:    nil             ,
+		# group:    nil             ,
 		setEgid:  true            ,
 		setRgid:  true            ,
 		setSgid:  true            ,
@@ -93,17 +92,19 @@ module Susu
 		initGroups:     true      ,
 		suplemGroups:   nil       ,
 
-		unsetEnvOthers: true      ,
-		setEnvStandard: true      ,
-		env:            nil       ,
+		unsetEnvStandard: false   ,
+		setEnvStandard:   true    ,
 
-		umask:          nil
+		unsetEnvOthers:   true    ,
+		env:              nil     ,
+
+		umask:            nil
 	)
-
 		# Find the user in the password database.
 		#
 		u = ( user .is_a? Integer ) ? Etc.getpwuid( user ) : Etc.getpwnam( user  )
 
+		# TODO: what about setting the primary group? like sg
 		# group ||= u.gid
 		# g = ( group.is_a? Integer ) ? Etc.getpwgid( group ) : Etc.getpwnam( group )
 
@@ -120,7 +121,9 @@ module Susu
 		setSuid  and Process::Sys.setresgid( -1, -1, u.gid )
 
 
-		unsetEnvOthers   and ENV.clear
+		unsetEnvStandard and ENV.delete_if { | key | key  =~ /^HOME=|^PWD=|^USER=|^PATH=/ }
+		unsetEnvOthers   and ENV.keep_if   { | key | key  =~ /^HOME=|^PWD=|^USER=|^PATH=/ }
+
 		umask            and File::umask umask
 
 
@@ -132,8 +135,8 @@ module Susu
 
 			env.map do | line |
 
-											 arr             = line.split( '=', 2 )
-				arr.length == 2  and  ENV[ arr[ 0 ] ] = arr[ 1 ]
+											 arr              = line.split( '=', 2 )
+				arr.length == 2  and  ENV[ arr.first ] = arr.last
 
 			end
 
@@ -145,19 +148,96 @@ module Susu
 		env  and  env.map { | name, value | ENV[ name.to_s ] = value }
 
 
-
-
 		# Now drop
 		#
 		setRuid  and Process::Sys.setresuid( u.uid, -1, -1 )
 		setEuid  and Process::Sys.setresuid( -1, u.uid, -1 )
 		setSuid  and Process::Sys.setresuid( -1, -1, u.uid )
 
-		setEuid and Process::Sys.seteuid( u.uid )
+	end
 
-		# Unimplemented on debian stretch
+
+	def self.fork( &blk )
+
+		read, write = IO.pipe
+		read .binmode
+		write.binmode
+
+
+		pid = Process.fork do
+
+			read.close
+
+			result = Marshal.dump( yield )
+
+			write.puts [result].pack( "m" )
+			exit!
+
+		end
+
+
+		write.close
+		result = read.read
+		Process.wait(pid)
+
+		Marshal.load(result.unpack( "m" )[ 0 ] )
+
+	end
+
+
+	def self.info
+
+		result = {}
+
+		# the login uid
 		#
-		# setRuid      and Process::Sys.setruid( u.uid )
+		result[ :loginuid ] =  `cat /proc/$$/task/$$/loginuid`.to_i
+
+		# Get the process user related information directly from the system
+		#
+		status = `cat /proc/$$/task/$$/status`
+
+		# this will output something like: "Uid:	0	0	0	0"
+		#
+		uids = status[ /^Uid:.*/ ].scan( /\d+/ )
+		gids = status[ /^Gid:.*/ ].scan( /\d+/ )
+
+		result[ :ruid   ] = uids[ 0 ]  # the “owner” of the current process
+		result[ :euid   ] = uids[ 1 ]  # the identity in effect
+		result[ :suid   ] = uids[ 2 ]  # stores some previous user ID, so that it can be restored (copied to the euid) at some later time
+		result[ :fsuid  ] = uids[ 3 ]  # create files with this credential
+
+		result[ :rgid   ] = gids[ 0 ]
+		result[ :egid   ] = gids[ 1 ]
+		result[ :sgid   ] = gids[ 2 ]
+		result[ :fsgid  ] = gids[ 3 ]
+
+		result[ :tgid   ] = status[ /^Tgid:.*/   ].scan( /\d+/ ).first  # Thread group ID (i.e., Process ID)
+		result[ :groups ] = status[ /^Groups:.*/ ].scan( /\d+/ )        # supplementary groups
+		result[ :umask  ] = sprintf( "%03o", File.umask )               # create files with these privs
+
+
+		# put some important environment variables
+		# if child processes are supposed to run as a different user, they might rely
+		# on $HOME, $USER, ...
+		# other candidates not yet included MAIL, SUDO*
+		#
+		# We don't have rights to do this after dropping privileges, so it don't work unless we are root
+		#
+		# environment = `cat /proc/$$/task/$$/environ`.gsub( "\0", "\n" )
+		environment = `env`
+
+		result[ :USER            ] = environment[ /^USER=(.*)/            , 1 ]
+		result[ :USERNAME        ] = environment[ /^USERNAME=(.*)/        , 1 ]
+		result[ :LOGNAME         ] = environment[ /^LOGNAME=(.*)/         , 1 ]
+		result[ :SUDO_USER       ] = environment[ /^SUDO_USER=(.*)/       , 1 ]
+		result[ :HOME            ] = environment[ /^HOME=(.*)/            , 1 ]
+		result[ :PWD             ] = environment[ /^PWD=(.*)/             , 1 ]
+		result[ :PATH            ] = environment[ /^PATH=(.*)/            , 1 ]
+		result[ :SHELL           ] = environment[ /^SHELL=(.*)/           , 1 ]
+		result[ :XDG_RUNTIME_DIR ] = environment[ /^XDG_RUNTIME_DIR=(.*)/ , 1 ]
+
+		result
 
 	end
 
@@ -200,60 +280,6 @@ module Susu
 		end
 
 		return false
-
-	end
-
-
-	def self.info
-
-		result = {}
-
-		# the login uid
-		#
-		result[ :loginuid ] =  `cat /proc/$$/task/$$/loginuid`.to_i
-
-		# Get the process user related information directly from the system
-		#
-		status = `cat /proc/$$/task/$$/status`
-
-		# this will output something like: "Uid:	0	0	0	0"
-		#
-		uids = status[ /^Uid:.*/ ].scan( /\d+/ )
-		gids = status[ /^Gid:.*/ ].scan( /\d+/ )
-
-		result[ :ruid   ] = uids[ 0 ]  # the “owner” of the current process
-		result[ :euid   ] = uids[ 1 ]  # the identity in effect
-		result[ :suid   ] = uids[ 2 ]  # stores some previous user ID, so that it can be restored (copied to the euid) at some later time
-		result[ :fsuid  ] = uids[ 3 ]  # create files with this credential
-
-		result[ :rgid   ] = gids[ 0 ]
-		result[ :egid   ] = gids[ 1 ]
-		result[ :sgid   ] = gids[ 2 ]
-		result[ :fsgid  ] = gids[ 3 ]
-
-		result[ :tgid   ] = status[ /^Tgid:.*/   ].scan( /\d+/ ).first  # Thread group ID (i.e., Process ID)
-		result[ :groups ] = status[ /^Groups:.*/ ].scan( /\d+/ )        # supplementary groups
-		result[ :umask  ] = sprintf( "%03o", File.umask )               # create files with these privs
-
-
-		# put some important environment variables
-		# if child processes are supposed to run as a different user, they might rely
-		# on $HOME, $USER, ...
-		# other candidates not yet included MAIL, SUDO*
-		#
-		environment = `cat /proc/$$/task/$$/environ`.gsub( "\0", "\n" )
-
-		result[ :USER            ] = environment[ /^USER=(.*)/            , 1 ]
-		result[ :USERNAME        ] = environment[ /^USERNAME=(.*)/        , 1 ]
-		result[ :LOGNAME         ] = environment[ /^LOGNAME=(.*)/         , 1 ]
-		result[ :SUDO_USER       ] = environment[ /^SUDO_USER=(.*)/       , 1 ]
-		result[ :HOME            ] = environment[ /^HOME=(.*)/            , 1 ]
-		result[ :PWD             ] = environment[ /^PWD=(.*)/             , 1 ]
-		result[ :PATH            ] = environment[ /^PATH=(.*)/            , 1 ]
-		result[ :SHELL           ] = environment[ /^SHELL=(.*)/           , 1 ]
-		result[ :XDG_RUNTIME_DIR ] = environment[ /^XDG_RUNTIME_DIR=(.*)/ , 1 ]
-
-		result
 
 	end
 

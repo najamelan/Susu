@@ -13,28 +13,36 @@ class TestSusu < Test::Unit::TestCase
 
 @@user  = 'user'
 @@group = 'user'
-@@uid   = 1000
+@@uid   = '1000'
+@@gid   = '1000'
 
+# This is the process thread id, but since we fork, this always changes
+#
+@@whitelist = [:tgid]
+
+# This basically tells Susu to do nothing, so we can test each parameter independantly.
+#
 @@params =
 {
-	          user:   nil  ,
-	       setEuid: false  ,
-	       setRuid: false  ,
-	       setSuid: false  ,
+	            user:   nil  ,
+	         setEuid: false  ,
+	         setRuid: false  ,
+	         setSuid: false  ,
 
-	         group:   nil  ,
-	       setEgid: false  ,
-	       setRgid: false  ,
-	       setSgid: false  ,
+	           group:   nil  ,
+	         setEgid: false  ,
+	         setRgid: false  ,
+	         setSgid: false  ,
 
-	    initGroups: false  ,
-	  suplemGroups:   nil  ,
+	      initGroups: false  ,
+	    suplemGroups:   nil  ,
 
-	unsetEnvOthers: false  ,
-	setEnvStandard: false  ,
-	           env:   nil  ,
+	unsetEnvStandard: false  ,
+	  unsetEnvOthers: false  ,
+	  setEnvStandard: false  ,
+	             env:   nil  ,
 
-	         umask:   nil
+	           umask:   nil
 }
 
 
@@ -59,8 +67,8 @@ def userInfo &block
 		yield
 
 		result[ :after  ] = Susu::info
-		result[ :diff   ] = result[ :before ].diff result[ :after ]
-		result[ :rdiff  ] = result[ :after ].diff result[ :before ]
+		result[ :diff   ] = result[ :before ].diff result[ :after  ]
+		result[ :rdiff  ] = result[ :after  ].diff result[ :before ]
 
 	else
 
@@ -75,28 +83,39 @@ end
 
 
 
-
-
-
+# The behaviour of this is not as desired. Right now the unit test fix the behaviour
+# rather than testing for desired behaviour. Ruby doesn't seem to support complete
+# independant changing of uids. Maybe it's a system limitation, not a ruby one, but
+# if these tests fail, check them well, cause it might be an improvement.
+# eg. only euid now says that suid and fsuid also change...
+#
 def test_change_uid()
 
-
-
+	# Structure:
+	#
+	# elem[ 0 ] = message
+	# elem[ 1 ] = params for Susu.su merged with defaults that disable everything
+	# elem[ 2 ] = which keys should have the new user id
+	#
 	data =
 	[
 			[
 				  "Only euid"                                               \
-				, { user: @@user, group: @@group, setEuid: true }           \
-				, :euid                                                     \
-				, false                                                     \
+				, { user: @@user, setEuid: true }                           \
+				, [ :euid, :suid, :fsuid ]                                  \
 			]                                                              \
                                                                         \
-		# ,  [                                                              \
-				  # "Same values, different keys"                             \
-				# , { a: 1, b: 2 }                                            \
-				# , { c: 1, d: 2 }                                            \
-				# , false                                                     \
-			# ]                                                              \
+		,  [                                                              \
+			    "Only ruid"                                                \
+			  , { user: @@user, setRuid: true }                            \
+			  , [ :ruid ]                                                  \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+			    "Only suid"                                                \
+			  , { user: @@user, setSuid: true }                            \
+			  , []                                                         \
+			]                                                              \
                                                                         \
 
 	]
@@ -104,37 +123,81 @@ def test_change_uid()
 
 	data.each do | arr |
 
-		pid = Process.fork do
+		info = Susu.fork do
 
-			info = userInfo do
-
-				Susu.su( @@params.merge arr[ 1 ] )
-
-			end
-
-			ap info.except :before, :after
+			userInfo { Susu.su( @@params.merge arr[ 1 ] ) }
 
 		end
 
-		Process.wait pid
 
+		arr[ 2 ].each do | key |
 
-		# control1 = arr[ 1 ].dup
-		# control2 = arr[ 2 ].dup
+			assert_equal( @@uid        , info[ :after ][ key ], "\n\nTEST: #{arr.first}\n"                  )
+			assert_equal( arr[ 2 ].size + @@whitelist.size, info[ :diff ].size, "\n\nTEST: #{arr.first} - length of diff\n" )
 
-		# result   = arr[ 1 ].superset? arr[ 2 ]
-		# result2  = arr[ 2 ].subset?   arr[ 1 ]
-
-		# assert_equal( control1, arr[ 1 ], "\n\nTEST: " + arr.first + "\n" )
-		# assert_equal( control2, arr[ 2 ], "\n\nTEST: " + arr.first + "\n" )
-
-		# assert_equal( arr[ 3 ], result  , "\n\nTEST: " + arr.first + "\n" )
-		# assert_equal( arr[ 3 ], result2 , "\n\nTEST: " + arr.first + "\n" )
+		end
 
 	end
 
+end
 
 
+
+# The behaviour of this is not as desired. Right now the unit test fix the behaviour
+# rather than testing for desired behaviour. Ruby doesn't seem to support complete
+# independant changing of uids. Maybe it's a system limitation, not a ruby one, but
+# if these tests fail, check them well, cause it might be an improvement.
+# eg. only euid now says that suid and fsuid also change...
+#
+def test_change_gid()
+
+	# Structure:
+	#
+	# elem[ 0 ] = message
+	# elem[ 1 ] = params for Susu.su merged with defaults that disable everything
+	# elem[ 2 ] = which keys should have the new user id
+	#
+	data =
+	[
+			[
+				  "Only egid"                                               \
+				, { user: @@user, setEgid: true }                           \
+				, [ :egid, :sgid, :fsgid ]                                  \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+			    "Only rgid"                                                \
+			  , { user: @@user, setRgid: true }                            \
+			  , [ :rgid ]                                                  \
+			]                                                              \
+                                                                        \
+		,  [                                                              \
+			    "Only sgid"                                                \
+			  , { user: @@user, setSgid: true }                            \
+			  , []                                                         \
+			]                                                              \
+                                                                        \
+
+	]
+
+
+	data.each do | arr |
+
+		info = Susu.fork do
+
+			userInfo { Susu.su( @@params.merge arr[ 1 ] ) }
+
+		end
+
+
+		arr[ 2 ].each do | key |
+
+			assert_equal( @@gid        , info[ :after ][ key ], "\n\nTEST: #{arr.first}\n"                  )
+			assert_equal( arr[ 2 ].size + @@whitelist.size, info[ :diff ].size, "\n\nTEST: #{arr.first} - length of diff\n" )
+
+		end
+
+	end
 
 end
 
