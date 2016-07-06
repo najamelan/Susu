@@ -157,6 +157,11 @@ module Susu
 	end
 
 
+	# Allows you to fork into a different process with a block like Kernel.fork, but returns
+	# the return value of the block to the current process!
+	#
+	# @see https://stackoverflow.com/questions/1076257/returning-data-from-forked-processes
+	#
 	def self.fork( &blk )
 
 		read, write = IO.pipe
