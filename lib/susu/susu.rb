@@ -111,7 +111,7 @@ module Susu
 
 		# Set the supplementary groups for the new user
 		#
-		initGroups and Process::initgroups( u.name, u.gid )
+		initGroups and Process.initgroups( u.name, u.gid )
 
 
 		# Change the GID (after dropping privileges, we won't be able anymore)
@@ -124,7 +124,7 @@ module Susu
 		unsetEnvStandard and ENV.delete_if { | key | key  =~ /^HOME|^PWD|^USER|^PATH/ }
 		unsetEnvOthers   and ENV.keep_if   { | key | key  =~ /^HOME|^PWD|^USER|^PATH/ }
 
-		umask            and File::umask umask
+		umask            and File.umask umask
 
 
 		# This is a dirty hack. If you know a better way to obtain these environment vars, please send a pull request at github.com/najamelan
