@@ -121,8 +121,8 @@ module Susu
 		setSuid  and Process::Sys.setresgid( -1, -1, u.gid )
 
 
-		unsetEnvStandard and ENV.delete_if { | key | key  =~ /^HOME=|^PWD=|^USER=|^PATH=/ }
-		unsetEnvOthers   and ENV.keep_if   { | key | key  =~ /^HOME=|^PWD=|^USER=|^PATH=/ }
+		unsetEnvStandard and ENV.delete_if { | key | key  =~ /^HOME|^PWD|^USER|^PATH/ }
+		unsetEnvOthers   and ENV.keep_if   { | key | key  =~ /^HOME|^PWD|^USER|^PATH/ }
 
 		umask            and File::umask umask
 
@@ -140,7 +140,7 @@ module Susu
 
 			end
 
-			ENV.keep_if { | key | key  =~ /^HOME=|^PWD=|^USER=|^PATH=/ }
+			ENV.keep_if { | key, value | key  =~ /^HOME|^PWD|^USER|^PATH/ }
 
 		end
 
