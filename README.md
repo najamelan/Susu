@@ -1,8 +1,11 @@
+# @title Susu README
+# @author Naja Melan <najamelan ꗈ autistici ꗈ org>
+
 # susu
 
-* [Homepage](https://rubygems.org/gems/susu)
+* [Homepage](https://github.com/najamelan/susu)
 * [Documentation](http://rubydoc.info/gems/susu/frames)
-* [Email](mailto:you at example.com)
+* [Email](mailto:najamelan ꗈ autistici ꗈ org)
 
 ## Description
 
@@ -21,7 +24,5 @@ TODO: Description
     $ gem install susu
 
 ## Copyright
-
-Copyright (c) 2014 Your Name
 
 See {file:LICENSE.txt} for details.
