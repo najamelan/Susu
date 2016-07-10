@@ -8,28 +8,31 @@ module Configurable
 
 def self.included base
 
-	class << base
+	base.class_eval do
 
 		@defaults = {}
 
 
-		def defaults
+		def base.defaults
 
 			@defaults.dup
 
 		end
 
 
-		def defaults= value
+		def base.defaults= value
+
+			@defaults == {} or raise RuntimeError.new "#{self.name}.defaults can only be set once!"
+
 
 			value.is_a? Hash or
 
 				raise ArgumentError.new "#{self.name}.defaults only accepts a Hash. Got: #{value.class.name}"
 
 
-			def defaults=( value ) raise RuntimeError.new "#{self.name}.defaults can only be set once!" end
-
 			@defaults = value.deep_symbolize_keys
+
+			self
 
 		end
 

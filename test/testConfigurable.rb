@@ -202,6 +202,13 @@ end
 
 def testClassDefaults
 
+	assert_equal( {}, TestHelper.defaults )
+
+end
+
+
+def testClassDefaultsValidation
+
 	assert_raise( ArgumentError ){ TestHelper.defaults = nil }
 	assert_raise( ArgumentError ){ TestHelper.defaults = []  }
 
@@ -210,7 +217,7 @@ end
 
 def testClassDefaultsAutodestruct
 
-	TestHelper.defaults = {}
+	TestHelper.defaults = { a: 1 }
 
 	assert_raise( RuntimeError ){ TestHelper.defaults = {} }
 	assert_raise( RuntimeError ){ TestHelper.defaults = []  }
