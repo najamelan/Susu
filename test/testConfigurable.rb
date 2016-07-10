@@ -12,9 +12,9 @@ class TestHelper
 
 include Configurable
 
-def initialize( defaults, userset )
+def initialize( **userset )
 
-	setupOptions( defaults, userset )
+	setupOptions( self.class.defaults, userset )
 
 end
 
@@ -40,7 +40,8 @@ def testSetupOptionsCreate
 	b = { type2: 'userset' }
 	c = { type: 'defaults', type2: 'userset' }
 
-	t = TestHelper.new( a, b )
+	TestHelper.defaults = a
+	t = TestHelper.new( b )
 
 	assert_equal( a, t.defaults )
 	assert_equal( b, t.userset  )
@@ -54,7 +55,8 @@ def testSetupOptionsOverride
 	a = { type: 'defaults' }
 	b = { type: 'userset'  }
 
-	t = TestHelper.new( a, b )
+	TestHelper.defaults = a
+	t = TestHelper.new( b )
 
 	assert_equal( a, t.defaults )
 	assert_equal( b, t.userset  )
@@ -68,7 +70,8 @@ def testgetOptsNestedOverride
 	a = { group: { type: 'defaults' } }
 	b = { group: { type: 'userset'  } }
 
-	t = TestHelper.new( a, b )
+	TestHelper.defaults = a
+	t = TestHelper.new( b )
 
 	assert_equal( a, t.defaults )
 	assert_equal( b, t.userset  )
@@ -83,7 +86,8 @@ def testgetOptsNestedRead
 	b = { group: { type: 'userset'  } }
 	c = 'userset'
 
-	t = TestHelper.new( a, b )
+	TestHelper.defaults = a
+	t = TestHelper.new( b )
 
 	assert_equal( a, t.defaults )
 	assert_equal( b, t.userset  )
@@ -98,7 +102,8 @@ def testgetOptsFixnum
 	b = { group: { type: 3          } }
 	c = 3
 
-	t = TestHelper.new( a, b )
+	TestHelper.defaults = a
+	t = TestHelper.new( b )
 
 	assert_equal( a, t.defaults )
 	assert_equal( b, t.userset  )
@@ -113,7 +118,8 @@ def testgetOptsNil
 	b = { group: { type: nil        } }
 	c = nil
 
-	t = TestHelper.new( a, b )
+	TestHelper.defaults = a
+	t = TestHelper.new( b )
 
 	assert_equal( a, t.defaults )
 	assert_equal( b, t.userset  )
@@ -128,7 +134,8 @@ def testgetOptsEmptyHash
 	b = { group: { type: {}         } }
 	c = {}
 
-	t = TestHelper.new( a, b )
+	TestHelper.defaults = a
+	t = TestHelper.new( b )
 
 	assert_equal( a, t.defaults )
 	assert_equal( b, t.userset  )
@@ -144,7 +151,9 @@ def testSetOpts
 	c = { group: 'userset' }
 
 
-	t = TestHelper.new( a, b )
+	TestHelper.defaults = a
+	t = TestHelper.new( b )
+
 	t.change( :group, 'userset' )
 
 	assert_equal( a, t.defaults )
@@ -156,12 +165,13 @@ end
 
 def testSymbolizeKeysSetupOptions
 
-	a = { group:     { type:     'defaults' } }
-	b = { 'group' => { 'type' => 'userset'  } }
-	c = { group:     { type:     'userset'  } }
+	a = { group: { type:     'defaults' } }
+	b = { group: { 'type' => 'userset'  } }
+	c = { group: { type:     'userset'  } }
 
 
-	t = TestHelper.new( a, b )
+	TestHelper.defaults = a
+	t = TestHelper.new( b )
 
 	assert_equal( a, t.defaults )
 	assert_equal( c, t.userset  )
@@ -172,13 +182,15 @@ end
 
 def testSymbolizeKeysSetOpts
 
-	a = { group:     {  type:     'defaults' }  }
-	b = { 'group' => [{ 'type' => 'userset'  }] }
-	c = { group:     [{ type:     'userset'  }] }
+	a = { group: { type:     'defaults' } }
+	b = { group: { 'type' => 'userset'  } }
+	c = { group: { type:     'userset'  } }
 
 
-	t = TestHelper.new( a, b )
-	t.change( :group, [{ 'type': 'userset'  }] )
+	TestHelper.defaults = a
+	t = TestHelper.new( b )
+
+	t.change( :group, { 'type': 'userset'  } )
 
 	assert_equal( a, t.defaults )
 	assert_equal( c, t.userset  )
@@ -187,8 +199,8 @@ def testSymbolizeKeysSetOpts
 
 	# Send in the main key as string
 	#
-	t = TestHelper.new( a, b )
-	t.change( 'group', [{ 'type' => 'userset' }] )
+	t = TestHelper.new( b )
+	t.change( 'group', { 'type' => 'userset' } )
 
 	assert_equal( c, t.options  )
 

@@ -5,6 +5,27 @@ module Options
 #
 module Configurable
 
+require 'awesome_print'
+
+def self.included base
+
+	class << base
+
+		attr_reader :defaults
+
+		@defaults = {}
+
+
+		def defaults= value
+
+			@defaults = value.deep_symbolize_keys
+
+		end
+
+	end
+
+end
+
 # Get the options in use for this class.
 #
 # @param  args [Symbol] The key for which to take the value. Defaults to returning the entire options Hash. This function takes an arbitrary number of parameters representing nested hash keys.
