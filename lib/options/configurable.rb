@@ -5,7 +5,6 @@ module Options
 #
 module Configurable
 
-require 'awesome_print'
 
 def self.included base
 
