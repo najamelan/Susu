@@ -17,6 +17,11 @@ def self.included base
 
 		def defaults= value
 
+			value.is_a? Hash or
+
+				raise ArgumentError.new "#{self.name}.defaults only accepts a Hash. Got: #{value.class.name}"
+
+
 			@defaults = value.deep_symbolize_keys
 
 		end

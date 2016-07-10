@@ -207,6 +207,14 @@ def testSymbolizeKeysSetOpts
 end
 
 
+def testClassDefaults
+
+	assert_raise( ArgumentError ){ TestHelper.defaults = nil }
+	assert_raise( ArgumentError ){ TestHelper.defaults = []  }
+
+end
+
+
 end # class  TestConfigurable
 end # module Options
 end # module TidBits
