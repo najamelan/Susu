@@ -1,37 +1,30 @@
 require          'test/unit'
-require          'pp'
+require          'awesome_print'
 require          'byebug'
 require_relative '../../../lib/tidbits'
 
 module TidBits
 module Options
 
-
-
-class TestHelper
-
-include Configurable
-
-def initialize( **userset )
-
-	setupOptions( self.class.defaults, userset )
-
-end
-
-
-
-def change( key, value )
-
-	setOpt( key, value )
-
-end
-
-
-end # class TestHelper
-
-
-
 class TestConfigurable < Test::Unit::TestCase
+
+
+def setup
+
+	load File.expand_path( 'TestHelper.rb', File.dirname( __FILE__ ) )
+
+end
+
+
+def teardown
+
+	TidBits::Options.class_eval do
+
+		remove_const :TestHelper if const_defined? :TestHelper
+
+	end
+
+end
 
 
 def testSetupOptionsCreate
@@ -211,6 +204,16 @@ def testClassDefaults
 
 	assert_raise( ArgumentError ){ TestHelper.defaults = nil }
 	assert_raise( ArgumentError ){ TestHelper.defaults = []  }
+
+end
+
+
+def testClassDefaultsAutodestruct
+
+	TestHelper.defaults = {}
+
+	assert_raise( RuntimeError ){ TestHelper.defaults = {} }
+	assert_raise( RuntimeError ){ TestHelper.defaults = []  }
 
 end
 
