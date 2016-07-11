@@ -8,21 +8,20 @@ module Configurable
 
 def self.included base
 
-	base.class_eval do
+	class << base
 
-		@defaults = {}
+		def defaults
 
-
-		def base.defaults
+			@defaults ||= {}
 
 			@defaults.dup
 
 		end
 
 
-		def base.defaults= value
+		def defaults= value
 
-			@defaults == {} or raise RuntimeError.new "#{self.name}.defaults can only be set once!"
+			@defaults == nil || @defaults == {} or raise RuntimeError.new "#{self.name}.defaults can only be set once!"
 
 
 			value.is_a? Hash or
@@ -67,7 +66,7 @@ end
 #
 def defaults( *args )
 
-	getOpts @defaults, *args
+	getOpts self.class.defaults, *args
 
 end
 
@@ -96,7 +95,7 @@ end
 # @return self.
 #
 protected
-def setupOptions( defaults, userset )
+def setupOptions( userset )
 
 	# Accept nil values, just in case a class looks up it's own config options
 	# and the user hasn't overridden any defaults. In that case userset will be
@@ -106,12 +105,10 @@ def setupOptions( defaults, userset )
 	# Doing the same for defaults is a little more questionnable, but then again
 	# it is imaginable that there are no defaults either for a certain section.
 	#
-	defaults ||= {}
 	userset  ||= {}
 
-	@defaults = defaults.deep_symbolize_keys!
 	@userset  = userset.deep_symbolize_keys!
-	@options  = @defaults.deep_merge @userset
+	@options  = self.class.defaults.deep_merge @userset
 
 	self
 

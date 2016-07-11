@@ -225,6 +225,17 @@ def testClassDefaultsAutodestruct
 end
 
 
+def testClassDefaultsMutate
+
+	TestHelper.defaults = { a: 1 }
+
+	TestHelper.defaults.delete :a
+
+	assert( TestHelper.defaults.include? :a )
+
+end
+
+
 end # class  TestConfigurable
 end # module Options
 end # module TidBits

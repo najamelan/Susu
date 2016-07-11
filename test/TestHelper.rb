@@ -7,7 +7,7 @@ include Configurable
 
 def initialize( **userset )
 
-	setupOptions( self.class.defaults, userset )
+	setupOptions( userset )
 
 end
 
