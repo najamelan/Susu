@@ -1,5 +1,8 @@
 require          'thor'
+
+require_relative 'lib/core_extend'
 require_relative 'test/run'
+
 
 
 class CoreExtend < Thor
