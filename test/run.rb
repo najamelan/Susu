@@ -25,6 +25,7 @@ def self.suite
 	suite =  Test::Unit::TestSuite.new( "CoreExtend Unit Tests" )
 
 	suite << TestHash.suite
+	suite << TestString.suite
 
 end
 
