@@ -19,7 +19,7 @@ def initialize( defaultFiles, runtime = [] )
 end
 
 
-def setup( klass, *options )
+def setup( klass, *options, inclModule: true )
 
 	settings = Settings.new
 
@@ -30,6 +30,8 @@ def setup( klass, *options )
 	klass.extend settings.to_module( 'settings' )
 
 	klass.extend @options.dig( *options ).to_module( 'options'  )
+
+	inclModule and klass.include Configurable
 
 end
 

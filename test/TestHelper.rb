@@ -3,8 +3,6 @@ module Options
 
 class TestHelper
 
-include Configurable
-
 def initialize( **userset )
 
 	setupOptions( userset )
