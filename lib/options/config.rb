@@ -88,18 +88,18 @@ def parse files
 
 	files  = *files
 	config = Settings.new
-	first  = files.first.path
 
-	if files.length == 1 && first.directory?
 
-		files = Dir[ first.join '**/*.yml' ]
+	if files.length == 1 && files.first.path.directory?
+
+		files = Dir[ files.first.join '**/*.yml' ]
 
 	end
 
 
 	files.each do |file|
 
-		file = file.realpath
+		file = file.path.realpath
 
 		# TODO: save the location of the code that created this object and try relative path before failing.
 		#

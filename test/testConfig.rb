@@ -76,6 +76,14 @@ def test04AssignChildToClass
 end
 
 
+
+def test05FilesAsString
+
+	assert_nothing_thrown { Config.new 'data/default.yml'.relpath.to_s }
+
+end
+
+
 end # class  TestConfig
 end # module Options
 end # module TidBits

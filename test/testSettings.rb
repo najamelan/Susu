@@ -19,7 +19,7 @@ end
 
 def test00LoadString
 
-	assert_nothing_raised do
+	assert_nothing_thrown do
 
 		@@settings = Settings.load 'data/default.yml'.relpath.to_s
 
@@ -30,7 +30,7 @@ end
 
 def test01LoadPathname
 
-	assert_nothing_raised do
+	assert_nothing_thrown do
 
 		@@settings = Settings.load 'data/default.yml'.relpath
 
