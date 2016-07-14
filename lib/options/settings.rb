@@ -5,11 +5,6 @@ module Options
 class Settings < Hashie::Mash
 
 
-# protect from overriding methods
-#
-include Hashie::Extensions::Mash::SafeAssignment
-
-
 # Support loading from a string or a Pathname
 #
 def self.load path, options = { reload: false }

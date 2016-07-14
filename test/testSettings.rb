@@ -72,6 +72,15 @@ def test04SymbolizeKeys
 end
 
 
+def test05TestOverrideMethods
+
+	h = Settings[{ a: 2, a?: 5 }]
+
+	assert_equal( 5, h.a? )
+
+end
+
+
 
 
 end # class  TestSettings
