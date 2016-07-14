@@ -12,10 +12,10 @@ def initialize( **userset )
 end
 
 
+def self.reset
 
-def change( key, value )
-
-	setOpt( key, value )
+	@settings = nil
+	@options  = nil
 
 end
 

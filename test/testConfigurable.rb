@@ -5,232 +5,47 @@ module Options
 
 class TestConfigurable < Test::Unit::TestCase
 
+def self.startup
+
+end
+
 
 def setup
 
-	load File.expand_path( 'TestHelper.rb', File.dirname( __FILE__ ) )
+	TestHelper.reset
+	@@config = Config.new 'data/default.yml'.relpath
+	@@config.setup TestHelper
 
 end
 
 
-def teardown
+def test00InstanceProperties
 
-	TidBits::Options.class_eval do
-
-		remove_const :TestHelper if const_defined? :TestHelper
-
-	end
-
-end
-
-
-def testSetupOptionsCreate
-
-	a = { type: 'defaults' }
-	b = { type2: 'userset' }
-	c = { type: 'defaults', type2: 'userset' }
-
-	TestHelper.defaults = a
-	t = TestHelper.new( b )
-
-	assert_equal( a, t.defaults )
-	assert_equal( b, t.userset  )
-	assert_equal( c, t.options  )
+	assert( TestHelper.new.class.settings.defaults.instance_of?( Settings ) )
+	assert( TestHelper.new.class.settings.userset .instance_of?( Settings ) )
+	assert( TestHelper.new.class.settings.runtime .instance_of?( Settings ) )
+	assert( TestHelper.new.class.options          .instance_of?( Settings ) )
 
 end
 
 
-def testSetupOptionsOverride
+def test01Profiles
 
-	a = { type: 'defaults' }
-	b = { type: 'userset'  }
+	TestHelper.reset
+	@@config = ConfigProfile.new :testing, 'data/default.yml'.relpath, 'data/runtime.yml'.relpath
+	@@config.setup TestHelper
 
-	TestHelper.defaults = a
-	t = TestHelper.new( b )
+	t = TestHelper.new( bollywood: 'cool' )
 
-	assert_equal( a, t.defaults )
-	assert_equal( b, t.userset  )
-	assert_equal( b, t.options  )
+	assert_equal( 'cool'    , t.options.bollywood                )
+	assert_equal( 'chinchin', t.options.level1.level2testing.foo )
 
-end
-
-
-def testgetOptsNestedOverride
-
-	a = { group: { type: 'defaults' } }
-	b = { group: { type: 'userset'  } }
-
-	TestHelper.defaults = a
-	t = TestHelper.new( b )
-
-	assert_equal( a, t.defaults )
-	assert_equal( b, t.userset  )
-	assert_equal( b, t.options  )
+	assert_false( t.options.has_key? :runit  )
+	assert_false( t.options.has_key? 'runit' )
 
 end
 
 
-def testgetOptsNestedRead
-
-	a = { group: { type: 'defaults' } }
-	b = { group: { type: 'userset'  } }
-	c = 'userset'
-
-	TestHelper.defaults = a
-	t = TestHelper.new( b )
-
-	assert_equal( a, t.defaults )
-	assert_equal( b, t.userset  )
-	assert_equal( c, t.options( :group, :type ) )
-
-end
-
-
-def testgetOptsFixnum
-
-	a = { group: { type: 'defaults' } }
-	b = { group: { type: 3          } }
-	c = 3
-
-	TestHelper.defaults = a
-	t = TestHelper.new( b )
-
-	assert_equal( a, t.defaults )
-	assert_equal( b, t.userset  )
-	assert_equal( c, t.options( :group, :type ) )
-
-end
-
-
-def testgetOptsNil
-
-	a = { group: { type: 'defaults' } }
-	b = { group: { type: nil        } }
-	c = nil
-
-	TestHelper.defaults = a
-	t = TestHelper.new( b )
-
-	assert_equal( a, t.defaults )
-	assert_equal( b, t.userset  )
-	assert_equal( c, t.options( :group, :type ) )
-
-end
-
-
-def testgetOptsEmptyHash
-
-	a = { group: { type: 'defaults' } }
-	b = { group: { type: {}         } }
-	c = {}
-
-	TestHelper.defaults = a
-	t = TestHelper.new( b )
-
-	assert_equal( a, t.defaults )
-	assert_equal( b, t.userset  )
-	assert_equal( c, t.options( :group, :type ) )
-
-end
-
-
-def testSetOpts
-
-	a = { group: { type: 'defaults' } }
-	b = { group: { type: 'userset'  } }
-	c = { group: 'userset' }
-
-
-	TestHelper.defaults = a
-	t = TestHelper.new( b )
-
-	t.change( :group, 'userset' )
-
-	assert_equal( a, t.defaults )
-	assert_equal( c, t.userset  )
-	assert_equal( c, t.options  )
-
-end
-
-
-def testSymbolizeKeysSetupOptions
-
-	a = { group: { type:     'defaults' } }
-	b = { group: { 'type' => 'userset'  } }
-	c = { group: { type:     'userset'  } }
-
-
-	TestHelper.defaults = a
-	t = TestHelper.new( b )
-
-	assert_equal( a, t.defaults )
-	assert_equal( c, t.userset  )
-	assert_equal( c, t.options  )
-
-end
-
-
-def testSymbolizeKeysSetOpts
-
-	a = { group: { type:     'defaults' } }
-	b = { group: { 'type' => 'userset'  } }
-	c = { group: { type:     'userset'  } }
-
-
-	TestHelper.defaults = a
-	t = TestHelper.new( b )
-
-	t.change( :group, { 'type': 'userset'  } )
-
-	assert_equal( a, t.defaults )
-	assert_equal( c, t.userset  )
-	assert_equal( c, t.options  )
-
-
-	# Send in the main key as string
-	#
-	t = TestHelper.new( b )
-	t.change( 'group', { 'type' => 'userset' } )
-
-	assert_equal( c, t.options  )
-
-end
-
-
-def testClassDefaults
-
-	assert_equal( {}, TestHelper.defaults )
-
-end
-
-
-def testClassDefaultsValidation
-
-	assert_raise( ArgumentError ){ TestHelper.defaults = nil }
-	assert_raise( ArgumentError ){ TestHelper.defaults = []  }
-
-end
-
-
-def testClassDefaultsAutodestruct
-
-	TestHelper.defaults = { a: 1 }
-
-	assert_raise( RuntimeError ){ TestHelper.defaults = {} }
-	assert_raise( RuntimeError ){ TestHelper.defaults = []  }
-
-end
-
-
-def testClassDefaultsMutate
-
-	TestHelper.defaults = { a: 1 }
-
-	TestHelper.defaults.delete :a
-
-	assert( TestHelper.defaults.include? :a )
-
-end
 
 
 end # class  TestConfigurable

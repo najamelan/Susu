@@ -24,7 +24,10 @@ def self.suite
 
 	suite =  Test::Unit::TestSuite.new( "Options Unit Tests" )
 
-	suite << TestConfigurable.suite
+	suite << TestSettings      .suite
+	suite << TestConfig        .suite
+	suite << TestConfigProfile .suite
+	suite << TestConfigurable  .suite
 
 end
 

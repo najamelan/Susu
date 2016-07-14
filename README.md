@@ -8,6 +8,7 @@ A mixin module for adding options to a class or module.
 ## Dependencies
 
 - TidBits Ruby CoreExtend
+- Hashie
 
 You don't need to do anything for this dependency if you include Options through TidBits Ruby, but if you want 
 to include it in your project without including TidBits Ruby, you should also include CoreExtend and make sure
