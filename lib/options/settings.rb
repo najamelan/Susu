@@ -21,17 +21,13 @@ def self.load path, options = {}
 end
 
 
-# Make sure any nested hashes are also setting objects
+protected
+
+# Make sure keys are always symbols
 #
-def []= key, value
+def convert_key( key )
 
-	if value.instance_of?( Hash ) || value.instance_of?( Hashie::Mash )
-
-		value = value.to_settings
-
-	end
-
-	super key, value
+  key.to_sym
 
 end
 

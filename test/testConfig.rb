@@ -37,6 +37,8 @@ def test01ClassDefaults
 	yml = YAML.load_file( 'data/default.yml'.relpath )
 	yml.delete( 'include' )
 
+	Hashie.symbolize_keys! yml
+
 	assert_equal( yml, TestHelper.settings.defaults )
 
 end

@@ -35,9 +35,11 @@ end
 def test01ClassDefaults
 
 	yml = YAML.load_file( 'data/default.yml'.relpath )
-	yml.delete( 'include' )
+	Hashie.symbolize_keys! yml
 
-	assert_equal( yml[ 'defaults' ], TestHelper.settings.defaults )
+	yml.delete( :include )
+
+	assert_equal( yml[ :defaults ], TestHelper.settings.defaults )
 
 end
 
@@ -53,6 +55,7 @@ def test02ClassOptions
 	defaults.delete( 'include' )
 
 	result = defaults[ 'defaults' ].deep_merge defaults[ 'testing' ]
+	Hashie.symbolize_keys! result
 
 	assert_equal( result, TestHelper.options )
 

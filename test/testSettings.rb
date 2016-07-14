@@ -55,6 +55,23 @@ def test03MethodAccessOnNew
 end
 
 
+def test04SymbolizeKeys
+
+	set = { 'a' => { 'b' => { 'c' => 5 } } }.to_settings
+
+	assert_instance_of( Symbol, set    .keys.first )
+	assert_instance_of( Symbol, set.a  .keys.first )
+	assert_instance_of( Symbol, set.a.b.keys.first )
+
+	@@settings.defaults.other = { 'a' => { 'b' => { 'c' => 5 } } }
+
+	assert_instance_of( Symbol, @@settings.defaults.other    .keys.first )
+	assert_instance_of( Symbol, @@settings.defaults.other.a  .keys.first )
+	assert_instance_of( Symbol, @@settings.defaults.other.a.b.keys.first )
+
+end
+
+
 
 
 end # class  TestSettings
