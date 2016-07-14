@@ -9,7 +9,6 @@ module TidBits
 [
 	  { name: 'CoreExtend', file: 'core_extend/lib/core_extend'  } \
 	, { name: 'Options'   , file: 'options/lib/options'          } \
-	, { name: 'Rush'      , file: 'rush/lib/rush'                } \
 	, { name: 'Susu'      , file: 'susu/lib/susu'                } \
 
 ].each do |lib|

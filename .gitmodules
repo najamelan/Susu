@@ -1,9 +1,6 @@
 [submodule "lib/susu"]
 	path = lib/susu
 	url = git@github.com:najamelan/susu.git
-[submodule "lib/rush"]
-	path = lib/rush
-	url = git@github.com:najamelan/rush.git
 [submodule "lib/core_extend"]
 	path = lib/core_extend
 	url = git@github.com:najamelan/TidBits_Ruby_CoreExtend.git
