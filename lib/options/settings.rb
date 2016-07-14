@@ -12,9 +12,9 @@ include Hashie::Extensions::Mash::SafeAssignment
 
 # Support loading from a string or a Pathname
 #
-def self.load path, options = {}
+def self.load path, options = { reload: false }
 
-	options.has_key?( :reload ) && options.fetch( :reload ) and @_mashes.delete( path.to_s )
+	options[ :reload ] && @_mashes and @_mashes.delete( path.to_s )
 
 	super( path.to_s, options )
 
