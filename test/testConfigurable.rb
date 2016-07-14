@@ -1,7 +1,4 @@
-require          'test/unit'
-require          'awesome_print'
-require          'byebug'
-require_relative '../../../lib/tidbits'
+require_relative 'TestHelper'
 
 module TidBits
 module Options

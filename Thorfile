@@ -1,4 +1,9 @@
 require          'thor'
+
+require          'awesome_print'
+require          'byebug'
+
+require_relative '../../lib/tidbits'
 require_relative 'test/run'
 
 
@@ -6,6 +11,7 @@ class Options < Thor
 
 
 desc 'test', 'Run the unit tests for the Options library'
+
 def test
 
 	TidBits::Options::TestSuite.run

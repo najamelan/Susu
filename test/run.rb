@@ -9,7 +9,7 @@ defined?( Test::Unit::AutoRunner ) and Test::Unit::AutoRunner.need_auto_run = fa
 
 Dir.entries( File.dirname( __FILE__ ) ).
 
-	grep( /test.*\.rb/ ) { | file | require_relative file }
+	grep( /^test.*\.rb$/ ) { | file | require_relative file }
 
 
 
