@@ -15,4 +15,19 @@ class Pathname
 
 	end
 
+
+	# Secure recursive delete of path.
+	# @see FileUtils.remove_entry_secure
+	#
+	def rm_secure( force = false )
+
+	  require 'fileutils'
+
+	  FileUtils.remove_entry_secure( @path, force )
+
+	  nil
+	end
+
+
+
 end # class Pathname
