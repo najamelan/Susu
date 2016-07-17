@@ -21,10 +21,11 @@ end
 
 def test00InstanceProperties
 
-	assert( TestHelper.new.class.settings.defaults.instance_of?( Settings ) )
-	assert( TestHelper.new.class.settings.userset .instance_of?( Settings ) )
-	assert( TestHelper.new.class.settings.runtime .instance_of?( Settings ) )
-	assert( TestHelper.new.class.options          .instance_of?( Settings ) )
+	assert_instance_of( Settings, TestHelper.new.class.settings.defaults )
+	assert_instance_of( Settings, TestHelper.new.class.settings.userset  )
+	assert_instance_of( Settings, TestHelper.new.class.settings.runtime  )
+	assert_instance_of( Settings, TestHelper.new.class.options           )
+	assert_instance_of( Settings, TestHelper.new      .options           )
 
 end
 

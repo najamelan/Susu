@@ -8,7 +8,7 @@ module Configurable
 	def setupOptions runtime
 
 		runtime = self.class.options.deep_merge( runtime )
-		self.class.include runtime.to_module( 'options' )
+		extend runtime.to_module( 'options' )
 
 	end
 

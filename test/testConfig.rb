@@ -84,6 +84,23 @@ def test05FilesAsString
 end
 
 
+
+def test06EmptyOptions
+
+	TestHelper.reset
+	config = Config.new( {} )
+	config.setup TestHelper
+
+	# ap TestHelper.settings
+
+	assert( TestHelper.settings.defaults.instance_of?( Settings ) )
+	assert( TestHelper.settings.userset .instance_of?( Settings ) )
+	assert( TestHelper.settings.runtime .instance_of?( Settings ) )
+	assert( TestHelper.options          .instance_of?( Settings ) )
+
+end
+
+
 end # class  TestConfig
 end # module Options
 end # module TidBits

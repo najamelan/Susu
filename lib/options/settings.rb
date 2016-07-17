@@ -16,6 +16,27 @@ def self.load path, options = { reload: false }
 end
 
 
+def to_module( method_name = :settings )
+
+	mash = self
+
+	Module.new do |m|
+
+		send :define_singleton_method, :extended do |base|
+
+			base.send :define_singleton_method, method_name.to_sym do
+
+				mash
+
+			end
+
+		end
+
+	end
+
+end
+
+
 protected
 
 # Make sure keys are always symbols

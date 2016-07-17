@@ -23,13 +23,15 @@ def setup( klass, *options, inclModule: true )
 
 	settings = Settings.new
 
-	settings.defaults = @default.dig( *options )
-	settings.userset  = @userset.dig( *options )
-	settings.runtime  = @runtime.dig( *options )
+	settings.defaults = @default.dig( *options ) || Settings.new
+	settings.userset  = @userset.dig( *options ) || Settings.new
+	settings.runtime  = @runtime.dig( *options ) || Settings.new
 
 	klass.extend settings.to_module( 'settings' )
 
-	klass.extend @options.dig( *options ).to_module( 'options'  )
+	opts = @options.dig( *options ) || Settings.new
+
+	klass.extend opts.to_module( 'options' )
 
 	inclModule and klass.include Configurable
 

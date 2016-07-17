@@ -12,10 +12,12 @@ end
 
 def self.reset
 
-	@settings = nil
-	@options  = nil
+	singleton_class.method_defined? :settings and singleton_class.send :remove_method, :settings
+	singleton_class.method_defined? :options  and singleton_class.send :remove_method, :options
 
 end
+
+
 
 
 end # class TestHelper
