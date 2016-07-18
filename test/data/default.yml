@@ -1,6 +1,6 @@
 include: user.yml
 
-defaults:
+default:
 
   level1:
 

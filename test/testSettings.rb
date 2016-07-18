@@ -5,17 +5,6 @@ module Options
 
 class TestSettings < Test::Unit::TestCase
 
-def self.startup
-
-
-end
-
-
-def setup
-
-
-end
-
 
 def test00LoadString
 
@@ -41,16 +30,16 @@ end
 
 def test02MethodAccess
 
-	assert_equal( ['A', 'B', 'C'], @@settings.defaults.level1.list )
+	assert_equal( ['A', 'B', 'C'], @@settings.default.level1.list )
 
 end
 
 
 def test03MethodAccessOnNew
 
-	@@settings.defaults.other = { a: { b: { c: 5 } } }
+	@@settings.default.other = { a: { b: { c: 5 } } }
 
-	assert_equal( 5, @@settings.defaults.other.a.b.c )
+	assert_equal( 5, @@settings.default.other.a.b.c )
 
 end
 
@@ -63,11 +52,11 @@ def test04SymbolizeKeys
 	assert_instance_of( Symbol, set.a  .keys.first )
 	assert_instance_of( Symbol, set.a.b.keys.first )
 
-	@@settings.defaults.other = { 'a' => { 'b' => { 'c' => 5 } } }
+	@@settings.default.other = { 'a' => { 'b' => { 'c' => 5 } } }
 
-	assert_instance_of( Symbol, @@settings.defaults.other    .keys.first )
-	assert_instance_of( Symbol, @@settings.defaults.other.a  .keys.first )
-	assert_instance_of( Symbol, @@settings.defaults.other.a.b.keys.first )
+	assert_instance_of( Symbol, @@settings.default.other    .keys.first )
+	assert_instance_of( Symbol, @@settings.default.other.a  .keys.first )
+	assert_instance_of( Symbol, @@settings.default.other.a.b.keys.first )
 
 end
 
@@ -77,6 +66,15 @@ def test05TestOverrideMethods
 	h = Settings[{ a: 2, a?: 5 }]
 
 	assert_equal( 5, h.a? )
+
+end
+
+
+def test06KeyDefault
+
+	h = Settings[{ default: 2}]
+
+	assert_equal( 2, h.default )
 
 end
 

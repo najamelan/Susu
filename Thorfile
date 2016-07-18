@@ -2,6 +2,7 @@ require          'thor'
 
 require          'awesome_print'
 require          'byebug'
+require          'pry'
 
 require_relative '../../lib/tidbits'
 require_relative 'test/run'

@@ -9,9 +9,33 @@ class Settings < Hashie::Mash
 #
 def self.load path, options = { reload: false }
 
-	options[ :reload ] && @_mashes and @_mashes.delete( path.to_s )
+	options[ :reload ] && @_mashes and @_mashes.delete( path.to_path )
 
-	super( path.to_s, options )
+	super( path.to_path, options ).dup
+
+end
+
+
+
+# I want to be able to create a key :default, so override the inherited method
+# :default.
+#
+def default arg = nil
+
+	if has_key?( :default )
+
+		arg == :default || arg == 'default' || arg == nil and return self[ :default ]
+
+	end
+
+	nil
+
+end
+
+
+def default= value
+
+	self[ :default ] = value
 
 end
 

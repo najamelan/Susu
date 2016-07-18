@@ -6,11 +6,13 @@ class ConfigProfile < Config
 
 
 
-def initialize( profile, defaultFiles, runtime = [] )
+def initialize( profile: :default, default: [], userset: [], runtime: [] )
 
-	super( defaultFiles, runtime )
+	@calledFrom   = caller_locations.first.absolute_path
 
-	@profile      = profile.to_sym || :defaults
+	super( default: default, userset: userset, runtime: runtime )
+
+	@profile      = profile.to_sym || :default
 	@inheritance  = []
 
 
@@ -29,7 +31,7 @@ def resolveProfile
 
 	profile = @profile
 
-	while profile != :defaults
+	while profile != :default
 
 		@allOptions.dig( profile ) or STDERR.puts "WARNING: Config profile [#{profile}] tries to inherit from unexisting profile [#{profile}]."
 
@@ -54,7 +56,7 @@ end
 def mergeProfiles
 
 	@inheritance or @inheritance = []
-	@inheritance.unshift :defaults
+	@inheritance.unshift :default
 
 
 	@default = Settings.new
@@ -66,7 +68,7 @@ def mergeProfiles
 	@inheritance.each do |parent|
 
 		# We will extract only the content of the profiles, without keeping the rest, so in the end
-		# we will only keep the currently running profile. The original will be stored in @allDefaults, etc.
+		# we will only keep the currently running profile. The original will be stored in @allDefault, etc.
 		#
 		@default.deep_merge!( @allDefault.dig( parent ) || Settings.new )
 		@userset.deep_merge!( @allUserset.dig( parent ) || Settings.new )

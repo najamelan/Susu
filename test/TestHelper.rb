@@ -17,9 +17,19 @@ def self.reset
 
 end
 
+end # class TestHelper
 
 
+
+class TestHelperChild < TestHelper
+
+def initialize( **userset )
+
+	setupOptions( userset )
+
+end
 
 end # class TestHelper
+
 end # module Options
 end # module TidBits

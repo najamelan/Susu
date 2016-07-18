@@ -8,38 +8,30 @@ class TestConfigProfile < Test::Unit::TestCase
 def self.startup
 
 	TestHelper.reset
-	@@config = ConfigProfile.new( :testing, 'data/default.yml'.relpath )
+	@@config = ConfigProfile.new( profile: :testing, default: 'data/default.yml' )
 	@@config.setup TestHelper
 
 end
 
 
-def setup
-
-
-end
-
-
-
 def test00ClassProperties
 
-	assert( TestHelper.settings.defaults.instance_of?( Settings ) )
-	assert( TestHelper.settings.userset .instance_of?( Settings ) )
-	assert( TestHelper.settings.runtime .instance_of?( Settings ) )
-	assert( TestHelper.options          .instance_of?( Settings ) )
+	assert( TestHelper.settings.default.instance_of?( Settings ) )
+	assert( TestHelper.settings.userset.instance_of?( Settings ) )
+	assert( TestHelper.settings.runtime.instance_of?( Settings ) )
+	assert( TestHelper.options         .instance_of?( Settings ) )
 
 end
 
 
 
-def test01ClassDefaults
+def test01ClassDefault
 
-	yml = YAML.load_file( 'data/default.yml'.relpath )
-	Hashie.symbolize_keys! yml
+	yml = Settings.load( 'data/default.yml'.relpath )
 
 	yml.delete( :include )
 
-	assert_equal( yml[ :defaults ], TestHelper.settings.defaults )
+	assert_equal( yml[ :default ], TestHelper.settings.default )
 
 end
 
@@ -47,15 +39,14 @@ end
 
 def test02ClassOptions
 
-	defaults = YAML.load_file( 'data/default.yml'.relpath )
-	yml      = YAML.load_file( 'data/user.yml'    .relpath )
-	yml2     = YAML.load_file( 'data/user2.yml'   .relpath )
+	default = Settings.load( 'data/default.yml'.relpath )
+	yml     = Settings.load( 'data/user.yml'   .relpath )
+	yml2    = Settings.load( 'data/user2.yml'  .relpath )
 
-	defaults.deep_merge!( yml ).deep_merge!( yml2 )
-	defaults.delete( 'include' )
+	default.deep_merge!( yml ).deep_merge!( yml2 )
+	default.delete( :include )
 
-	result = defaults[ 'defaults' ].deep_merge defaults[ 'testing' ]
-	Hashie.symbolize_keys! result
+	result = default[ :default ].deep_merge default[ :testing ]
 
 	assert_equal( result, TestHelper.options )
 

@@ -5,98 +5,386 @@ module Options
 
 class TestConfig < Test::Unit::TestCase
 
-def self.startup
-
-
-end
-
-
-def setup
-
-	TestHelper.reset
-	@@config = Config.new 'data/default.yml'.relpath
-	@@config.setup TestHelper
-
-end
-
-
 
 def test00ClassProperties
 
-	assert( TestHelper.settings.defaults.instance_of?( Settings ) )
-	assert( TestHelper.settings.userset .instance_of?( Settings ) )
-	assert( TestHelper.settings.runtime .instance_of?( Settings ) )
-	assert( TestHelper.options          .instance_of?( Settings ) )
-
-end
-
-
-
-def test01ClassDefaults
-
-	yml = YAML.load_file( 'data/default.yml'.relpath )
-	yml.delete( 'include' )
-
-	Hashie.symbolize_keys! yml
-
-	assert_equal( yml, TestHelper.settings.defaults )
-
-end
-
-
-
-def test02Overriding
-
-	assert_equal( TestHelper.options.testing.level1.level2testing.foo, 'chinchin' )
-
-end
-
-
-
-def test03Runtime
-
-	config = Config.new( 'data/default.yml'.relpath, 'data/runtime.yml'.relpath )
+	TestHelper.reset
+	config = TidBits::Options::Config.new
 	config.setup TestHelper
 
-	assert_equal( TestHelper.options          .runit.level1.level2testing.foo, 'chinchin' )
-	assert_equal( TestHelper.settings.runtime .runit.level1.level2testing.foo, 'chinchin' )
-	assert_equal( TestHelper.settings.userset .runit                         , nil        )
-	assert_equal( TestHelper.settings.defaults.runit                         , nil        )
+	assert_instance_of( Settings, TestHelper.settings.default )
+	assert_instance_of( Settings, TestHelper.settings.userset )
+	assert_instance_of( Settings, TestHelper.settings.runtime )
+	assert_instance_of( Settings, TestHelper.options          )
+	assert_equal(       config  , TestHelper.settings.cfgObj  )
 
 end
 
 
 
-def test04AssignChildToClass
+def test01Defaults
 
-	@@config.setup( TestHelper, :testing, :level1  )
-
-	assert_equal( 'chinchin', TestHelper.options.level2testing.foo )
-
-end
-
-
-
-def test05FilesAsString
-
-	assert_nothing_thrown { Config.new 'data/default.yml'.relpath.to_s }
-
-end
-
-
-
-def test06EmptyOptions
+	one = { a: 1 }
 
 	TestHelper.reset
-	config = Config.new( {} )
+	config = TidBits::Options::Config.new( default: one )
 	config.setup TestHelper
 
-	# ap TestHelper.settings
+	assert_equal( one   , TestHelper.settings.default )
+	assert_equal( {}    , TestHelper.settings.userset  )
+	assert_equal( {}    , TestHelper.settings.runtime  )
+	assert_equal( one   , TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj  )
 
-	assert( TestHelper.settings.defaults.instance_of?( Settings ) )
-	assert( TestHelper.settings.userset .instance_of?( Settings ) )
-	assert( TestHelper.settings.runtime .instance_of?( Settings ) )
-	assert( TestHelper.options          .instance_of?( Settings ) )
+end
+
+
+
+def test02DefaultsArray
+
+	one    = { a: 1, b: { c: 2, d: 3 } }
+	two    = {       b: {       d: 4 } }
+	expect = { a: 1, b: { c: 2, d: 4 } }
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( default: [ one, two ] )
+	config.setup TestHelper
+
+	assert_equal( expect, TestHelper.settings.default  )
+	assert_equal( {}    , TestHelper.settings.userset  )
+	assert_equal( {}    , TestHelper.settings.runtime  )
+	assert_equal( expect, TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test03OverridingAll
+
+	one    = { a: 1, b: { c: 2, d: 3 } }
+	two    = {       b: {       d: 4 } }
+	three  = {       b: { c: 5       } }
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( default: one, userset: two, runtime: three )
+	config.setup TestHelper
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new
+	config.setup TestHelper
+
+
+	assert_equal( {}    , TestHelper.settings.default  )
+	assert_equal( {}    , TestHelper.settings.userset  )
+	assert_equal( {}    , TestHelper.settings.runtime  )
+	assert_equal( {}    , TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test04Userset
+
+	one = { a: 1 }
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( userset: one )
+	config.setup TestHelper
+
+	assert_equal( {}    , TestHelper.settings.default  )
+	assert_equal( one   , TestHelper.settings.userset  )
+	assert_equal( {}    , TestHelper.settings.runtime  )
+	assert_equal( one   , TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test05UsersetArray
+
+	one    = { a: 1, b: { c: 2, d: 3 } }
+	two    = {       b: {       d: 4 } }
+	expect = { a: 1, b: { c: 2, d: 4 } }
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( userset: [ one, two ] )
+	config.setup TestHelper
+
+	assert_equal( {}    , TestHelper.settings.default  )
+	assert_equal( expect, TestHelper.settings.userset  )
+	assert_equal( {}    , TestHelper.settings.runtime  )
+	assert_equal( expect, TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test06Runtime
+
+	one = { a: 1 }
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( runtime: one )
+	config.setup TestHelper
+
+	assert_equal( {}    , TestHelper.settings.default  )
+	assert_equal( {}    , TestHelper.settings.userset  )
+	assert_equal( one   , TestHelper.settings.runtime  )
+	assert_equal( one   , TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test07RuntimeArray
+
+	one    = { a: 1, b: { c: 2, d: 3 } }
+	two    = {       b: {       d: 4 } }
+	expect = { a: 1, b: { c: 2, d: 4 } }
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( runtime: [ one, two ] )
+	config.setup TestHelper
+
+	assert_equal( {}    , TestHelper.settings.default  )
+	assert_equal( {}    , TestHelper.settings.userset  )
+	assert_equal( expect, TestHelper.settings.runtime  )
+	assert_equal( expect, TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test08Combine
+
+	one    = { a: 1, b: { c: 2, d: 3 } }
+	two    = {       b: {       d: 4 } }
+	three  = {       b: { c: 5       } }
+	expect = { a: 1, b: { c: 5, d: 4 } }
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( default: one, userset: two, runtime: three )
+	config.setup TestHelper
+
+	assert_equal( one   , TestHelper.settings.default  )
+	assert_equal( two   , TestHelper.settings.userset  )
+	assert_equal( three , TestHelper.settings.runtime  )
+	assert_equal( expect, TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test09FromRelFile
+
+	one    = { a: 1, b: { c: 2, d: 3 } }
+	two    = 'data/two.yml'.relpath
+	three  = {       b: { c: 5       } }
+	expect = { a: 1, b: { c: 5, d: 4 } }
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( default: one, userset: two, runtime: three )
+	config.setup TestHelper
+
+	two = Settings.load two
+
+	assert_equal( one   , TestHelper.settings.default  )
+	assert_equal( two   , TestHelper.settings.userset  )
+	assert_equal( three , TestHelper.settings.runtime  )
+	assert_equal( expect, TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test10FromRelString
+
+	one    = { a: 1, b: { c: 2, d: 3 } }
+	two    = 'data/two.yml'
+	three  = {       b: { c: 5       } }
+	expect = { a: 1, b: { c: 5, d: 4 } }
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( default: one, userset: two, runtime: three )
+	config.setup TestHelper
+
+	two = Settings.load two.relpath
+
+	assert_equal( one   , TestHelper.settings.default  )
+	assert_equal( two   , TestHelper.settings.userset  )
+	assert_equal( three , TestHelper.settings.runtime  )
+	assert_equal( expect, TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test11FromInclude
+
+	two    = 'data/two.yml'
+	one    = { a: 1, b: { c: 2, d: 3 }, include: two }
+	three  = {       b: { c: 5       } }
+	expect = { a: 1, b: { c: 5, d: 4 } }
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( default: one, runtime: three )
+	config.setup TestHelper
+
+	one.delete :include
+	two = Settings.load two.relpath
+
+	assert_equal( one   , TestHelper.settings.default  )
+	assert_equal( two   , TestHelper.settings.userset  )
+	assert_equal( three , TestHelper.settings.runtime  )
+	assert_equal( expect, TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test12SetupPartial
+
+	two    = 'data/two.yml'
+	one    = { a: 1, b: { c: 2, d: 3 }, include: two }
+	three  = {       b: { c: 5       } }
+	expect = { a: 1, b: { c: 5, d: 4 } }
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( default: one, runtime: three )
+	config.setup TestHelper, :b
+
+	one.delete :include
+	two = Settings.load two.relpath
+
+	assert_equal( one   [ :b ], TestHelper.settings.default  )
+	assert_equal( two   [ :b ], TestHelper.settings.userset  )
+	assert_equal( three [ :b ], TestHelper.settings.runtime  )
+	assert_equal( expect[ :b ], TestHelper.options           )
+	assert_equal( config      , TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test13Inheritance
+
+	two     = 'data/two.yml'
+	one     = { a: 1, b: { c: 2, d: 3 }, include: two }
+	three   = {       b: { c: 5       } }
+	expect  = { a: 1, b: { c: 5, d: 4 } }
+
+	threeC  = {       b: { c: 6       } }
+	expectC = { a: 1, b: { c: 6, d: 4 } }
+
+
+	TestHelper      .reset
+	TestHelperChild .reset
+
+
+	config  = TidBits::Options::Config.new( default: one, runtime: three  )
+	config.setup TestHelper
+
+	configC = TidBits::Options::Config.new( default: one, runtime: threeC )
+	configC.setup TestHelperChild
+
+
+	one.delete :include
+	two = Settings.load two.relpath
+
+	assert_equal( one    , TestHelper      .settings.default  )
+	assert_equal( two    , TestHelper      .settings.userset  )
+	assert_equal( three  , TestHelper      .settings.runtime  )
+	assert_equal( expect , TestHelper      .options           )
+	assert_equal( config , TestHelper      .settings.cfgObj   )
+
+	assert_equal( one    , TestHelperChild .settings.default  )
+	assert_equal( two    , TestHelperChild .settings.userset  )
+	assert_equal( threeC , TestHelperChild .settings.runtime  )
+	assert_equal( expectC, TestHelperChild .options           )
+	assert_equal( configC, TestHelperChild .settings.cfgObj   )
+
+end
+
+
+
+def test14IncludeFromFile
+
+	one    = 'data/one.yml'  .relpath
+	two    = 'data/two.yml'  .relpath
+	three  = 'data/three.yml'.relpath
+	expect = Settings.load( one ).deep_merge!( Settings.load( two ) ).deep_merge!( Settings.load( three ) )
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( default: 'data/include.yml' )
+	config.setup TestHelper
+
+
+	assert_equal( {}    , TestHelper.settings.default  )
+	assert_equal( expect, TestHelper.settings.userset  )
+	assert_equal( {}    , TestHelper.settings.runtime  )
+	assert_equal( expect, TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test15NestedInclude
+
+	one    = 'data/one.yml'  .relpath
+	two    = 'data/two.yml'  .relpath
+	three  = 'data/three.yml'.relpath
+	expect = Settings.load( one ).deep_merge!( Settings.load( two ) ).deep_merge!( Settings.load( three ) )
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( default: { include: 'data/include.yml' } )
+	config.setup TestHelper
+
+
+	assert_equal( {}    , TestHelper.settings.default  )
+	assert_equal( expect, TestHelper.settings.userset  )
+	assert_equal( {}    , TestHelper.settings.runtime  )
+	assert_equal( expect, TestHelper.options           )
+	assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test16AbsolutePath
+
+	defInclude = 'data/include.yml'.relpath.realpath
+	one        = 'data/one.yml'    .relpath
+	two        = 'data/two.yml'    .relpath
+	three      = 'data/three.yml'  .relpath
+
+	expect     = Settings.load( one ).deep_merge!( Settings.load( two ) ).deep_merge!( Settings.load( three ) )
+
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( default: { include: defInclude } )
+	config.setup TestHelper
+
+
+	parsed = [ defInclude, one, two, three ]
+
+
+	assert_equal( {}    , TestHelper.settings.default            )
+	assert_equal( expect, TestHelper.settings.userset            )
+	assert_equal( {}    , TestHelper.settings.runtime            )
+	assert_equal( expect, TestHelper.options                     )
+	assert_equal( config, TestHelper.settings.cfgObj             )
+	assert_equal( parsed, TestHelper.settings.cfgObj.parsedFiles )
 
 end
 

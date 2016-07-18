@@ -6,79 +6,207 @@ class Config
 
 attr_reader :parsedFiles
 
-def initialize( defaultFiles, runtime = [] )
 
-	@include     = []
-	@parsedFiles = []
+def initialize( default: [], userset: [], runtime: [] )
 
-	@default = parse     defaultFiles
-	@userset = deepParse @include.shift
-	@runtime = parseRunt runtime
+	@calledFrom  ||= caller_locations.first.absolute_path
+	@parsedFiles   = []
+
+	@defaultInputs, @defaultIncludes = processInputs( default )
+	@usersetInputs, @usersetIncludes = processInputs( userset )
+	@runtimeInputs, @runtimeIncludes = processInputs( runtime )
+
+	@default = (                    @defaultInputs                    ).reduce( &:deep_merge ) || Settings.new
+	@userset = ( @defaultIncludes + @usersetInputs + @usersetIncludes ).reduce( &:deep_merge ) || Settings.new
+	@runtime = (                    @runtimeInputs + @runtimeIncludes ).reduce( &:deep_merge ) || Settings.new
+
 	@options = @default.deep_merge( @userset ).deep_merge( @runtime )
 
 end
 
 
-def setup( klass, *options, inclModule: true )
+# Put options on a class. It will create a settings and an options object on your class with
+# the following layout:
+#
+#  - settings.cfgObj  => A reference to this TidBits::Options::Config object.
+#
+#  - settings.default => usually application defaults that ship with the app
+#  - settings.userset => extra configuration files from /etc or the home directory
+#  - settings.runtime => anything you want to change on runtime
+#
+#  - options          => a deep merge of the 3 settings above.
+#
+# If a class is a subclass of another class that
+#
+# @param  klass       [Class/Module] The class onto which to put settings.
+# @param  options     [Symbol, ...]  A list of symbols representing the path within the total options you want to use.
+#                                    Usually when classes can be configured, you only want them to have a subset.
+# @param  inclModule  [Boolean]      Whether to include a module that allows an instance of this class to call
+#                                    `setupOptions( runtime )` in order to have it's own options object.
+# @param  inherit     [Boolean]      Whether to inherit options from superclass (own options will override with deep_merge).
+#
+# @return self
+#
+# @example Usage:
+#   # It will dig into the entire options to retrieve options[ :Data ][ :Xml ] so this class
+#   # only considers this subset as their options.
+#   #
+#   configObj.setup( Data::Xml, :Data, :Xml )
+#
+#   configObj.setup( App ) # The app object gets everything.
+#
+#   # On your classes you can access options as:
+#   #
+#   App.options.Data.Xml == Data::Xml.options
+#
+# @see Configurable Configurable: the module that inclModule parameter refers to.
+#
+def setup( klass, *options, inclModule: true, inherit: true )
 
 	settings = Settings.new
 
-	settings.defaults = @default.dig( *options ) || Settings.new
-	settings.userset  = @userset.dig( *options ) || Settings.new
-	settings.runtime  = @runtime.dig( *options ) || Settings.new
+	settings.default = @default.dig( *options ) || Settings.new
+	settings.userset = @userset.dig( *options ) || Settings.new
+	settings.runtime = @runtime.dig( *options ) || Settings.new
+	opts             = @options.dig( *options ) || Settings.new
+
+
+	sup = klass.superclass
+
+	if inherit && sup.respond_to?( :settings ) && sup.settings.respond_to?( :cfgObj )
+
+		 settings =  sup.settings.deep_merge settings
+		 opts     =  sup.options .deep_merge opts
+
+	end
+
+
+	settings.cfgObj  = self
 
 	klass.extend settings.to_module( 'settings' )
-
-	opts = @options.dig( *options ) || Settings.new
-
-	klass.extend opts.to_module( 'options' )
+	klass.extend opts    .to_module( 'options'  )
 
 	inclModule and klass.include Configurable
 
-end
+	self
 
+end
 
 
 
 protected
 
 
-def parseRunt inputs
+def processInputs inputs
 
-	output = Settings.new
+	inputs   = Array.eat( inputs )
+	output   = []
+	includes = []
+	tmpIncls = []
+	from     = @calledFrom
 
-	[*inputs].each do |input|
+	inputs.each do |input|
 
-		if input.kind_of? Hash
+		# If it's a file
+		#
+		if input.kind_of?( Hash )
 
-			output.deep_merge! input
-			next
+			input = input.to_settings
+
+		else
+
+			input = filename2array( input, @calledFrom )
+			from  = input.first
+
+			input.map!( &method( :parseFile) )
 
 		end
 
-		output.deep_merge! deepParse( input )
+		# Since input may now be a directory listing, make sure it's an array and loop over it.
+		#
+		input = Array.eat( input )
+
+		input.each do |elem|
+
+			[ output, tmpIncls ].nest_concat! extractIncludes( elem, from )
+
+		end
 
 	end
 
-	output
+
+	while tmpIncls.length > 0
+
+		out, tmpIncls = processInputs tmpIncls
+
+		includes += out
+
+	end
+
+	includes.flatten!
+	return output, includes
 
 end
 
 
 
-# This will parse all files and directories passed to it, and then check for the key
-# include. If there are includes, parse them recursively.
+def filename2array file, from
+
+	file.respond_to?( :to_path ) or raise ArgumentError.new "Unsupported input type for TidBits::Options::Config: #{file.ai} or path did not exist. Supported are Hash and subclasses or String/Pathname representing a file or a directory or something that resolves to a valid string path when answering to #to_path."
+
+	file = file.to_path.path
+
+	if ! file.exist?
+
+		if file.relpath( from ).exist?
+
+			file = file.relpath( from )
+
+		else
+
+			raise ArgumentError.new "Could not find configuration file: #{file.ai} included from #{from}."
+
+		end
+
+	end
+
+	file.directory?  and  out = file.glob( '**/*.yml' )
+	file.directory?   or  out = file
+
+	out = Array.eat out
+	out.flatten!
+	return out
+
+end
+
+
+# Take the include key from each input and extract it..
+# Delete the include key on the original hash
 #
-def deepParse files
+def extractIncludes inputs, from
 
-	config = parse files
-	more   = @include.shift
+	inputs   = Array.eat( inputs )
+	includes = []
 
-	more and config.deep_merge! deepParse( more )
-	config
+	inputs.each_with_index do |out, i|
+
+		incls = Array.eat( out[ :include ] )
+		incls.empty? and next
+
+		incls.each do |incl|
+
+			includes += filename2array( incl, from )
+
+		end
+
+		inputs[ i ].delete :include
+
+	end
+
+	includes.flatten!
+	return inputs, includes
 
 end
-
 
 
 # Parses the configuration files
@@ -86,86 +214,18 @@ end
 # @param  [String|Array<String>] files File or directory to parse or an array of such
 # @return [TidBits::Options:Settings]
 #
-def parse files
+def parseFile path
 
-	files  = *files
-	config = Settings.new
+	if @parsedFiles.include? path
 
-
-	if files.length == 1 && files.first.path.directory?
-
-		files = Dir[ files.first.join '**/*.yml' ]
+		STDERR.puts "WARNING: Trying to include configuration path twice: [#{path}]. Skipping..."
+		return nil
 
 	end
 
 
-	files.each do |file|
-
-		file = file.path.realpath
-
-		# TODO: save the location of the code that created this object and try relative path before failing.
-		#
-		if ! file.exist?
-
-			raise LoadError.new "WARNING: Trying to load unexisting configuration file: #{ file }. Config files parsed so far: #{@parsedFiles.ai}"
-
-			next
-
-		end
-
-
-		if file.directory?
-
-			config.deep_merge! parse( file )
-			next
-
-		end
-
-
-		if @parsedFiles.include? file
-
-			STDERR.puts "WARNING: Trying to include configuration file twice: [#{file}]. Skipping..."
-			next
-
-		end
-
-
-		loaded = Settings.load( file, reload: true )
-
-		config.deep_merge! loaded
-		@parsedFiles << file
-
-
-		# We don't override included files, so different config files can specify different
-		# includes, so it's not possible in one config file to specify that another included
-		# file shouldn't be included.
-		#
-		[*loaded.include].each do |f|
-
-			fincl = f.path
-
-			if f.path.exist?
-
-				@include << fincl
-
-			elsif f.relpath( file ).exist?
-
-				@include << f.relpath( file )
-
-			else
-
-				raise LoadError.new "Cannot find configuration file [#{f}] included from #{file}"
-
-			end
-
-		end
-
-		config.delete :include
-
-	end
-
-
-	config
+	@parsedFiles << path
+	Settings.load( path, reload: true )
 
 end
 

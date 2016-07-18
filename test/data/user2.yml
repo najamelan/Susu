@@ -9,3 +9,14 @@ testing:
     level2testing:
 
       foo: chinchin
+
+  TestHelper:
+
+      helperOption: one
+      second      : two
+
+  TestHelperChild:
+
+      helperOption: three
+      third       : four
+
