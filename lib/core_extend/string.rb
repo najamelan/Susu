@@ -26,4 +26,11 @@ class String
 	end
 
 
+	def to_path
+
+		self
+
+	end
+
+
 end # class String
