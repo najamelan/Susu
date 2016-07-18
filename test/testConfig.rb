@@ -228,7 +228,27 @@ end
 
 
 
-def test11FromInclude
+def test11FromDirectory
+
+	data = 'data'
+
+	TestHelper.reset
+	assert_nothing_raised { TidBits::Options::Config.new( default: data ) }
+	# config.setup TestHelper
+
+	# two = Settings.load two
+
+	# assert_equal( one   , TestHelper.settings.default  )
+	# assert_equal( two   , TestHelper.settings.userset  )
+	# assert_equal( three , TestHelper.settings.runtime  )
+	# assert_equal( expect, TestHelper.options           )
+	# assert_equal( config, TestHelper.settings.cfgObj   )
+
+end
+
+
+
+def test12FromInclude
 
 	two    = 'data/two.yml'
 	one    = { a: 1, b: { c: 2, d: 3 }, include: two }
@@ -252,7 +272,7 @@ end
 
 
 
-def test12SetupPartial
+def test13SetupPartial
 
 	two    = 'data/two.yml'
 	one    = { a: 1, b: { c: 2, d: 3 }, include: two }
@@ -276,7 +296,7 @@ end
 
 
 
-def test13Inheritance
+def test14Inheritance
 
 	two     = 'data/two.yml'
 	one     = { a: 1, b: { c: 2, d: 3 }, include: two }
@@ -317,7 +337,7 @@ end
 
 
 
-def test14IncludeFromFile
+def test15IncludeFromFile
 
 	one    = 'data/one.yml'  .relpath
 	two    = 'data/two.yml'  .relpath
@@ -339,7 +359,7 @@ end
 
 
 
-def test15NestedInclude
+def test16NestedInclude
 
 	one    = 'data/one.yml'  .relpath
 	two    = 'data/two.yml'  .relpath
@@ -361,7 +381,7 @@ end
 
 
 
-def test16AbsolutePath
+def test17AbsolutePath
 
 	defInclude = 'data/include.yml'.relpath.realpath
 	one        = 'data/one.yml'    .relpath
