@@ -9,7 +9,7 @@ class Pathname
 
 	end
 
-	def rpath( from = caller_locations( 1 ).first.absolute_path )
+	def relpath( from = caller_locations( 1 ).first.absolute_path )
 
 		Pathname File.join( File.dirname( from ), self.to_path )
 
