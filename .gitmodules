@@ -7,3 +7,6 @@
 [submodule "lib/options"]
 	path = lib/options
 	url = git@github.com:najamelan/TidBits_Ruby_Options.git
+[submodule "lib/fs"]
+	path = lib/fs
+	url = git@github.com:najamelan/TidBits_Ruby_Fs.git
