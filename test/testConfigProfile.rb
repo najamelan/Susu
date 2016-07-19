@@ -62,8 +62,9 @@ end
 
 
 
-def test04Runtime
+def test04Overriding
 
+	assert_raise( RuntimeError ) { ConfigProfile.new profile: :include }
 
 end
 

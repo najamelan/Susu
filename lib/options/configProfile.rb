@@ -12,7 +12,9 @@ def initialize( profile: :default, default: [], userset: [], runtime: [] )
 
 	super( default: default, userset: userset, runtime: runtime )
 
-	@profile      = profile.to_sym || :default
+	@profile = profile.to_sym || :default
+	@profile == :include and raise "FATAL: The profile cannot be called [include]. Include is the only reserved name."
+
 	@inheritance  = []
 
 
