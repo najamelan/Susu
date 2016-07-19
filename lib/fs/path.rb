@@ -51,7 +51,11 @@ class Path < Pathname
 
 		require 'fileutils'
 
-		FileUtils.mkpath( self.join( subPath ).to_path )
+		make = self.join( subPath )
+
+		FileUtils.mkpath( make.to_path )
+
+		make
 
 	end
 
@@ -65,9 +69,11 @@ class Path < Pathname
 	#
 	def mkdir( subPath = '', mode = 0777 )
 
-		Dir.mkdir( self.join( subPath ).to_path, mode )
+		make = self.join( subPath )
 
-		self.join( subPath )
+		Dir.mkdir( make.to_path, mode )
+
+		make
 
 	end
 
