@@ -8,6 +8,7 @@ module TidBits
 
 [
 	  { name: 'CoreExtend', file: 'core_extend/lib/core_extend'  } \
+	, { name: 'Fs'        , file: 'fs/lib/fs'                    } \
 	, { name: 'Options'   , file: 'options/lib/options'          } \
 	, { name: 'Susu'      , file: 'susu/lib/susu'                } \
 
