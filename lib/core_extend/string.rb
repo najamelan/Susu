@@ -1,5 +1,3 @@
-require 'pathname'
-
 
 class String
 
@@ -8,7 +6,9 @@ class String
 	#
 	def path
 
-		Pathname self
+		require_relative '../../../fs/lib/fs'
+
+		TidBits::Fs::Path.new self
 
 	end
 
@@ -21,7 +21,9 @@ class String
 	#
 	def relpath( from = caller_locations( 1 ).first.absolute_path )
 
-		Pathname File.join( File.dirname( from ), self )
+		require_relative '../../../fs/lib/fs'
+
+		TidBits::Fs::Path.new File.join( File.dirname( from ), self )
 
 	end
 
