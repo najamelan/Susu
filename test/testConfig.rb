@@ -9,8 +9,13 @@ class TestConfig < Test::Unit::TestCase
 def test00ClassProperties
 
 	TestHelper.reset
+
+	assert( ! TestHelper.configured? )
+
 	config = TidBits::Options::Config.new
 	config.setup TestHelper
+
+	assert( TestHelper.configured? )
 
 	assert_instance_of( Settings, TestHelper.settings.default )
 	assert_instance_of( Settings, TestHelper.settings.userset )
@@ -310,12 +315,15 @@ def test14Inheritance
 	TestHelper      .reset
 	TestHelperChild .reset
 
+	assert( ! TestHelperChild.configured? )
 
 	config  = TidBits::Options::Config.new( default: one, runtime: three  )
 	config.setup TestHelper
 
 	configC = TidBits::Options::Config.new( default: one, runtime: threeC )
 	configC.setup TestHelperChild
+
+	assert( TestHelperChild.configured? )
 
 
 	one.delete :include

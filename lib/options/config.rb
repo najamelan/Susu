@@ -88,6 +88,8 @@ def setup( klass, *options, inclModule: true, inherit: true )
 
 	inclModule and klass.include Configurable
 
+	klass.singleton_methods.include?( :class_configured ) and klass.class_configured( self )
+
 	self
 
 end
