@@ -1,4 +1,4 @@
-require 'test/unit/testsuite'
+require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
 
