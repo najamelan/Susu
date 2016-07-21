@@ -7,6 +7,19 @@ module Fs
 class Path < Pathname
 
 
+# Make a new Fs::Path object.
+#
+# @param path [Object.respond_to?( :to_path )] The path, may be any object that responds to #to_path. Defaults to the current working directory.
+#
+# @return [TidBits::Fs::Path] The new instance.
+#
+def self.new path = self.pwd
+
+	super path.to_path
+
+end
+
+
 def self.pwd
 
 	# When the current working directory gets deleted, things go pear shaped.
