@@ -108,9 +108,11 @@ end
 #
 def rm_secure( force = false )
 
-  require 'fileutils'
+	exist? or return
 
-  FileUtils.remove_entry_secure( @path, force )
+	require 'fileutils'
+
+	FileUtils.remove_entry_secure( @path, force )
 
 end
 
