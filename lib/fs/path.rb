@@ -130,16 +130,27 @@ def rm_secure( force = false )
 end
 
 
-def join( *args )
+# Joins the given paths onto self to create a new Path object. Does not access the filesystem.
+#
+# @example Usage
+#   "/usr".path.join 'bin', 'ruby' # Fs::Path:/usr/bin/ruby
+#                                  # is the same as
+#   "/usr".path + "bin/ruby"       # Fs::Path:/usr/bin/ruby
+#
+# @param  pieces [Object.respond_to?( :to_path )] One or more pieces to add to the path.
+#
+# @return A Fs::Path to the new location.
+#
+def join( *pieces )
 
-  args.unshift self
+  pieces.unshift self
 
-  result = args.pop
+  result = pieces.pop
   result.kind_of?( self.class )  or  result = self.class.new( result )
 
   result.absolute? and return result
 
-  args.reverse_each do |arg|
+  pieces.reverse_each do |arg|
 
     arg.kind_of?( self.class )  or  arg = self.class.new( arg )
     result = arg + result
@@ -147,12 +158,23 @@ def join( *args )
     result.absolute? and return result
 
   end
-  ap result
+
   result
 
 end
 
 
+# Joins the give path onto self to create a new Path object. Does not access the filesystem.
+#
+# @example Usage
+#   "/usr".path.join 'bin', 'ruby' # Fs::Path:/usr/bin/ruby
+#                                  # is the same as
+#   "/usr".path + "bin/ruby"       # Fs::Path:/usr/bin/ruby
+#
+# @param  other [Object.respond_to?( :to_path )] A pieces to add to the path.
+#
+# @return A Fs::Path to the new location.
+#
 def +( other )
 
   other.kind_of?( self.class )  or  other = self.class.new( other )
