@@ -7,6 +7,31 @@ module Fs
 class Path < Pathname
 
 
+def self.pwd
+
+	# When the current working directory gets deleted, things go pear shaped.
+	# Dir.pwd will throw an exception and even `pwd` will choke. In that case
+	# just set the old pwd to the users home dir.
+	#
+	pwd = ''
+
+	begin
+
+		pwd = Dir.pwd
+
+	rescue Errno::ENOENT
+
+		Dir.chdir
+		pwd = Dir.pwd
+
+	end
+
+	pwd.path
+
+end
+
+
+
 # Runs Pathname.glob
 #
 # @param  pattern  The pattern will be created by doing self + pattern if
@@ -143,7 +168,7 @@ end
 
 def chdir &block
 
-	old    = Dir.pwd
+	old    = self.class.pwd
 	result = Dir.chdir dirname
 
 	block_given? or return result
