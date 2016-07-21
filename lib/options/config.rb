@@ -166,7 +166,7 @@ def filename2array file, from
 
 		else
 
-			raise ArgumentError.new "Could not find configuration file: #{file.ai} included from #{from}."
+			raise ArgumentError.new "Could not find configuration file: #{file.to_path} included from #{from.to_path}."
 
 		end
 
