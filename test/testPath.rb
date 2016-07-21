@@ -83,6 +83,18 @@ end
 
 def test03Mkpath
 
+	path = @@tmp + '/some'
+	f = path.path.mkpath
+
+	assert_instance_of( Path, f      )
+	assert            ( f.exist?     )
+	assert            ( f.directory? )
+
+end
+
+
+def test04MkpathSub
+
 	FileUtils.mkpath @@tmp
 
 	f = @@tmp.path
