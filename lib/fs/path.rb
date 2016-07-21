@@ -141,6 +141,22 @@ def touch( subPath = '', **options )
 end
 
 
+def chdir &block
+
+	old    = Dir.pwd
+	result = Dir.chdir dirname
+
+	block_given? or return result
+
+	result = yield Pathname.pwd
+
+	Dir.chdir old
+
+	result
+
+end
+
+
 
 end # class  Pathname
 end # module Fs
