@@ -10,3 +10,6 @@
 [submodule "lib/fs"]
 	path = lib/fs
 	url = git@github.com:najamelan/TidBits_Ruby_Fs.git
+[submodule "lib/facts"]
+	path = lib/facts
+	url = git@github.com:najamelan/TidBits_Ruby_Facts.git
