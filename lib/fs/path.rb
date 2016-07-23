@@ -48,7 +48,8 @@ end
 # Runs Pathname.glob
 #
 # @param  pattern  The pattern will be created by doing self + pattern if
-#                  self.directory? otherwise, it will be self.dirname + pattern
+#                  self.directory? otherwise, it will be self.dirname + pattern.
+#                  Pattern should not start with a slash, otherwise it would be considered an absolute path.
 # @param  flags    The flags as in File::Constants, see Dir.glob
 # @param  block    The block will receive the pathname of each found path as parameter.
 #
@@ -59,7 +60,15 @@ def glob( pattern, flags = 0, &block )
 	p = self
 	p.directory? or p = p.dirname
 
-	Dir.glob( ( p + pattern ), flags, &block ).map!( &:path )
+	p = ( p + pattern ).to_path
+
+	block_given?  or  return Dir.glob( p, flags ).map!( &:path )
+
+	Dir.glob( p, flags ) do |found|
+
+		yield found.path
+
+	end
 
 end
 
