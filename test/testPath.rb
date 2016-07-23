@@ -9,14 +9,14 @@ class TestPath < Test::Unit::TestCase
 def self.startup
 
 	@@user = Etc.getpwuid( Process.euid )
-	@@tmp  = FileUtils.mkpath( "/run/shm/#{ @@user.uid }/tidbits/fs/#{randomString}/" ).first
+	@@tmpd = FileUtils.mkpath( "/run/shm/#{ @@user.uid }/tidbits/fs/#{randomString}/" ).first
 
 end
 
 
 def self.shutdown
 
-	FileUtils.remove_entry_secure @@tmp
+	FileUtils.remove_entry_secure @@tmpd
 
 end
 
@@ -32,7 +32,7 @@ end
 
 def setup
 
-	@@tmp += method_name
+	@@tmp = File.join @@tmpd, method_name
 
 end
 
