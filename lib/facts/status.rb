@@ -5,25 +5,25 @@ module Status
 
 def initialize( *a, &b ) super; @status = [ :fresh ].to_set; end
 
-def passAnalyze;  @status << :passA;  @status -= [ :fresh, :failA ]  end
-def passCheck  ;  @status << :passC;  @status -= [ :fresh, :failC ]  end
-def passFix    ;  @status << :passF;  @status -= [ :fresh, :failF ]  end
+def analyzePassed;  @status << :analyzePassed;  @status -= [:fresh, :analyzeFailed ];  @status  end
+def checkPassed  ;  @status << :checkPassed  ;  @status -= [:fresh, :checkFailed   ];  @status  end
+def fixPassed    ;  @status << :fixPassed    ;  @status -= [:fresh, :fixFailed     ];  @status  end
 
-def failAnalyze;  @status << :failA;  @status -= [ :fresh, :passA ]  end
-def failCheck  ;  @status << :failC;  @status -= [ :fresh, :passC ]  end
-def failFix    ;  @status << :failF;  @status -= [ :fresh, :passF ]  end
+def analyzeFailed;  @status << :analyzeFailed;  @status -= [:fresh, :analyzePassed ];  @status  end
+def checkFailed  ;  @status << :checkFailed  ;  @status -= [:fresh, :checkPassed   ];  @status  end
+def fixFailed    ;  @status << :fixFailed    ;  @status -= [:fresh, :fixPassed     ];  @status  end
 
 def fresh?        ;  @status.include? :fresh  end
-def passedAnalyze?;  @status.include? :passA  end
-def passedCheck?  ;  @status.include? :passC  end
-def passedFix?    ;  @status.include? :passF  end
-def failedAnalyze?;  @status.include? :failA  end
-def failedCheck?  ;  @status.include? :failC  end
-def failedFix?    ;  @status.include? :failF  end
+def analyzePassed?;  @status.include? :analyzePassed  end
+def checkPassed?  ;  @status.include? :checkPassed    end
+def fixPassed?    ;  @status.include? :fixPassed      end
+def analyzeFailed?;  @status.include? :analyzeFailed  end
+def checkFailed?  ;  @status.include? :checkFailed    end
+def fixFailed?    ;  @status.include? :fixFailed      end
 
-def analyzed?;  @status.intersect? [ :failA, :passA ].to_set end
-def checked? ;  @status.intersect? [ :failC, :passC ].to_set end
-def fixed?   ;  @status.intersect? [ :failF, :passF ].to_set end
+def analyzed?;  @status.intersect? [ :analyzeFailed, :analyzePassed ].to_set end
+def checked? ;  @status.intersect? [ :checkFailed  , :checkPassed   ].to_set end
+def fixed?   ;  @status.intersect? [ :fixFailed    , :fixPassed     ].to_set end
 
 def reset;  @status = [ :fresh ].to_set  end
 

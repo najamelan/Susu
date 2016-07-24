@@ -39,7 +39,7 @@ def analyze found
 
 	setActual found
 
-	passAnalyze
+	analyzePassed
 	@status
 
 end
@@ -58,7 +58,7 @@ def check
 
 	analyze
 
-	@sm.desire( @address ) == @sm.actual( @address ) ? passCheck : failCheck
+	@sm.desire( @address ) == @sm.actual( @address ) ? checkPassed : checkFailed
 
 	@status
 
@@ -72,7 +72,7 @@ def fix &block
 
 	check
 
-	passedCheck? ? passFix : failFix
+	checkPassed? ? fixPassed : fixFailed
 
 	@status
 

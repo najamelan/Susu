@@ -101,13 +101,14 @@ def initialize( **opts )
 
 	super
 
-	@path = options.path
-
 end
 
 
 
 def analyze
+
+	ok = dependOn( [ options.path, :exist ], true )
+	ok or return analyzeFailed
 
 	super @path.exist?
 

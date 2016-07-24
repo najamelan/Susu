@@ -53,11 +53,11 @@ def test01Exist
 	f = Path.new path: @@tmpdir
 
 	assert_equal( [ :passA ].to_set, f.analyze )
-	assert      ( f.passedAnalyze?  )
+	assert      ( f.analyzePassed?  )
 
 	assert_equal( [ :passA, :passC ].to_set, f.check )
-	assert      ( f.passedAnalyze? )
-	assert      ( f.passedCheck?   )
+	assert      ( f.analyzePassed? )
+	assert      ( f.checkPassed?   )
 
 
 	# Test create file
@@ -68,16 +68,16 @@ def test01Exist
 	g = Path.new( path: path )
 
 	assert_equal( [ :passA ].to_set, g.analyze )
-	assert      ( g.passedAnalyze? )
+	assert      ( g.analyzePassed? )
 
 	assert_equal( [ :passA, :failC ].to_set, g.check )
-	assert      ( g.passedAnalyze? )
-	assert      ( ! g.passedCheck? )
+	assert      ( g.analyzePassed? )
+	assert      ( ! g.checkPassed? )
 
 	assert_equal( [ :passA, :passC, :passF ].to_set, g.fix )
-	assert      ( g.passedAnalyze? )
-	assert      ( g.passedCheck?   )
-	assert      ( g.passedFix?     )
+	assert      ( g.analyzePassed? )
+	assert      ( g.checkPassed?   )
+	assert      ( g.fixPassed?     )
 	assert      ( path.exist?      )
 	assert      ( path.file?       )
 
@@ -88,16 +88,16 @@ def test01Exist
 	h = Path.new( path: path, exist: false )
 
 	assert_equal( [ :passA ].to_set, h.analyze )
-	assert      ( h.passedAnalyze? )
+	assert      ( h.analyzePassed? )
 
 	assert_equal( [ :passA, :failC ].to_set, h.check )
-	assert      ( h.passedAnalyze? )
-	assert      ( ! h.passedCheck? )
+	assert      ( h.analyzePassed? )
+	assert      ( ! h.checkPassed? )
 
 	assert_equal( [ :passA, :passC, :passF ].to_set, h.fix )
-	assert      ( h.passedAnalyze? )
-	assert      ( h.passedCheck?   )
-	assert      ( h.passedFix?     )
+	assert      ( h.analyzePassed? )
+	assert      ( h.checkPassed?   )
+	assert      ( h.fixPassed?     )
 	assert      ( ! path.exist?    )
 
 
@@ -109,16 +109,16 @@ def test01Exist
 	g = Path.new( path: path, createType: :directory )
 
 	assert_equal( [ :passA ].to_set, g.analyze )
-	assert      ( g.passedAnalyze? )
+	assert      ( g.analyzePassed? )
 
 	assert_equal( [ :passA, :failC ].to_set, g.check )
-	assert      ( g.passedAnalyze? )
-	assert      ( ! g.passedCheck? )
+	assert      ( g.analyzePassed? )
+	assert      ( ! g.checkPassed? )
 
 	assert_equal( [ :passA, :passC, :passF ].to_set, g.fix )
-	assert      ( g.passedAnalyze? )
-	assert      ( g.passedCheck?   )
-	assert      ( g.passedFix?     )
+	assert      ( g.analyzePassed? )
+	assert      ( g.checkPassed?   )
+	assert      ( g.fixPassed?     )
 	assert      ( path.exist?      )
 	assert      ( path.directory?  )
 
