@@ -52,12 +52,12 @@ def test01Exist
 
 	f = Path.new path: @@tmpdir
 
-	assert_equal( [ :passA ].to_set, f.analyze )
-	assert      ( f.analyzePassed?  )
+	assert( f.analyze        )
+	assert( f.analyzePassed? )
 
-	assert_equal( [ :passA, :passC ].to_set, f.check )
-	assert      ( f.analyzePassed? )
-	assert      ( f.checkPassed?   )
+	assert( f.check          )
+	assert( f.analyzePassed? )
+	assert( f.checkPassed?   )
 
 
 	# Test create file
@@ -67,19 +67,19 @@ def test01Exist
 	assert( ! path.exist? )
 	g = Path.new( path: path )
 
-	assert_equal( [ :passA ].to_set, g.analyze )
-	assert      ( g.analyzePassed? )
+	assert(   g.analyze        )
+	assert(   g.analyzePassed? )
 
-	assert_equal( [ :passA, :failC ].to_set, g.check )
-	assert      ( g.analyzePassed? )
-	assert      ( ! g.checkPassed? )
+	assert( ! g.check          )
+	assert(   g.analyzePassed? )
+	assert( ! g.checkPassed? )
 
-	assert_equal( [ :passA, :passC, :passF ].to_set, g.fix )
-	assert      ( g.analyzePassed? )
-	assert      ( g.checkPassed?   )
-	assert      ( g.fixPassed?     )
-	assert      ( path.exist?      )
-	assert      ( path.file?       )
+	assert(   g.fix            )
+	assert(   g.analyzePassed? )
+	assert(   g.checkPassed?   )
+	assert(   g.fixPassed?     )
+	assert(   path.exist?      )
+	assert(   path.file?       )
 
 
 	# Test remove file
@@ -87,18 +87,18 @@ def test01Exist
 	assert( path.exist? )
 	h = Path.new( path: path, exist: false )
 
-	assert_equal( [ :passA ].to_set, h.analyze )
-	assert      ( h.analyzePassed? )
+	assert(   h.analyze        )
+	assert(   h.analyzePassed? )
 
-	assert_equal( [ :passA, :failC ].to_set, h.check )
-	assert      ( h.analyzePassed? )
-	assert      ( ! h.checkPassed? )
+	assert( ! h.check          )
+	assert(   h.analyzePassed? )
+	assert( ! h.checkPassed? )
 
-	assert_equal( [ :passA, :passC, :passF ].to_set, h.fix )
-	assert      ( h.analyzePassed? )
-	assert      ( h.checkPassed?   )
-	assert      ( h.fixPassed?     )
-	assert      ( ! path.exist?    )
+	assert(   h.fix            )
+	assert(   h.analyzePassed? )
+	assert(   h.checkPassed?   )
+	assert(   h.fixPassed?     )
+	assert( ! path.exist?      )
 
 
 	# Test create directory
@@ -106,21 +106,21 @@ def test01Exist
 	path = @@tmpdir + 'doesntexist'
 
 	assert( ! path.exist? )
-	g = Path.new( path: path, createType: :directory )
+	i = Path.new( path: path, createType: :directory )
 
-	assert_equal( [ :passA ].to_set, g.analyze )
-	assert      ( g.analyzePassed? )
+	assert(   i.analyze        )
+	assert(   i.analyzePassed? )
 
-	assert_equal( [ :passA, :failC ].to_set, g.check )
-	assert      ( g.analyzePassed? )
-	assert      ( ! g.checkPassed? )
+	assert( ! i.check          )
+	assert(   i.analyzePassed? )
+	assert( ! i.checkPassed? )
 
-	assert_equal( [ :passA, :passC, :passF ].to_set, g.fix )
-	assert      ( g.analyzePassed? )
-	assert      ( g.checkPassed?   )
-	assert      ( g.fixPassed?     )
-	assert      ( path.exist?      )
-	assert      ( path.directory?  )
+	assert(   i.fix            )
+	assert(   i.analyzePassed? )
+	assert(   i.checkPassed?   )
+	assert(   i.fixPassed?     )
+	assert(   path.exist?      )
+	assert(   path.directory?  )
 
 end
 
