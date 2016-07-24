@@ -9,9 +9,10 @@ default:
 
   Path:
 
-    params     : [ path, createType ]
-    indexKeys  : path
-    exist      : true
+    params        : [ path, createType, followSymlinks ]
+    indexKeys     : path
+    exist         : true
+    followSymlinks: true
 
     # This is just a default value for Conditions::Path::Exist when it needs to fix
     # a non existing file. If a type is specified, that will be used instead.

@@ -97,20 +97,10 @@ module Path
 
 class Exist < Condition
 
-def initialize( **opts )
-
-	super
-
-end
-
-
 
 def analyze
 
-	ok = dependOn( [ options.path, :exist ], true )
-	ok or return analyzeFailed
-
-	super @path.exist?
+	super options.path.exist?
 
 end
 
@@ -121,17 +111,61 @@ def fix
 
 		if ! @expect
 
-			@path.rm_secure( options.force )
+			options.path.rm_secure( options.force )
 
 		else
 
 			type = @sm.desire( @factAddress )[ :type ]  ||  options.createType
 
-			type == :file ? @path.touch : @path.mkdir
+			type == :file ? options.path.touch : options.path.mkdir
 
 		end
 
 		true
+
+	end
+
+	@status
+
+end
+
+end # class Exist < Condition
+
+
+
+class Type < Condition
+
+def initialize( **opts )
+
+	super
+
+end
+
+
+
+def analyze
+
+	dependOn( @factAddress.dup.push( :exist ), true )  or  return analyzeFailed
+
+	stat = options.followSymlinks  ?  options.path.stat  :  options.path.lstat
+
+	super stat.ftype.to_sym
+
+end
+
+
+def fix
+
+	super do
+
+		options.path.rm_secure
+
+		exist = @sm.conditions( @factAddress.dup << :exist )
+
+		exist.reset
+		exist.fix
+
+		exist.fixPassed?
 
 	end
 

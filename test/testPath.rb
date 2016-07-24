@@ -52,13 +52,19 @@ def test01Exist
 
 	f = Path.new path: @@tmpdir
 
-	assert( f.analyze        )
-	assert( f.analyzePassed? )
+	assert(   f.analyze            )
+	assert(   f.analyzePassed?     )
 
-	assert( f.check          )
-	assert( f.analyzePassed? )
-	assert( f.checkPassed?   )
+	assert(   f.check              )
+	assert(   f.analyzePassed?     )
+	assert(   f.checkPassed?       )
 
+	assert(   f.fix                )
+	assert(   f.analyzePassed?     )
+	assert(   f.checkPassed?       )
+	assert(   f.fixPassed?         )
+	assert( ! f.fixedAny?          )
+	assert(   @@tmpdir.directory?  )
 
 	# Test create file
 	#
@@ -72,13 +78,12 @@ def test01Exist
 
 	assert( ! g.check          )
 	assert(   g.analyzePassed? )
-	assert( ! g.checkPassed? )
+	assert( ! g.checkPassed?   )
 
 	assert(   g.fix            )
 	assert(   g.analyzePassed? )
 	assert(   g.checkPassed?   )
 	assert(   g.fixPassed?     )
-	assert(   path.exist?      )
 	assert(   path.file?       )
 
 
@@ -92,7 +97,7 @@ def test01Exist
 
 	assert( ! h.check          )
 	assert(   h.analyzePassed? )
-	assert( ! h.checkPassed? )
+	assert( ! h.checkPassed?   )
 
 	assert(   h.fix            )
 	assert(   h.analyzePassed? )
@@ -103,8 +108,6 @@ def test01Exist
 
 	# Test create directory
 	#
-	path = @@tmpdir + 'doesntexist'
-
 	assert( ! path.exist? )
 	i = Path.new( path: path, createType: :directory )
 
@@ -113,14 +116,64 @@ def test01Exist
 
 	assert( ! i.check          )
 	assert(   i.analyzePassed? )
-	assert( ! i.checkPassed? )
+	assert( ! i.checkPassed?   )
 
 	assert(   i.fix            )
 	assert(   i.analyzePassed? )
 	assert(   i.checkPassed?   )
 	assert(   i.fixPassed?     )
-	assert(   path.exist?      )
 	assert(   path.directory?  )
+
+end
+
+
+
+def test02Type
+
+	f = Path.new path: @@tmpdir, type: :directory
+
+	assert(   f.analyze            )
+	assert(   f.analyzePassed?     )
+
+	assert(   f.check              )
+	assert(   f.analyzePassed?     )
+	assert(   f.checkPassed?       )
+
+	assert(   f.fix                )
+	assert(   f.analyzePassed?     )
+	assert(   f.checkPassed?       )
+	assert(   f.fixPassed?         )
+	assert( ! f.fixedAny?          )
+	assert(   @@tmpdir.directory?  )
+
+
+	# Test create directory
+	#
+	path = @@tmpdir + 'doesntexist'
+
+	assert( ! path.exist? )
+	g = Path.new( path: path, type: :directory )
+	g.fix
+	assert( path.directory? )
+
+
+	# Turn it into a file
+	#
+	g = Path.new( path: path, type: :file )
+
+	assert(   g.analyze        )
+	assert(   g.analyzePassed? )
+
+	assert( ! g.check          )
+	assert(   g.analyzePassed? )
+	assert( ! g.checkPassed?   )
+
+	assert(   g.fix            )
+	assert(   g.analyzePassed? )
+	assert(   g.checkPassed?   )
+	assert(   g.fixPassed?     )
+	assert(   g.fixedAny?      )
+	assert(   path.file?       )
 
 end
 

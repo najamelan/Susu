@@ -47,13 +47,18 @@ def initialize( **opts )
 
 	super
 
-	reset
+	init
+
+	# This must survive reset, because we call reset if we need to re-analyze realite,
+	# but then we won't know whether we fixed things or not unless we store it here.
+	#
+	@fixedAny = false
 
 end
 
 
 
-def reset
+def init
 
 	@mustDepend    = Array.eat( options.mustDepend   )
 	@depend        = Array.eat( options.dependOn     )
@@ -152,7 +157,7 @@ end
 
 def fixedAny?
 
-	@conditions.any? { |key, cond| cond.fixed? }
+	@fixedAny
 
 end
 
@@ -160,6 +165,8 @@ end
 
 
 def analyze
+
+	analyzePassed?  and  return @status
 
 	states = @conditions.map { |key, cond| cond.analyze }
 
@@ -172,6 +179,8 @@ end
 
 def check
 
+	analyzed? or analyze
+
 	states = @conditions.map { |key, cond| cond.check }
 
 	states.all? { |state| state.include? :checkPassed }  ?  checkPassed : checkFailed
@@ -183,14 +192,20 @@ end
 
 def fix
 
+	checked?       or  check
+	checkPassed?  and  ( fixPassed; return true )
+
+
 	@conditions.map { |key, cond| cond.fix }
 
-	if fixedAny?
+	if @conditions.any? { |key, cond| cond.fixed? }
 
+		@fixedAny = true
 		reset
 		check
 
 	end
+
 
 	checkPassed? ?  fixPassed  :  fixFailed
 

@@ -29,6 +29,8 @@ end
 
 def analyze found
 
+	analyzePassed?  and  return @status
+
 	setActual found
 
 	analyzePassed
@@ -75,7 +77,41 @@ def fix &block
 
 end
 
+
+
+def dependOn( address, value, operation = :check )
+
+	desire = @sm.desire    ( address )
+	cond   = @sm.conditions( address )
+
+	! desire || ! cond and raise "Failed to find dependency for #{address}, which should be #{value}. Caller: #{self}"
+	desire != value    and raise "Failed to satisfy dependency for #{address}, which should be #{value}, but desired state already has #{desire}. Caller #{self}"
+
+	case operation
+
+	when :analyze
+
+		cond.analyzePassed? or  cond.analyze
+		cond.analyzePassed? and return true
+
+	when :check
+
+		cond.checkPassed? or  cond.check
+		cond.checkPassed? and return true
+
+	when :fix
+
+		cond.fixPassed? or  cond.fix
+		cond.fixPassed? and return true
+
+	end
+
+	false
+
 end
+
+
+end # class Condition
 
 end # module Conditions
 
