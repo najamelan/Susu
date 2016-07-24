@@ -27,6 +27,20 @@ def dig( *path )
 end
 
 
+
+def dig!( *path )
+
+  path.reduce( self ) do | location, key |
+
+  		location[ key ] or location[ key ] = self.class.new
+  		location[ key ]
+
+  end
+
+end
+
+
+
 def superset?( other )
 
 	deep_merge( other ) == self
