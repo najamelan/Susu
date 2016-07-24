@@ -41,8 +41,6 @@ def resolveProfile
 
 		@inheritance.unshift profile
 
-		profile = profile
-
 		profile = @allOptions.dig( profile, :inherit )
 		profile or break
 		profile = profile.to_sym

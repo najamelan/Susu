@@ -172,8 +172,7 @@ def filename2array file, from
 
 	end
 
-	file.directory?  and  out = file.glob( '**/*.yml' )
-	file.directory?   or  out = file
+	out =  file.directory?  ?  file.glob( '**/*.yml' )  :  file
 
 	out = Array.eat out
 	out.flatten!
@@ -192,8 +191,9 @@ def extractIncludes inputs, from
 
 	inputs.each_with_index do |out, i|
 
-		incls = Array.eat( out[ :include ] )
-		incls.empty? and next
+		out.include  or  next
+
+		incls = Array.eat( out.include )
 
 		incls.each do |incl|
 
