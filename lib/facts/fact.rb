@@ -32,7 +32,7 @@ end
 
 
 
-attr_reader :depend, :state, :params, :stateMachine, :address
+attr_reader :depend, :state, :status, :params, :stateMachine, :address, :conditions
 
 
 
