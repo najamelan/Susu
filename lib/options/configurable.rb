@@ -5,12 +5,22 @@ module Options
 #
 module Configurable
 
-	def setupOptions runtime
 
-		runtime = self.class.options.deep_merge( runtime )
-		extend runtime.to_module( 'options' )
+def initialize( *args, **opts, &block )
 
-	end
+	super( *args, &block )
+
+	setupOptions opts
+
+end
+
+
+def setupOptions runtime
+
+	runtime = self.class.options.deep_merge( runtime )
+	extend runtime.to_module( 'options' )
+
+end
 
 end # Configurable
 end # Options

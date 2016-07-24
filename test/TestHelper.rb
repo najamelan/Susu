@@ -5,12 +5,6 @@ class TestHelper
 
 @configured = false
 
-def initialize( **userset )
-
-	setupOptions( userset )
-
-end
-
 
 def self.reset
 
@@ -41,11 +35,6 @@ end # class TestHelper
 
 class TestHelperChild < TestHelper
 
-def initialize( **userset )
-
-	setupOptions( userset )
-
-end
 
 end # class TestHelper
 
