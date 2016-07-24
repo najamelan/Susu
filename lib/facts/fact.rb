@@ -152,7 +152,7 @@ end
 
 def fixedAny?
 
-	@state.any? do |key, info| info[ :fixed ] end
+	@conditions.any? { |key, cond| cond.fixed? }
 
 end
 
@@ -163,7 +163,9 @@ def analyze
 
 	states = @conditions.map { |key, cond| cond.analyze }
 
-	@status = states.min
+	states.all? { |state| state.include? :analyzePassed }  ?  analyzePassed : analyzeFailed
+
+	return analyzePassed? ? true : false
 
 end
 
@@ -172,16 +174,27 @@ def check
 
 	states = @conditions.map { |key, cond| cond.check }
 
-	@status = states.min
+	states.all? { |state| state.include? :checkPassed }  ?  checkPassed : checkFailed
+
+	return checkPassed? ? true : false
 
 end
 
 
 def fix
 
-	states = @conditions.map { |key, cond| cond.fix }
+	@conditions.map { |key, cond| cond.fix }
 
-	@status = states.min
+	if fixedAny?
+
+		reset
+		check
+
+	end
+
+	checkPassed? ?  fixPassed  :  fixFailed
+
+	return fixPassed? ? true : false
 
 end
 

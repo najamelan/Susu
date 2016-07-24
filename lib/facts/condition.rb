@@ -14,14 +14,6 @@ def initialize( **opts )
 
 	reset
 
-end
-
-
-
-def reset
-
-	super
-
 	@sm          = options.stateMachine
 	@desire      = @sm.desire
 	@actual      = @sm.actual
@@ -56,7 +48,7 @@ end
 
 def check
 
-	analyze
+	analyzed? or analyze
 
 	@sm.desire( @address ) == @sm.actual( @address ) ? checkPassed : checkFailed
 
@@ -68,8 +60,13 @@ end
 
 def fix &block
 
-	block_given? and yield
+	block_given? or raise ArgumentError.new "Condition#fix requires a block"
 
+	checked?       or  check
+	checkPassed?  and  return @status
+
+	yield
+	reset
 	check
 
 	checkPassed? ? fixPassed : fixFailed
