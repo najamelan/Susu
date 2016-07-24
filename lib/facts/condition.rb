@@ -47,7 +47,7 @@ end
 
 def setActual found
 
-	@actual.dig!( @factAddress )[ @name ] = found
+	@actual.dig!( *@factAddress )[ @name ] = found
 
 end
 
@@ -55,9 +55,11 @@ end
 
 def check
 
-	conclusion = @desire.dig( @address ) == @actual.dig( @address )
+	conclusion = @desire.dig( *@address ) == @actual.dig( *@address )
 
-	conclusion and passCheck
+	conclusion ? passCheck : failCheck
+
+	@status
 
 end
 

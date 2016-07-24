@@ -45,7 +45,7 @@ def createAddress
 
 		ret = options[ key ]
 
-		key.to_sym == :path and  ret = ret.realpath.to_path
+		key.to_sym == :path and  ret = ret.expand_path.to_path
 
 		ret
 

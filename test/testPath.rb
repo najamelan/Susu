@@ -48,6 +48,28 @@ end
 
 
 
+def test01Exist
+
+	f = Path.new path: @@tmpdir
+
+	assert_equal( Status::PASSA, f.analyze )
+	assert      ( f.passedAnalyze? )
+
+	assert_equal( Status::PASSA | Status::PASSC, f.check   )
+	assert      ( f.passedCheck? )
+
+	g = Path.new( path: @@tmpdir + 'doesntexist' )
+
+	assert_equal( Status::PASSA, g.analyze )
+	assert      ( g.passedAnalyze? )
+
+	assert_equal( Status::PASSA | Status::FAILC, g.check   )
+	assert      ( ! g.passedCheck? )
+
+end
+
+
+
 end # class  TestFactPath
 end # module Facts
 end # module TidBits
