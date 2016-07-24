@@ -12,6 +12,7 @@ def set address, value
 end
 
 
+
 protected
 
 # Make sure keys are always symbols
@@ -24,7 +25,7 @@ end # class Pash
 
 class StateMachine
 
-attr_reader :conditions
+
 
 def initialize( **opts )
 
@@ -77,6 +78,26 @@ end
 
 
 #-------------------------------------------------------------------------------
+# Will dig into the conditions to retrieve the condition located at given address.
+#
+# @param  address [Array|segment1, segment2, ...] The path to the requested condition as
+#                 an array of path segments. Can also be several parameters not in array.
+#
+# @return The condition at requested location or nil if it doesn't exist.
+#
+def conditions( *address )
+
+	# This allows to call this function with an array without having to splat on caller side.
+	#
+	address.length == 1  &&  address.first.kind_of?( Array ) and address = address.first
+
+	@conditions.dig( *address )
+
+end
+
+
+
+#-------------------------------------------------------------------------------
 # Will dig! into the desired state to retrieve the value located at given address.
 # The location keys that don't exist yet will be created.
 #
@@ -115,6 +136,28 @@ def actual!( *address )
 	@actual.dig!( *address )
 
 end
+
+
+
+#-------------------------------------------------------------------------------
+# Will dig! into the conditions to retrieve the condition located at given address.
+# The location keys that don't exist yet will be created.
+#
+# @param  address [Array|segment1, segment2, ...] The path to the requested condition as
+#                 an array of path segments. Can also be several parameters not in array.
+#
+# @return The condition at requested location or nil if it doesn't exist.
+#
+def conditions!( *address )
+
+	# This allows to call this function with an array without having to splat on caller side.
+	#
+	address.length == 1  &&  address.first.kind_of?( Array ) and address = address.first
+
+	@conditions.dig!( *address )
+
+end
+
 
 
 end # class  StateMachine
