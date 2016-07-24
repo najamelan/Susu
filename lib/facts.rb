@@ -1,5 +1,6 @@
 require 'logger'
 require 'awesome_print'
+require 'set'
 
 AwesomePrint.defaults = {
 # 	indent:          3,      # Indent using 4 spaces.

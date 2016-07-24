@@ -22,13 +22,14 @@ def reset
 
 	super
 
-	@desire      = options.stateMachine.desire
-	@actual      = options.stateMachine.actual
+	@sm          = options.stateMachine
+	@desire      = @sm.desire
+	@actual      = @sm.actual
 	@address     = options.address
 	@factAddress = options.address[0...-1]
 	@name        = options.address.last
 
-	@expect = options.stateMachine.desire.dig( @address )
+	@expect = @sm.desire( @address )
 
 end
 
@@ -47,7 +48,7 @@ end
 
 def setActual found
 
-	@actual.dig!( *@factAddress )[ @name ] = found
+	@sm.actual.set( @address, found )
 
 end
 
@@ -55,9 +56,9 @@ end
 
 def check
 
-	conclusion = @desire.dig( *@address ) == @actual.dig( *@address )
+	analyze
 
-	conclusion ? passCheck : failCheck
+	@sm.desire( @address ) == @sm.actual( @address ) ? passCheck : failCheck
 
 	@status
 
@@ -65,8 +66,15 @@ end
 
 
 
-def fix
+def fix &block
 
+	block_given? and yield
+
+	check
+
+	passedCheck? ? passFix : failFix
+
+	@status
 
 end
 

@@ -13,6 +13,13 @@ include Options::Configurable, Status, InstanceCount
 
 def self.class_configured cfgObj
 
+	self.fixSymbols
+
+end
+
+
+def self.fixSymbols
+
 	# Yaml can't have symbols as rvalues
 	#
 	[
@@ -51,7 +58,7 @@ def reset
 	@mustDepend    = Array.eat( options.mustDepend   )
 	@depend        = Array.eat( options.dependOn     )
 	@metas         = Array.eat( options.metas        )
-	@stateMachine  = options.stateMachine || StateMachine.new
+	@sm            = options.stateMachine || StateMachine.new
 
 	@log           = Logger.new(STDERR)
 	@log.progname  = self.class.name
@@ -61,8 +68,11 @@ def reset
 	@address       = createAddress
 	@params        = createParams
 	@state         = createState
-	@desire        = createDesire
-	@conditions    = createConditions
+	@desire        = @sm.desire!( @address )
+	@conditions    = @sm.conditions.dig!( *@address )
+
+	createDesire
+	createConditions
 
 end
 
@@ -102,8 +112,6 @@ end
 #
 def createDesire
 
-	@desire = @stateMachine.desire.dig!( *@address )
-
 	@state.each do | key, value |
 
 		if @desire[ key ] && desire[ key ] != value.expect
@@ -125,8 +133,6 @@ end
 
 def createConditions
 
-	@conditions = @stateMachine.conditions.dig!( *@address )
-
 	@state.each do | key, value |
 
 		klass = Conditions.const_get( self.class.lastname ).const_get( key.to_s.capitalize! )
@@ -134,7 +140,7 @@ def createConditions
 
 		@conditions[ key ] and  raise "The condition already exists: #{address.ai}"
 
-		@conditions[ key ] = klass.new( **@params, address: address, stateMachine: @stateMachine, key => options[ key ]  )
+		@conditions[ key ] = klass.new( **options, address: address, stateMachine: @sm)
 
 	end
 

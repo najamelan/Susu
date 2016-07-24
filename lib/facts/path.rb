@@ -26,13 +26,44 @@ class Path < Fact
 
 include InstanceCount
 
+
+
+def self.class_configured cfgObj
+
+	self.fixSymbols
+
+end
+
+
+def self.fixSymbols
+
+	super
+
+	# Yaml can't have symbols as rvalues
+	#
+	[ :type, :createType ].each do |key|
+
+		settings.default.has_key?( key ) and settings.default[ key ] = settings.default[ key ].to_sym
+		settings.userset.has_key?( key ) and settings.userset[ key ] = settings.userset[ key ].to_sym
+		settings.runtime.has_key?( key ) and settings.runtime[ key ] = settings.runtime[ key ].to_sym
+		         options.has_key?( key ) and          options[ key ] =          options[ key ].to_sym
+
+	end
+
+end
+
+
+
 def initialize( path:, **opts )
 
 	# Yaml doesn't really support symbol values, so garuantee it are symbols for
 	# consistency.
 	# TODO: have a config option for type guarantees and let Facts::Fact deal with it.
 	#
-	opts.has_key?( :type ) and opts[ :type ] = opts[ :type ].to_sym
+	[ :type, :createType ].each { |key| opts.has_key?( key ) and opts[ key ] = opts[key ].to_sym }
+
+	# opts.has_key?( :type       ) and opts[ :type       ] = opts[ :type       ].to_sym
+	# opts.has_key?( :createType ) and opts[ :createType ] = opts[ :createType ].to_sym
 
 	super( **opts, path: path.to_path.path )
 
@@ -45,6 +76,8 @@ def createAddress
 
 		ret = options[ key ]
 
+		# We make sure path is always a string for the address
+		#
 		key.to_sym == :path and  ret = ret.expand_path.to_path
 
 		ret
@@ -61,12 +94,14 @@ end # class  Path
 module Conditions
 module Path
 
-class Exist < Condition
 
+class Exist < Condition
 
 def initialize( **opts )
 
 	super
+
+	@path = options.path
 
 end
 
@@ -74,17 +109,36 @@ end
 
 def analyze
 
-	super options.path.exist?
+	super @path.exist?
 
 end
 
 
 def fix
 
+	super do
+
+		if ! @expect
+
+			@path.rm_secure( options.force )
+
+		else
+
+			type = @sm.desire( @factAddress )[ :type ]  ||  options.createType
+
+			type == :file ? @path.touch : @path.mkdir
+
+		end
+
+		true
+
+	end
+
+	@status
 
 end
 
-end
+end # class Exist < Condition
 
 
 end # module Path
