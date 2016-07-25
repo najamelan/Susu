@@ -47,9 +47,7 @@ end
 #
 def desire( *address )
 
-	# This allows to call this function with an array without having to splat on caller side.
-	#
-	address.length == 1  &&  address.first.kind_of?( Array ) and address = address.first
+	address = Array.spit address
 
 	@desire.dig( *address )
 
@@ -67,9 +65,7 @@ end
 #
 def actual( *address )
 
-	# This allows to call this function with an array without having to splat on caller side.
-	#
-	address.length == 1  &&  address.first.kind_of?( Array ) and address = address.first
+	address = Array.spit address
 
 	@actual.dig( *address )
 
@@ -87,9 +83,7 @@ end
 #
 def conditions( *address )
 
-	# This allows to call this function with an array without having to splat on caller side.
-	#
-	address.length == 1  &&  address.first.kind_of?( Array ) and address = address.first
+	address = Array.spit address
 
 	@conditions.dig( *address )
 
@@ -108,9 +102,7 @@ end
 #
 def desire!( *address )
 
-	# This allows to call this function with an array without having to splat on caller side.
-	#
-	address.length == 1  &&  address.first.kind_of?( Array ) and address = address.first
+	address = Array.spit address
 
 	@desire.dig!( *address )
 
@@ -129,9 +121,7 @@ end
 #
 def actual!( *address )
 
-	# This allows to call this function with an array without having to splat on caller side.
-	#
-	address.length == 1  &&  address.first.kind_of?( Array ) and address = address.first
+	address = Array.spit address
 
 	@actual.dig!( *address )
 
@@ -150,9 +140,7 @@ end
 #
 def conditions!( *address )
 
-	# This allows to call this function with an array without having to splat on caller side.
-	#
-	address.length == 1  &&  address.first.kind_of?( Array ) and address = address.first
+	address = Array.spit address
 
 	@conditions.dig!( *address )
 
