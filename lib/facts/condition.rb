@@ -8,20 +8,22 @@ include Options::Configurable, Status, InstanceCount
 
 attr_reader :expect, :found
 
-def initialize( **opts )
+def initialize **opts
 
 	super
 
-	reset
-
 	@sm          = options.stateMachine
-	@desire      = @sm.desire
-	@actual      = @sm.actual
 	@address     = options.address
 	@factAddress = options.address[0...-1]
 	@name        = options.address.last
 
-	@expect = @sm.desire( @address )
+	@desire      = @sm.desire
+	@actual      = @sm.actual
+
+	@fact        = @sm.facts( @factAddress )
+	@expect      = @sm.desire( @address )
+
+	reset
 
 end
 
@@ -31,18 +33,9 @@ def analyze found
 
 	analyzePassed?  and  return @status
 
-	setActual found
+	@sm.actual.set( @address, found )
 
 	analyzePassed
-	@status
-
-end
-
-
-
-def setActual found
-
-	@sm.actual.set( @address, found )
 
 end
 
@@ -53,8 +46,6 @@ def check
 	analyzed? or analyze
 
 	@sm.desire( @address ) == @sm.actual( @address ) ? checkPassed : checkFailed
-
-	@status
 
 end
 
@@ -72,8 +63,6 @@ def fix &block
 	check
 
 	checkPassed? ? fixPassed : fixFailed
-
-	@status
 
 end
 

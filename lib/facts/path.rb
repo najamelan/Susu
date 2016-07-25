@@ -26,7 +26,7 @@ class Path < Fact
 
 include InstanceCount
 
-
+attr_accessor :statCalled
 
 def self.class_configured cfgObj
 
@@ -62,12 +62,21 @@ def initialize( path:, **opts )
 	#
 	[ :type, :createType ].each { |key| opts.has_key?( key ) and opts[ key ] = opts[key ].to_sym }
 
-	# opts.has_key?( :type       ) and opts[ :type       ] = opts[ :type       ].to_sym
-	# opts.has_key?( :createType ) and opts[ :createType ] = opts[ :createType ].to_sym
 
 	super( **opts, path: path.to_path.path )
 
+	@statCalled = false
+
 end
+
+
+
+def reset
+
+	@statCalled = false
+
+end
+
 
 
 def createAddress
@@ -132,54 +141,74 @@ end
 end # class Exist < Condition
 
 
+class StatCondition < Condition
 
-class Type < Condition
+	def analyze
 
-def initialize( **opts )
+		analyzePassed?    and  return @status
+		@fact.statCalled  and  return analyzePassed
 
-	super
+		dependOn( @factAddress.dup.push( :exist ), true )  or  return analyzeFailed
 
-end
+		stat = options.followSymlinks  ?  options.path.stat  :  options.path.lstat
+		@fact.statCalled = true
 
+		owner = Etc.getpwuid( stat.uid ).name
+		group = Etc.getgrgid( stat.gid ).name
 
+		@sm.actual.set( @factAddress.dup.push( :type  ), stat.ftype.to_sym )
+		@sm.actual.set( @factAddress.dup.push( :mode  ), stat.mode         )
+		@sm.actual.set( @factAddress.dup.push( :owner ), owner             )
+		@sm.actual.set( @factAddress.dup.push( :group ), group             )
+		@sm.actual.set( @factAddress.dup.push( :uid   ), stat.uid          )
+		@sm.actual.set( @factAddress.dup.push( :gid   ), stat.gid          )
+		@sm.actual.set( @factAddress.dup.push( :ctime ), stat.ctime        )
+		@sm.actual.set( @factAddress.dup.push( :mtime ), stat.mtime        )
+		@sm.actual.set( @factAddress.dup.push( :atime ), stat.atime        )
 
-def analyze
-
-	dependOn( @factAddress.dup.push( :exist ), true )  or  return analyzeFailed
-
-	stat = options.followSymlinks  ?  options.path.stat  :  options.path.lstat
-
-	super stat.ftype.to_sym
-
-end
-
-
-def fix
-
-	super do
-
-		options.path.rm_secure
-
-		exist = @sm.conditions( @factAddress.dup << :exist )
-
-		exist.reset
-		exist.fix
-
-		exist.fixPassed?
+		analyzePassed
 
 	end
 
-	@status
 
-end
+	def reset
+
+		super
+
+		@fact.statCalled = false
+
+	end
+
+end # class StatCondition < Condition
+
+
+
+class Type < StatCondition
+
+	def fix
+
+		super do
+
+			options.path.rm_secure
+
+			exist = @sm.conditions( @factAddress.dup << :exist )
+
+			exist.reset
+			exist.fix
+
+			exist.fixPassed?
+
+		end
+
+		@status
+
+	end
 
 end # class Exist < Condition
 
 
 end # module Path
 end # module Conditions
-
-
 
 end # module Facts
 end # module TidBits
