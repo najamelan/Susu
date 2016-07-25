@@ -11,29 +11,17 @@ class Fact
 include Options::Configurable, Status, InstanceCount
 
 
-def self.class_configured cfgObj
+# Yaml can't have symbols as rvalues
+#
+def self.sanitize key, value
 
-	self.fixSymbols
+	if [ :params, :metas ].include? key
 
-end
+		value = value.map!( &:to_sym )
 
+	end
 
-def self.fixSymbols
-
-	# Yaml can't have symbols as rvalues
-	#
-	[
-
-		settings.default.params      ,
-	   settings.default.metas       ,
-	   settings.userset.params      ,
-	   settings.userset.metas       ,
-	   settings.runtime.params      ,
-	   settings.runtime.metas       ,
-	   options.params               ,
-	   options.metas
-
-	].each { |setting| setting and setting.map!( &:to_sym ) }
+	return key, value
 
 end
 

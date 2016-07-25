@@ -26,8 +26,8 @@ protected
 
 def setupDefaults profile
 
-	@cfg.setup( Fact                 , :Fact        )
-	@cfg.setup( Path                 , :Path        )
+	@cfg.setup( Fact                 , :Fact, sanitizer: Fact.method( :sanitize ) )
+	@cfg.setup( Path                 , :Path, sanitizer: Path.method( :sanitize ) )
 
 	@cfg.setup( Conditions::Condition, :Condition )
 	# @cfg.setup( Git::RepoExist   , :Git, :RepoExist   )

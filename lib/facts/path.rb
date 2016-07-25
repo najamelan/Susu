@@ -28,40 +28,26 @@ include InstanceCount
 
 attr_accessor :statCalled
 
-def self.class_configured cfgObj
-
-	self.fixSymbols
-
-end
 
 
-def self.fixSymbols
+# Yaml can't have symbols as rvalues
+#
+def self.sanitize key, value
 
-	super
+	key, value = super
 
-	# Yaml can't have symbols as rvalues
-	#
-	[ :type, :createType ].each do |key|
+	if [ :type, :createType ].include? key
 
-		settings.default.has_key?( key ) and settings.default[ key ] = settings.default[ key ].to_sym
-		settings.userset.has_key?( key ) and settings.userset[ key ] = settings.userset[ key ].to_sym
-		settings.runtime.has_key?( key ) and settings.runtime[ key ] = settings.runtime[ key ].to_sym
-		         options.has_key?( key ) and          options[ key ] =          options[ key ].to_sym
+		value = value.to_sym
 
 	end
 
+	return key, value
+
 end
 
 
-
 def initialize( path:, **opts )
-
-	# Yaml doesn't really support symbol values, so garuantee it are symbols for
-	# consistency.
-	# TODO: have a config option for type guarantees and let Facts::Fact deal with it.
-	#
-	[ :type, :createType ].each { |key| opts.has_key?( key ) and opts[ key ] = opts[key ].to_sym }
-
 
 	super( **opts, path: path.to_path.path )
 
