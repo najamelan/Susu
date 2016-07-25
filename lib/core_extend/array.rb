@@ -31,5 +31,31 @@ def self.eat( object )
 
 end
 
+
+# This allows to call a method with an array without having to splat on caller side.
+# The method needs to splat their arguments on the parameter list.
+#
+# @example Usage
+#
+#   def some *path
+#
+#      path = Array.spit path
+#
+#      someHash.dig *path
+#
+#   end
+#
+#   some    :key1, :key2    # Will work
+#   some  [ :key1, :key2 ]  # Will also work thanks to spit
+#   some *[ :key1, :key2 ]  # Will work but no need to splat now.
+#
+def self.spit args
+
+	args.length == 1  &&  args.first.kind_of?( Array ) and args = args.first
+
+	args
+
+end
+
 end
 
