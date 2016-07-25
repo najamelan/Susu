@@ -75,6 +75,9 @@ def init
 	@state         = createState
 	@desire        = @sm.desire!( @address )
 	@conditions    = @sm.conditions.dig!( *@address )
+	@facts         = @sm.facts
+
+	@facts.set @address, self
 
 	createDesire
 	createConditions
