@@ -70,6 +70,19 @@ def test01Exist
 	assert            f.fixedAny?
 	assert            path.directory?
 
+
+	# Test create file call fix without calling analyze and check
+	#
+	path.rm_secure
+	assert ! path.exist?
+
+	f = Path.new( path: path )
+
+	assert_fix  f
+	assert      f.fixedAny?
+
+	assert      path.file?
+
 end
 
 
@@ -107,6 +120,18 @@ def test02Type
 
 	assert            f.fixedAny?
 	assert            path.file?
+
+
+	# Turn it back to directory without calling analyze and check
+	#
+	assert path.file?
+
+	f = Path.new( path: path, type: :directory )
+
+	assert_fix  f
+	assert      f.fixedAny?
+
+	assert      path.directory?
 
 end
 
