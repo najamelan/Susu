@@ -24,7 +24,8 @@ def self.suite
 
 	suite =  Test::Unit::TestSuite.new( "Facts Unit Tests" )
 
-	suite << TestFactPath.suite
+	suite << TestStatus   .suite
+	suite << TestFactPath .suite
 
 
 end
