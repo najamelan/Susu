@@ -417,6 +417,43 @@ def test17AbsolutePath
 end
 
 
+
+def test18Sanitizer
+
+	one           = { a:  1 , b: { c:  2 , d:  3  } }
+	two           = {         b: {         d:  4  } }
+	expectDefault = { a: '1', b: { c: '2', d: '3' } }
+	expectUser    = {         b: {         d: '4' } }
+	expect        = { a: '1', b: { c: '2', d: '4' } }
+
+
+	san = lambda do |key, value|
+
+		if value.kind_of?( Settings )
+
+			value._sanitizer_ = san
+			return key, value
+
+		end
+
+		return key, value.to_s
+
+	end
+
+
+	TestHelper.reset
+	config = TidBits::Options::Config.new( default: one, userset: two )
+	config.setup( TestHelper, sanitizer: san )
+
+	assert_equal( expectDefault, TestHelper.settings.default  )
+	assert_equal( expectUser   , TestHelper.settings.userset  )
+	assert_equal( {}           , TestHelper.settings.runtime  )
+	assert_equal( expect       , TestHelper.options           )
+	assert_equal( config       , TestHelper.settings.cfgObj   )
+
+end
+
+
 end # class  TestConfig
 end # module Options
 end # module TidBits

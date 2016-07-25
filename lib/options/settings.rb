@@ -90,6 +90,21 @@ end
 #
 #   puts h # => #<TidBits::Options::Settings bla="KABOOM" bli="HAHA">
 #
+# @example Recursive:
+#
+#  san = lambda do |key, value|
+#
+#     if value.kind_of?( Settings )
+#
+#        value._sanitizer_ = san
+#        return key, value
+#
+#     end
+#
+#     return key, value.to_s
+#
+#  end
+#
 def _sanitizer_= block
 
 	@_sanitizer_ = block

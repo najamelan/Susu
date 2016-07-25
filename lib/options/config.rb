@@ -61,7 +61,7 @@ end
 #
 # @see Configurable Configurable: the module that inclModule parameter refers to.
 #
-def setup( klass, *options, inclModule: true, inherit: true )
+def setup( klass, *options, inclModule: true, inherit: true, sanitizer: nil, validator: nil )
 
 	settings = Settings.new
 
@@ -82,6 +82,14 @@ def setup( klass, *options, inclModule: true, inherit: true )
 
 
 	settings.cfgObj  = self
+
+	[ settings.default, settings.userset, settings.runtime, opts ].each do |h|
+
+		sanitizer and h._sanitizer_ = sanitizer
+		validator and h._validator_ = validator
+
+	end
+
 
 	klass.extend settings.to_module( 'settings' )
 	klass.extend opts    .to_module( 'options'  )
