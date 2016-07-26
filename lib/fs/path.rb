@@ -98,9 +98,13 @@ def mkpath( subPath = '', options = {} )
 
 	require 'fileutils'
 
+	file? and return dirname.mkpath( subPath, mode )
+
 	make = join( subPath )
 
-	FileUtils.mkpath( make.to_path )
+ 	make.directory? and return make
+
+ 	FileUtils.mkpath( make.to_path )
 
 	make
 
