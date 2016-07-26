@@ -11,6 +11,7 @@ module TidBits
 	, { name: 'Fs'        , file: 'fs/lib/fs'                    } \
 	, { name: 'Options'   , file: 'options/lib/options'          } \
 	, { name: 'Susu'      , file: 'susu/lib/susu'                } \
+	, { name: 'Facts'     , file: 'facts/lib/facts'              } \
 
 ].each do |lib|
 
