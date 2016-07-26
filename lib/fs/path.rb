@@ -107,7 +107,12 @@ def mkpath( subPath = '', options = {} )
 end
 
 
-# Will create a directory
+# Will create a directory. Target = `self.join subPath`.
+#
+# - If self is a file, make the directory in the directory of self.
+# - If self is a directory, make the target inside the directory.
+# - If target is an existing file, bail with exception
+# - If target is an existing directory, do nothing.
 #
 # @param  [Path|String] subPath  The sub path to create relative to the path of self.
 # @param  [FixNum]      mode     The permissions for the new directory.
@@ -116,7 +121,11 @@ end
 #
 def mkdir( subPath = '', mode = 0777 )
 
+	file? and return dirname.mkdir( subPath, mode )
+
 	make = join( subPath )
+
+ 	make.directory? and return make
 
 	Dir.mkdir( make.to_path, mode )
 

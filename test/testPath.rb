@@ -64,19 +64,48 @@ def test02Mkdir
 
 	FileUtils.mkpath @@tmp
 
-	f = @@tmp.path
+	tmp = @@tmp.path
 
-	assert_instance_of( Path, f      )
-	assert            ( f.exist?     )
-	assert            ( f.directory? )
+	assert_instance_of( Path, tmp      )
+	assert            ( tmp.exist?     )
+	assert            ( tmp.directory? )
 
-	d = f.mkdir 'some'
+	d = tmp.mkdir 'some'
 
 	assert_instance_of( Path, d )
 
 	assert_equal( @@tmp + '/some', d.to_path )
 	assert      ( d.exist?     )
 	assert      ( d.directory? )
+
+	# If the path exists and it is a directory, do nothing.
+	#
+	d = tmp.mkdir 'd'
+	f = d  .touch 'f'
+
+	d.mkdir
+	assert_equal tmp + 'd', d
+	assert       d.directory?
+	assert       f.file?
+
+	# If self is a file, make dir in directory of file.
+	#
+	f = tmp.touch 'ff'
+
+	d = f.mkdir 'ho'
+	assert_equal tmp + 'ho', d
+	assert       f.file?
+
+	# If target is a file, raise.
+	#
+	f = tmp.touch 'fff'
+
+	assert_raise { d = tmp.mkdir 'fff' }
+
+	assert       f.file?
+
+	# TODO: absolute paths
+	# TODO: path objects instead of strings
 
 end
 
