@@ -39,7 +39,7 @@ end
 # If a class is a subclass of another class that
 #
 # @param  klass       [Class/Module] The class onto which to put settings.
-# @param  options     [Symbol, ...]  A list of symbols representing the path within the total options you want to use.
+# @param  path        [Symbol, ...]  A list of symbols representing the path within the total options you want to use.
 #                                    Usually when classes can be configured, you only want them to have a subset.
 # @param  inclModule  [Boolean]      Whether to include a module that allows an instance of this class to call
 #                                    `setupOptions( runtime )` in order to have it's own options object.
@@ -61,14 +61,14 @@ end
 #
 # @see Configurable Configurable: the module that inclModule parameter refers to.
 #
-def setup( klass, *options, inclModule: true, inherit: true, sanitizer: nil, validator: nil )
+def setup( klass, *path, inclModule: true, inherit: true, sanitizer: nil, validator: nil )
 
 	settings = Settings.new
 
-	settings.default = @default.dig( *options ) || Settings.new
-	settings.userset = @userset.dig( *options ) || Settings.new
-	settings.runtime = @runtime.dig( *options ) || Settings.new
-	opts             = @options.dig( *options ) || Settings.new
+	settings.default = @default.dig( *path ) || Settings.new
+	settings.userset = @userset.dig( *path ) || Settings.new
+	settings.runtime = @runtime.dig( *path ) || Settings.new
+	opts             = @options.dig( *path ) || Settings.new
 
 
 	sup = klass.superclass
