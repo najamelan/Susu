@@ -137,6 +137,56 @@ end
 
 
 
+def test03Own
+
+	# Test an existing file
+	#
+	path = @@tmpdir
+	f = Path.new( path: path, own: { uid: options.uid , gid: options.gid  } )
+	g = Path.new( path: path, own: { uid: options.uid2, gid: options.gid2 } )
+
+	assert_check      f
+	assert_check_fail g
+
+
+	# Create file with different owner
+	#
+	path = @@tmpdir + 'own'
+	f = Path.new( path: path, type: :file, own: { uid: options.uid2, gid: options.gid2 } )
+
+	assert_fix f
+
+	stat = path.stat
+
+	assert path.file?
+	assert_equal stat.uid, options.uid2
+	assert_equal stat.gid, options.gid2
+
+
+	# Change owner on existing file
+	#
+	path = @@tmpdir + 'fix'
+	f = Path.new( path: path )
+
+	assert_fix f
+
+	assert       path.file?
+	assert_equal path.stat.uid, options.uid
+	assert_equal path.stat.gid, options.gid
+
+	f = Path.new( path: path, own: { uid: options.uid2, gid: options.gid2 } )
+
+	assert_fix f
+	stat = path.stat
+
+	assert path.file?
+	assert_equal stat.uid, options.uid2
+	assert_equal stat.gid, options.gid2
+
+end
+
+
+
 end # class  TestFactPath
 end # module Facts
 end # module TidBits

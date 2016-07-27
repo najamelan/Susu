@@ -5,13 +5,13 @@ module Facts
 class Config
 
 
-def initialize( profile = :default, fromCmdLine = [], **opts )
+def initialize( profile = :default, runtime = [], **opts )
 
 	@profile = profile.to_sym
 
 	# get options from <installDir>/conf into defaults
 	#
-	@cfg = TidBits::Options::ConfigProfile.new( profile: @profile, default: 'config.yml'.relpath, runtime: fromCmdLine )
+	@cfg = TidBits::Options::ConfigProfile.new( profile: @profile, default: 'config.yml'.relpath, runtime: runtime )
 
 	@cfg.setup( self.class )
 	setupOptions opts
@@ -38,6 +38,8 @@ def setupDefaults profile
 	# @cfg.setup( Git::Branch      , :Git, :Branch      )
 
 	profile == :testing or return
+
+	@cfg.setup( TestFactPath, :TestFactPath )
 
 end
 

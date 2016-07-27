@@ -1,0 +1,9 @@
+testing:
+
+  TestFactPath:
+
+    uid: 0
+    gid: 0
+
+    uid2: 1000
+    gid2: 1000

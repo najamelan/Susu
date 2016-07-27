@@ -12,15 +12,15 @@ def initialize **opts
 
 	super
 
-	@sm          = options.stateMachine
-	@address     = options.address
-	@factAddress = options.address[0...-1]
-	@name        = options.address.last
+	@sm       = options.stateMachine
+	@address  = options.address
+	@factAddr = options.address[0...-1]
+	@name     = options.address.last
 
 	@desire      = @sm.desire
 	@actual      = @sm.actual
 
-	@fact        = @sm.facts( @factAddress )
+	@fact        = @sm.facts(@factAddr )
 	@expect      = @sm.desire( @address )
 
 	reset
@@ -68,6 +68,17 @@ end
 
 
 
+# Let's a condition depend on another condition, possibly from another fact all
+# together. This method will make sure the operation on the corresponding condition
+# is run at this moment if it hasn't already run.
+#
+# @param  address    The address in the statemachine to the property you want to depend on.
+# @param  value      The value the property needs to hold for the dependency to be met
+# @param  operation  The operation of the dependency that needs to pass, default :check.
+#                    Can be :analyze, :check or :fix.
+#
+# @return true on success, false on failure.
+#
 def dependOn( address, value, operation = :check )
 
 	desire = @sm.desire    ( address )

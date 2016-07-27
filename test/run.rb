@@ -23,6 +23,8 @@ class TestSuite
 
 def self.suite
 
+	Config.new :testing, 'test.yml'.relpath
+
 	suite =  Test::Unit::TestSuite.new( "Facts Unit Tests" )
 
 	suite << TestStatus   .suite

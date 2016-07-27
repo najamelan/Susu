@@ -110,7 +110,7 @@ def fix
 
 		else
 
-			type = @sm.desire( @factAddress )[ :type ]  ||  options.createType
+			type = @sm.desire(@factAddr )[:type ]  ||  options.createType
 
 			type == :file ? options.path.touch : options.path.mkdir
 
@@ -134,23 +134,18 @@ class StatCondition < Condition
 		analyzePassed?    and  return @status
 		@fact.statCalled  and  return analyzePassed
 
-		dependOn( @factAddress.dup.push( :exist ), true )  or  return analyzeFailed
+		dependOn( @factAddr.dup.push( :exist ), true )  or  return analyzeFailed
 
+		sap "stat called for #{@fact.object_id}"
 		stat = options.followSymlinks  ?  options.path.stat  :  options.path.lstat
 		@fact.statCalled = true
 
-		owner = Etc.getpwuid( stat.uid ).name
-		group = Etc.getgrgid( stat.gid ).name
-
-		@sm.actual.set( @factAddress.dup.push( :type  ), stat.ftype.to_sym )
-		@sm.actual.set( @factAddress.dup.push( :mode  ), stat.mode         )
-		@sm.actual.set( @factAddress.dup.push( :owner ), owner             )
-		@sm.actual.set( @factAddress.dup.push( :group ), group             )
-		@sm.actual.set( @factAddress.dup.push( :uid   ), stat.uid          )
-		@sm.actual.set( @factAddress.dup.push( :gid   ), stat.gid          )
-		@sm.actual.set( @factAddress.dup.push( :ctime ), stat.ctime        )
-		@sm.actual.set( @factAddress.dup.push( :mtime ), stat.mtime        )
-		@sm.actual.set( @factAddress.dup.push( :atime ), stat.atime        )
+		@sm.actual.set( @factAddr.dup.push( :type  ), stat.ftype.to_sym                            )
+		@sm.actual.set( @factAddr.dup.push( :mode  ), stat.mode                                    )
+		@sm.actual.set( @factAddr.dup.push( :ctime ), stat.ctime                                   )
+		@sm.actual.set( @factAddr.dup.push( :mtime ), stat.mtime                                   )
+		@sm.actual.set( @factAddr.dup.push( :atime ), stat.atime                                   )
+		@sm.actual.set( @factAddr.dup.push( :own   ), { uid: stat.uid, gid: stat.gid }.to_settings )
 
 		analyzePassed
 
@@ -177,7 +172,7 @@ class Type < StatCondition
 
 			options.path.rm_secure
 
-			exist = @sm.conditions( @factAddress.dup << :exist )
+			exist = @sm.conditions @factAddr.dup.push(:exist )
 
 			exist.reset
 			exist.fix
@@ -186,11 +181,26 @@ class Type < StatCondition
 
 		end
 
-		@status
-
 	end
 
 end # class Exist < Condition
+
+
+
+class Own < StatCondition
+
+	def fix
+
+		super { options.path.chown( @expect[ :uid ], @expect[ :gid ] ) }
+
+	end
+
+end # class Own < StatCondition
+
+
+
+	end
+
 
 
 end # module Path

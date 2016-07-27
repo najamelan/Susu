@@ -12,6 +12,9 @@ default:
     params        : [ path, createType, followSymlinks ]
     indexKeys     : path
     exist         : true
+
+    # Whether to work on symbolic links, or their targets.
+    #
     followSymlinks: true
 
     # This is just a default value for Conditions::Path::Exist when it needs to fix
