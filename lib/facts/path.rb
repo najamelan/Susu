@@ -169,6 +169,8 @@ class Type < StatCondition
 
 	def fix
 
+		options.force or return fixFailed
+
 		super do
 
 			options.path.rm_secure
