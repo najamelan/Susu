@@ -110,7 +110,7 @@ def fix
 
 		else
 
-			type = @sm.desire(@factAddr )[:type ]  ||  options.createType
+			type = @sm.desire( @factAddr )[ :type ]  ||  options.createType
 
 			type == :file ? options.path.touch : options.path.mkdir
 
@@ -136,7 +136,6 @@ class StatCondition < Condition
 
 		dependOn( @factAddr.dup.push( :exist ), true )  or  return analyzeFailed
 
-		sap "stat called for #{@fact.object_id}"
 		stat = options.followSymlinks  ?  options.path.stat  :  options.path.lstat
 		@fact.statCalled = true
 
@@ -155,6 +154,8 @@ class StatCondition < Condition
 	def reset
 
 		super
+
+		fresh? or raise
 
 		@fact.statCalled = false
 
@@ -189,6 +190,16 @@ end # class Exist < Condition
 
 class Own < StatCondition
 
+	def check
+
+		super
+
+		@sm.actual( @address ).nil? and raise "Analyze for #{self.ai} returned nil"
+
+		@status
+
+	end
+
 	def fix
 
 		super { options.path.chown( @expect[ :uid ], @expect[ :gid ] ) }
@@ -199,8 +210,36 @@ end # class Own < StatCondition
 
 
 
+class Mode < StatCondition
+
+	def check
+
+		analyzed?     or analyze
+		checkPassed? and return @status
+
+		@sm.actual( @address ).nil? and raise
+
+		if @sm.desire( @address ) == @sm.actual( @address )
+
+			return checkPassed
+
+		else
+
+			@fact.debug "Check failed for #{@address.ai}, expect: #{@expect.to_s( 8 )}, found: #{@sm.actual( @address ).to_s( 8 )}"
+			return checkFailed
+
+		end
+
 	end
 
+
+	def fix
+
+		super { options.path.chmod( @expect ) }
+
+	end
+
+end # class Mode < StatCondition
 
 
 end # module Path

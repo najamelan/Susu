@@ -27,7 +27,7 @@ end
 
 
 
-attr_reader :depend, :state, :status, :params, :stateMachine, :address, :conditions
+attr_reader :depend, :state, :status, :params, :stateMachine, :address, :conditions, :operation
 
 
 
@@ -157,12 +157,14 @@ end
 
 def analyze
 
-	analyzePassed?  and  return @status
+	@operation ||= :analyze
 
+	analyzePassed?  and  return @status
 	states = @conditions.map { |key, cond| cond.analyze }
 
 	states.all? { |state| state.include? :analyzePassed }  ?  analyzePassed : analyzeFailed
 
+	@operation == :analyze and @operation = nil
 	return analyzePassed? ? true : false
 
 end
@@ -170,12 +172,14 @@ end
 
 def check
 
-	analyzed? or analyze
+	@operation ||= :check
 
+	analyzed? or analyze
 	states = @conditions.map { |key, cond| cond.check }
 
 	states.all? { |state| state.include? :checkPassed }  ?  checkPassed : checkFailed
 
+	@operation == :check and @operation = nil
 	return checkPassed? ? true : false
 
 end
@@ -183,9 +187,10 @@ end
 
 def fix
 
+	@operation ||= :fix
+
 	checked?       or  check
 	checkPassed?  and  ( fixPassed; return true )
-
 
 	@conditions.map { |key, cond| cond.fix }
 
@@ -200,7 +205,23 @@ def fix
 
 	checkPassed? ?  fixPassed  :  fixFailed
 
+	@operation == :fix and @operation = nil
 	return fixPassed? ? true : false
+
+end
+
+
+
+def debug(   msg ) log( msg, lvl: :debug   ) end
+def info(    msg ) log( msg, lvl: :info    ) end
+def warn(    msg ) log( msg, lvl: :warn    ) end
+def error(   msg ) log( msg, lvl: :error   ) end
+def fatal(   msg ) log( msg, lvl: :fatal   ) end
+def unknown( msg ) log( msg, lvl: :unknown ) end
+
+def log( msg, lvl: :warn )
+
+	options.quiet or @log.send lvl, msg
 
 end
 
@@ -378,52 +399,6 @@ def == other
 		self.class  == other.class          \
 	&& params      == other.params         \
 	&& createState == other.createState
-
-end
-
-
-
-def expect key
-
-	@state[ key ][ :expect ]
-
-end
-
-
-
-def found key
-
-	@state[ key ][ :found ]
-
-end
-
-
-
-def passed key
-
-	@state[ key ][ :passed ]
-
-end
-
-
-
-def _fixed key
-
-	@state[ key ][ :fixed ]
-
-end
-
-
-def debug(   msg ) log( msg, lvl: :debug   ) end
-def info(    msg ) log( msg, lvl: :info    ) end
-def warn(    msg ) log( msg, lvl: :warn    ) end
-def error(   msg ) log( msg, lvl: :error   ) end
-def fatal(   msg ) log( msg, lvl: :fatal   ) end
-def unknown( msg ) log( msg, lvl: :unknown ) end
-
-def log( msg, lvl: :warn )
-
-	options.quiet or @log.send lvl, msg
 
 end
 

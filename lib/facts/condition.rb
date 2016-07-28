@@ -43,9 +43,19 @@ end
 
 def check
 
-	analyzed? or analyze
+	checkPassed? and return @status
+	analyzed?     or analyze
 
-	@sm.desire( @address ) == @sm.actual( @address ) ? checkPassed : checkFailed
+	if @sm.desire( @address ) == @sm.actual( @address )
+
+		return checkPassed
+
+	else
+
+		@fact.debug "Check failed for #{@address.ai}, expect: #{@expect.ai}, found: #{@sm.actual( @address ).ai}"
+		return checkFailed
+
+	end
 
 end
 
@@ -56,7 +66,8 @@ def fix &block
 	block_given? or raise ArgumentError.new "Condition#fix requires a block"
 
 	checked?       or  check
-	checkPassed?  and  return @status
+	checkPassed?  and  fixPassed
+	fixPassed?    and  return @status
 
 	yield
 	reset
@@ -74,35 +85,50 @@ end
 #
 # @param  address    The address in the statemachine to the property you want to depend on.
 # @param  value      The value the property needs to hold for the dependency to be met
-# @param  operation  The operation of the dependency that needs to pass, default :check.
+# @param  operation  The operation of the dependency that needs to pass, default :fix.
 #                    Can be :analyze, :check or :fix.
 #
 # @return true on success, false on failure.
 #
-def dependOn( address, value, operation = :check )
+def dependOn( address, value, operation = :fix )
 
 	desire = @sm.desire    ( address )
 	cond   = @sm.conditions( address )
 
-	! desire || ! cond and raise "Failed to find dependency for #{address}, which should be #{value}. Caller: #{self}"
-	desire != value    and raise "Failed to satisfy dependency for #{address}, which should be #{value}, but desired state already has #{desire}. Caller #{self}"
+	desire && cond   or raise "Failed to find dependency for #{address}, which should be #{value}. Caller: #{self}"
+	desire != value and raise "Failed to satisfy dependency for #{address}, which should be #{value}, but desired state already has #{desire}. Caller #{self}"
 
 	case operation
 
 	when :analyze
 
-		cond.analyzePassed? or  cond.analyze
-		cond.analyzePassed? and return true
+		cond.analyze
+		return cond.analyzePassed?
 
 	when :check
 
-		cond.checkPassed? or  cond.check
-		cond.checkPassed? and return true
+		cond.check
+		return cond.checkPassed?
 
 	when :fix
 
-		cond.fixPassed? or  cond.fix
-		cond.fixPassed? and return true
+		# Conditions can depend on eachother, however if the client didn't tell us to
+		# fix, we shouldn't make changes to the system, so check @fact.operation.
+		#
+		if @fact.operation == :fix
+
+			cond.fix
+			return cond.fixPassed?
+
+		# As a second best, if check passes, there was no need to fix, so we shall consider
+		# this a success.
+		#
+		else
+
+			cond.check
+			return cond.checkPassed?
+
+		end
 
 	end
 

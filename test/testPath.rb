@@ -187,6 +187,48 @@ end
 
 
 
+def test04Mode
+
+	# Test an existing file
+	#
+	path = @@tmpdir
+	f = Path.new( path: path, mode: path.stat.mode )
+	g = Path.new( path: path, mode: 040600         )
+
+	assert_check      f
+	assert_check_fail g
+
+
+	# Create file with different mode
+	#
+	path = @@tmpdir + 'mode'
+	f = Path.new( path: path, mode: 0100640 )
+
+	assert_fix   f
+	assert       path.file?
+	assert_equal 0100640, path.stat.mode
+
+
+	# Change owner on existing file
+	#
+	path = @@tmpdir + 'fix'
+	f = Path.new( path: path )
+
+	assert_fix f
+
+	assert       path.file?
+	assert_equal path.stat.mode, 0100644
+
+	f = Path.new( path: path, mode: 0100600 )
+
+	assert_fix   f
+	assert       path.file?
+	assert_equal 0100600, path.stat.mode
+
+end
+
+
+
 end # class  TestFactPath
 end # module Facts
 end # module TidBits
