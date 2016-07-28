@@ -20,6 +20,9 @@ class Facts < Thor
 desc 'test', 'Run the unit tests for the Facts library'
 def test
 
+	$stdout.sync=true
+	$stderr.sync=true
+
 	TidBits::Facts::TestSuite.run
 
 end
