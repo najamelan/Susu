@@ -23,6 +23,17 @@ default:
     createType : file
 
 
+  RecursivePath:
+
+    indexKeys: path
+    params   : [ path, followSymlinks, dirMode, fileMode, own ]
+    force    : false
+
+    # Whether to work on symbolic links, or their targets.
+    #
+    followSymlinks: true
+
+
   Git:
 
     RepoExist:

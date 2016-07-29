@@ -257,6 +257,96 @@ end
 
 
 
+def test05RecursivePath
+
+	# Setup recursive structure
+	#
+	path = @@tmpdir
+	sub  = path.mkdir 'sub'
+	f1   = path.touch 'f1'
+	f2   = sub .touch 'f2'
+
+	# Test an tree
+	#
+	f = RecursivePath.new( path: path, dirMode: path.stat.mode, fileMode: f1.stat.mode, own: { uid: options.uid, gid: options.gid } )
+
+	assert_check   f
+	assert       ! f.fixedAny?
+
+
+	# Change mode and owner
+	#
+	f = RecursivePath.new( path: path, dirMode: 040700, fileMode: 0100640, own: { uid: options.uid2, gid: options.gid2 } )
+
+	assert_fix f
+	assert     f.fixedAny?
+
+	assert       path.directory?
+	assert       sub .directory?
+	assert       f1  .file?
+	assert       f2  .file?
+
+	assert_equal  040700, path.stat.mode
+	assert_equal  040700, sub .stat.mode
+	assert_equal 0100640, f1  .stat.mode
+	assert_equal 0100640, f2  .stat.mode
+
+	[ path, sub, f1, f2 ].each do |entry|
+
+		stat = entry.stat
+
+	assert_equal options.uid2, stat.uid
+	assert_equal options.gid2, stat.gid
+
+	end
+
+
+	# Create directory with RecursivePath
+	#
+	path = @@tmpdir + 'dontexist'
+
+	f = RecursivePath.new( path: path, dirMode: 040700, own: { uid: options.uid2, gid: options.gid2 } )
+
+	assert_fix   f
+	assert       f.fixedAny?
+	assert       path.directory?
+	assert_equal 040700, path.stat.mode
+
+	stat = path.stat
+
+	assert_equal options.uid2, stat.uid
+	assert_equal options.gid2, stat.gid
+
+
+	# Without force, should fail on existing file
+	#
+	assert f2.file?
+
+	f = RecursivePath.new( path: f2, dirMode: 040700, own: { uid: options.uid2, gid: options.gid2 } )
+
+	assert_fix_fail f
+	assert          f2.file?
+
+
+	# With force, should pass on existing file
+	#
+	assert f2.file?
+
+	f = RecursivePath.new( path: f2, force: true, dirMode: 040700, own: { uid: options.uid2, gid: options.gid2 } )
+
+	assert_fix   f
+	assert       f2.directory?
+	assert_equal 040700, f2.stat.mode
+
+	stat = f2.stat
+
+	assert_equal options.uid2, stat.uid
+	assert_equal options.gid2, stat.gid
+
+end
+
+
+
 end # class  TestFactPath
 end # module Facts
 end # module TidBits

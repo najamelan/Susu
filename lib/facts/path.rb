@@ -1,4 +1,3 @@
-require 'awesome_print'
 require_relative 'fact'
 
 module TidBits
@@ -16,11 +15,6 @@ module Facts
 # mtime      :
 # hashAlgo   : :SHA512
 # hash       : string   the hash of the content
-#
-# TODO: currently we won't check anything if the exist option doesn't correspond with reality.
-#       However, we don't do input validation to keep people from asking us to test properties
-#       on a file that they claim should not exist, which might be confusing when they check the
-#       results.
 #
 class Path < Fact
 
@@ -67,14 +61,14 @@ end
 
 
 
+# Make sure path is always a string for the address
+#
 def createAddress
 
 	@indexKeys.map do |key|
 
 		ret = options[ key ]
 
-		# We make sure path is always a string for the address
-		#
 		key.to_sym == :path and  ret = ret.expand_path.to_path
 
 		ret
@@ -85,6 +79,105 @@ end
 
 
 end # class  Path
+
+
+
+# Options (* means mandatory). The defaults for each is no change.
+# One of fileMode, dirMode or own must be present.
+#
+# path*   : string
+# fileMode: integer Will be applied only to files
+# dirMode : integer Will be applied only to directories
+# own     : hash { uid: integer, gid: integer }
+#
+class RecursivePath < Fact
+
+include InstanceCount
+
+
+
+# Yaml can't have symbols as rvalues
+#
+def self.sanitize key, value
+
+	key, value = super
+
+	if [ :dirMode, :fileMode ].include? key
+
+		value = value.to_sym
+
+	end
+
+	return key, value
+
+end
+
+
+
+def initialize( path:, **opts )
+
+	super( **opts, path: path.to_path.path )
+
+
+	!options.fileMode && !options.dirMode && !options.own and
+
+		raise "RecursivePath must at least get one of the following options: :fileMode, :dirMode or :own."
+
+
+	pathOption = Options::Settings.new
+	options.own and pathOption[ :own  ] = options.own
+	options.own and pathOption[ :mode ] = options.dirMode
+
+
+	dependOn(
+
+		Path,
+		{ path: @path, force: options.force, type: :directory, followSymlinks: @followSymlinks },
+		pathOption
+
+	)
+
+
+	if options.path.directory?
+
+		children = options.path.children( recursive: true, follow: @followSymlinks )
+
+		children.each do |child|
+
+			pathOption = pathOption.dup
+
+			child.file?      && options.fileMode  and  pathOption[ :mode ] = options.fileMode
+			child.directory? && options.dirMode   and  pathOption[ :mode ] = options.dirMode
+
+			dependOn( Path, { path: child }, pathOption )
+
+		end
+
+	end
+
+end
+
+
+
+# Make sure path is always a string for the address
+#
+def createAddress
+
+	@indexKeys.map do |key|
+
+		ret = options[ key ]
+
+		key.to_sym == :path  and  ret = ret.expand_path.to_path
+
+		ret
+
+	end.unshift self.class.name
+
+end
+
+
+end # class  RecursivePath
+
 
 
 
