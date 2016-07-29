@@ -51,13 +51,15 @@ def init
 	@mustDepend    = Array.eat( options.mustDepend   )
 	@depend        = Array.eat( options.dependOn     )
 	@metas         = Array.eat( options.metas        )
-	@sm            = options.stateMachine || StateMachine.new
+	@factPool      = Array.eat( options.factPool   )
+
 
 	@log           = Logger.new(STDERR)
 	@log.progname  = self.class.name
 
 	@indexKeys     = Array.eat( options.indexKeys )
 
+	@sm            = options.stateMachine || StateMachine.new
 	@address       = createAddress
 	@params        = createParams
 	@state         = createState
@@ -148,7 +150,9 @@ end
 
 def fixedAny?
 
-	@fixedAny
+	@fixedAny and return true
+
+	@depend.any? { |dep| dep.fixedAny? }
 
 end
 
@@ -156,6 +160,8 @@ end
 
 
 def analyze
+
+	checkDepends  or  ( analyzeFailed; return false )
 
 	@operation ||= :analyze
 
@@ -172,6 +178,8 @@ end
 
 def check
 
+	checkDepends  or  ( checkFailed; return false )
+
 	@operation ||= :check
 
 	analyzed? or analyze
@@ -186,6 +194,8 @@ end
 
 
 def fix
+
+	fixDepends  or  ( fixFailed; return false )
 
 	@operation ||= :fix
 
@@ -251,13 +261,13 @@ end
 
 
 
-def checkDepends( update = false )
+def checkDepends
 
 	@depend.each do | dep |
 
-		update || !dep.checked  and  dep.check( update )
+		!dep.checked?  and  dep.check
 
-		if ! dep.checkPassed
+		if !dep.checkPassed?
 
 			warn "#{self.class.name}: Dependency #{dep.class.name} #{dep.params.ai} failed."
 			return false
@@ -276,9 +286,9 @@ def fixDepends( update = false, **options )
 
 	@depend.each do | dep |
 
-		update || !dep.fixed  and  dep.fix( update, **options )
+		!dep.fixed?  and  dep.fix
 
-		if ! dep.fixPassed
+		if !dep.fixPassed?
 
 			warn "#{self.class.name}: Dependency #{dep.class.name} #{dep.params.ai} could not be fixed."
 			return false
