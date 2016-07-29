@@ -220,6 +220,23 @@ def test04Mode
 	assert_equal 0100640, path.stat.mode
 
 
+	# Change owner on existing directory
+	#
+	path = @@tmpdir + 'fixd'
+	f = Path.new( path: path, type: :directory )
+
+	assert_fix f
+
+	assert       path.directory?
+	assert_equal 040755, path.stat.mode
+
+	f = Path.new( path: path, mode: 040600 )
+
+	assert_fix   f
+	assert       path.directory?
+	assert_equal 040600, path.stat.mode
+
+
 	# Change owner on existing file
 	#
 	path = @@tmpdir + 'fix'
