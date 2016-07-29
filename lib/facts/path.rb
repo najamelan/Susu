@@ -171,18 +171,20 @@ class Type < StatCondition
 
 	def fix
 
-		options.force or return fixFailed
-
 		super do
+
+			if !options.force
+
+				@fact.info "Did not change type on #{options.path} to #{@expect} because the file exists and force is not set. Current type: #{@sm.actual( @address )}"
+
+				return fixFailed
+
+			end
 
 			options.path.rm_secure
 
-			exist = @sm.conditions @factAddr.dup.push(:exist )
-
-			exist.reset
-			exist.fix
-
-			exist.fixPassed?
+			@fact.reset
+			@fact.fix
 
 		end
 

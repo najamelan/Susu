@@ -133,6 +133,16 @@ def test02Type
 
 	assert      path.directory?
 
+
+	# Turn it back to file should fail if :force is false
+	#
+	assert path.directory?
+
+	f = Path.new( path: path, type: :file, force: false )
+
+	assert_fix_fail f
+	assert          path.directory?
+
 end
 
 
