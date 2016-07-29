@@ -168,7 +168,7 @@ def analyze
 	analyzePassed?  and  return @status
 	states = @conditions.map { |key, cond| cond.analyze }
 
-	states.all? { |state| state.include? :analyzePassed }  ?  analyzePassed : analyzeFailed
+	states.none? { |state| state.include? :analyzeFailed }  ?  analyzePassed : analyzeFailed
 
 	@operation == :analyze and @operation = nil
 	return analyzePassed? ? true : false
@@ -185,7 +185,7 @@ def check
 	analyzed? or analyze
 	states = @conditions.map { |key, cond| cond.check }
 
-	states.all? { |state| state.include? :checkPassed }  ?  checkPassed : checkFailed
+	states.none? { |state| state.include? :checkFailed }  ?  checkPassed : checkFailed
 
 	@operation == :check and @operation = nil
 	return checkPassed? ? true : false
