@@ -59,6 +59,8 @@ end
 
 def reset
 
+	super
+
 	@statCalled = false
 
 end

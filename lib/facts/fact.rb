@@ -75,6 +75,18 @@ def init
 end
 
 
+
+def reset
+
+	super
+
+	@depend    .each { |dep      | dep .reset }
+	@conditions.each { |key, cond| cond.reset }
+
+end
+
+
+
 def createAddress
 
 	@indexKeys.map { |key| options[ key ] }.unshift self.class.name
