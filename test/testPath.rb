@@ -187,11 +187,12 @@ def test03Own
 	f = Path.new( path: path, own: { uid: options.uid2, gid: options.gid2 } )
 
 	assert_fix f
+	assert     path.file?
+
 	stat = path.stat
 
-	assert path.file?
-	assert_equal stat.uid, options.uid2
-	assert_equal stat.gid, options.gid2
+	assert_equal options.uid2, stat.uid
+	assert_equal options.gid2, stat.gid
 
 end
 
