@@ -1,0 +1,29 @@
+default:
+
+  Repo  : {}
+  Branch: {}
+  Remote: {}
+
+  Facts:
+
+    Repo:
+
+      params    : [ path, remotes, branches ]
+      exist     : true
+      remotes   : []
+      branches  : []
+      createType: notBare
+
+    Remote:
+
+      params: [ path, name ]
+      name  : origin
+      exist : true
+
+    Branch:
+
+      params: [ path, name ]
+      name  : master
+      exist : true
+
+
