@@ -166,6 +166,33 @@ def test04Glob
 end
 
 
+def test05Children
+
+	p = @@tmp.path
+
+	p.mkdir
+
+
+
+	f = @@tmp.path
+
+	assert_instance_of( Path, f      )
+	assert            ( f.exist?     )
+	assert            ( f.directory? )
+
+	f.touch 'haha'
+	f.touch 'hihi'
+
+	d = f.glob( '*' )
+
+	assert_instance_of( Array, d        )
+	assert_equal(       2    , d.length )
+
+	assert( d.all? { |p| p.kind_of? Path } )
+
+end
+
+
 
 
 end # class  TestPath

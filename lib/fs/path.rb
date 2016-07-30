@@ -241,6 +241,53 @@ def chdir &block
 end
 
 
+# Returns an array of children of the Path.
+#
+# @param  options  The options accepted are :
+#                  - dir:       true
+#                  - file:      true
+#                  - follow:    true
+#                  - recursive: false
+#
+# @param  block    an optional block
+#
+# @return { description_of_the_return_value }
+#
+def children( dir: true, file: true, follow: true, recursive: false, &block )
+
+	toddlers = super( dir )
+
+	file   or toddlers.delete_if { |entry| entry.file? }
+
+	block_given? and toddlers.map! do |entry|
+
+		result = yield entry
+
+		result == true                and next entry
+		result.kind_of?( self.class ) and next result
+
+		nil
+
+	end.compact!
+
+
+	recursive and toddlers +=
+
+		toddlers.map do |path|
+
+			!follow && path.link? and next []
+			path.directory?        or next []
+
+			path.children( dir: dir, file: file, follow: follow, recursive: recursive, &block )
+
+		end.flatten
+
+
+	return toddlers
+
+end
+
+
 
 end # class  Pathname
 end # module Fs
