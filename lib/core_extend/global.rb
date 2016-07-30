@@ -8,10 +8,14 @@ def read_line_number( filename, number )
 
 end
 
-def sap arg
+def sap *args
 
 	loc = caller_locations.first
+	# msg = args.map( &:ai ).join "\n"
+	msg = args.first.ai
 
-	puts read_line_number( loc.absolute_path, loc.lineno ).gsub!( /sap +/, "#{Pathname(loc.path).basename}:#{loc.lineno} - " ) + ' ⇝ ' + arg.ai
+	$stdout.write read_line_number( loc.absolute_path, loc.lineno ).
+
+		gsub!( /sap +/, "#{Pathname(loc.path).basename}:#{loc.lineno} - " ) + " ⇝ \n" + msg + "\n"
 
 end
