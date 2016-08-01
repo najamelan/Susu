@@ -5,12 +5,13 @@ default:
     quiet   : false
     force   : true
     factPool: []
-    metas   : [ metas, params, quiet, dependOn, mustDepend, factPool, force, stateMachine, indexKeys ]
+    metas   : [ metas, params, quiet, dependOn, mustDepend, factPool, force, stateMachine, indexKeys, conditions ]
 
   Path:
 
     params        : [ path, createType, followSymlinks ]
     indexKeys     : path
+    conditions    : TidBits::Facts::Conditions::Path
     exist         : true
 
     # Whether to work on symbolic links, or their targets.
@@ -25,9 +26,10 @@ default:
 
   RecursivePath:
 
-    indexKeys: path
-    params   : [ path, followSymlinks, dirMode, fileMode, own ]
-    force    : false
+    indexKeys : path
+    params    : [ path, followSymlinks, dirMode, fileMode, own ]
+    conditions: TidBits::Facts::Conditions::RecursivePath
+    force     : false
 
     # Whether to work on symbolic links, or their targets.
     #

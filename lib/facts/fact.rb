@@ -145,7 +145,7 @@ def createConditions
 
 	@state.each do | key, value |
 
-		klass = Conditions.const_get( self.class.lastname ).const_get( key.to_s.capitalize! )
+		klass = Object.const_get( options.conditions ).const_get( key.to_s.capitalize! )
 		address = @address.dup << key
 
 		@conditions[ key ] and  raise "The condition already exists: #{address.ai}"
