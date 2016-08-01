@@ -1,39 +1,22 @@
 require 'securerandom'
 require 'open3'
 
+require_relative '../../facts/test/TestFactCase'
+
 
 module TidBits
 module Git
 
-class TestRepoCase < Test::Unit::TestCase
+class TestRepoCase < TidBits::Facts::TestFactCase
 
-
-def self.startup
-
-	@@tmp  = Dir.mktmpdir( self.class.lastname ).path
-
-end
-
-
-def self.shutdown
-
-	@@tmp.rm_secure
-
-end
 
 
 def setup
 
-	@@tmpdir  = @@tmp.path.mkdir method_name
+	super
+
 	@@repo    = 'data/fixtures/clean'.relpath.copy @@tmpdir
 	@@repo[ '.gitted' ].rename '.git'
-
-end
-
-
-def teardown
-
-	@@tmpdir.rm_secure
 
 end
 
@@ -53,9 +36,8 @@ def pollute path
 
 	file = randomString
 
-	Dir.chdir path
-	out += cmd "touch #{file}"
-	out += cmd "git add #{file}"
+	out += cmd "touch #{file}"   , path
+	out += cmd "git add #{file}" , path
 
 	return file, out
 
@@ -67,7 +49,7 @@ def commitOne path
 
 	file, out = pollute path
 
-	out += cmd "git commit -am'commit #{file}'"
+	out += cmd "git commit -am'commit #{file}'", path
 
 	return file, out
 
@@ -81,9 +63,7 @@ def clone path
 	name = randomString
 	out  = []
 
-	Dir.chdir tmp
-
-	out += cmd "git clone #{path} #{name}"
+	out += cmd "git clone #{path} #{name}", tmp
 
 	return "#{tmp}/#{name}", out
 
@@ -134,7 +114,11 @@ end
 #   current directory:
 #     :chdir => str
 #
-def cmd cmds, **options
+def cmd cmds, cwd = Fs::Path.pwd, **options
+
+	pwd = Fs::Path.pwd
+
+	Fs::Path.chdir cwd
 
 	output = []
 	cmds   = Array.eat cmds
@@ -147,7 +131,11 @@ def cmd cmds, **options
 
 	end
 
-	output
+	return output
+
+ensure
+
+	Fs::Path.chdir pwd
 
 end
 

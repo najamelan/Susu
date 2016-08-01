@@ -8,11 +8,13 @@ default:
 
     Repo:
 
-      params    : [ path, remotes, branches ]
+      params    : [ path, createBare, remotes, branches ]
+      indexKeys : path
+      conditions: TidBits::Git::Facts::Conditions::Repo
+      createBare: false
       exist     : true
       remotes   : []
       branches  : []
-      createType: notBare
 
     Remote:
 

@@ -27,7 +27,8 @@ def self.suite
 
 	suite =  Test::Unit::TestSuite.new( "Git Unit Tests" )
 
-	suite << TestRepo.suite
+	suite << TestRepo     .suite
+	suite << TestFactRepo .suite
 
 end
 

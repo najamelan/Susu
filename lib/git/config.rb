@@ -30,7 +30,7 @@ def setupDefaults profile
 	@cfg.setup( Remote       , :Remote         )
 	@cfg.setup( Branch       , :Branch         )
 
-	@cfg.setup( Facts::Repo  , :Facts, :Repo   )
+	@cfg.setup( Facts::Repo  , :Facts, :Repo   , sanitizer: TidBits::Facts::Fact.method( :sanitize ) )
 	@cfg.setup( Facts::Remote, :Facts, :Remote )
 	@cfg.setup( Facts::Branch, :Facts, :Branch )
 

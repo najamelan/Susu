@@ -113,129 +113,92 @@ end # class  RepoExist
 # remotes: Array<Hash> A list of settings for Fact::Git::Remote to depend on.
 # remotes: Array<Hash> A list of settings for Fact::Git::Branch to depend on.
 #
-# TODO: currently we won't check anything if the exist option doesn't correspond with reality.
-#       However, we don't do input validation to keep people from asking us to test properties on a
-#       repo that they claim should not exist, which might be confusing when they check the results.
-#
-#       In general we should have some sort of feedback mechanism to report the reason for failures to clients.
-#
 class Repo < TidBits::Facts::Fact
+
+include TidBits::Facts::InstanceCount
 
 attr_reader :repo
 
 
-
 def initialize( path:, **opts )
 
-	super( **opts, path: path.path )
+	super( **opts, path: path.to_path.path )
+	@repo = TidBits::Git::Repo.new( @path )
 
-	@repo   = TidBits::Git::Repo.new( @path )
-
-	exist = dependOn( RepoExist, { path: @path, bare: options.bare } )
 
 	# Having them depend on exist explicitly means they will respect the bare option
 	#
-	remotes .each {|remote| dependOn( Remote, remote.merge( path: @path, dependOn: exist ) ) }
-	branches.each {|branch| dependOn( Branch, branch.merge( path: @path, dependOn: exist ) ) }
+	# remotes .each {|remote| dependOn( Remote, remote.merge( path: @path, dependOn: exist ) ) }
+	# branches.each {|branch| dependOn( Branch, branch.merge( path: @path, dependOn: exist ) ) }
 
 end
 
 
 
-def analyze( update = false )
+# Make sure path is always a string for the address
+#
+def createAddress
 
-	super == 'return'  and  return @analyzePassed
+	@indexKeys.map do |key|
 
-	@state[ :head  ]  and  @state[ :head  ][ :found ] = @repo.head
-	@state[ :clean ]  and  @state[ :clean ][ :found ] = @repo.workingDirClean?
+		ret = options[ key ]
 
-	@analyzePassed
+		key.to_sym == :path and  ret = ret.expand_path.to_path
 
-end
+		ret
 
-
-
-def check( update = false )
-
-	super == 'return'  and  return @checkPassed
-
-
-	@state.each do | key, info |
-
-		info[ :passed ] = true
-
-		if found( key ) != expect( key )
-
-			info[ :passed ] = false
-			@checkPassed    = false
-
-
-			case key
-
-			when :head
-
-				warn "#{@path} should be on branch #{expect( key )}, but is on #{@state[ key ][ :found ].ai}."
-
-			when :clean
-
-				expect( key ) and warn "#{@path} should have a clean working directory."
-				expect( key ) or  warn "#{@path} should NOT have a clean working directory."
-
-			end
-
-
-		else
-
-			info[ :passed ] = true
-
-
-		end
-
-	end
-
-
-	@checkPassed
-
-end
-
-
-
-def fix( update = false, force: true )
-
-	# super == 'return'  and  return @fixPassed
-
-
-	# @state.each do |key, test|
-
-	# 	test[ :fixed ] = true
-
-	# 	case key
-
-	# 	when :type
-
-	# 		@path.rm_secure
-
-	# 		fix true, force: force
-
-	# 	end
-
-	# end
-
-
-	# @fixPassed = check( true )
-
-	# @state.each do |key, test|
-
-	# 	_fixed( key ) and test[ :fixed ] = test[ :passed ]
-
-	# end
-
-	# @fixPassed
+	end.unshift self.class.name
 
 end
 
 
 end # class  Repo
+
+
+module Conditions
+module Repo
+
+
+class Exist < TidBits::Facts::Conditions::Condition
+
+
+def analyze
+
+	super @fact.repo.valid?
+
+end
+
+
+def fix
+
+	super do
+
+		# TODO: catch exceptions and report
+		#
+		if @expect
+
+			bare = @sm.desire( @factAddr )[ :bare ]  ||  options.createBare
+			@fact.repo.init( bare )
+
+		else
+
+			@fact.repo.deinit
+
+		end
+
+		true
+
+	end
+
+	@status
+
+end
+
+end # class Exist < Condition
+
+
+end # module Conditions
+end # module Repo
 
 
 

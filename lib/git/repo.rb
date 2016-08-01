@@ -77,7 +77,10 @@ def pathExists?() File.exist? @path end
 
 def valid?
 
-	!@rug and createBackend
+	# It's a bit silly to call this everytime, but it seems the only way to avoid stale data.
+	#
+	@rug = nil
+	createBackend
 
 	!!@rug
 
