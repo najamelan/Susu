@@ -45,6 +45,15 @@ def self.pwd
 end
 
 
+def self.chdir newCWD
+
+	Dir.chdir newCWD.to_path
+
+	newCWD.to_path.path
+
+end
+
+
 
 # Runs Pathname.glob
 #
