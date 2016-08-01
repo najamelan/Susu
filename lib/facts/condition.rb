@@ -6,7 +6,7 @@ class Condition
 
 include Options::Configurable, Status, InstanceCount
 
-attr_reader :expect, :found
+attr_reader :expect, :found, :status
 
 def initialize **opts
 
@@ -20,7 +20,7 @@ def initialize **opts
 	@desire      = @sm.desire
 	@actual      = @sm.actual
 
-	@fact        = @sm.facts(@factAddr )
+	@fact        = @sm.facts( @factAddr )
 	@expect      = @sm.desire( @address )
 
 	reset
