@@ -12,6 +12,7 @@ module TidBits
 	, { name: 'Options'   , file: 'options/lib/options'          } \
 	, { name: 'Susu'      , file: 'susu/lib/susu'                } \
 	, { name: 'Facts'     , file: 'facts/lib/facts'              } \
+	, { name: 'Git'       , file: 'git/lib/git'                  } \
 
 ].each do |lib|
 
