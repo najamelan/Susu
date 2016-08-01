@@ -288,6 +288,75 @@ def children( dir: true, file: true, follow: true, recursive: false, &block )
 end
 
 
+# Copy the file or directory to a new location.
+# Options: preserve noop verbose dereference_root remove_destination.
+#
+# @param  dst  [respond_to(:to_path)|Array(respond_to(:to_path))] The destination(s). If destination
+#              is an existing directory, source shall be copied inside. If destination is an existing
+#              file, it shall be replaced only if remove_destination is set. If parent directories
+#              don't exist, they will be created.
+#
+# @param  opts         [hash] options to pass to FileUtils.cp_r
+#
+# @return [Fs::Path|Array(Fs::Path)] The destination(s) as Fs::Path or an array of such. If you have passed
+#                                    in an array with one element, you will be returned an array.
+#
+# TODO: Unit testing and verifying and documenting the behaviour of FileUtils.cp_r.
+#
+def copy( dst, **opts )
+
+	arr = dst.kind_of?( Array )
+	dst = Array.eat( dst )
+	dst = dst.map( &:to_path )
+
+	dst.each { |dest| FileUtils.cp_r( @path, dest, opts ) }
+
+	dst = dst.map do |dest|
+
+		dest = dest.path
+		dest.directory? and dest = dest/basename
+
+	end
+
+	!arr and dst = Array.spit( dst )
+
+end
+
+alias :cp :copy
+
+
+# Move the file or directory to a new location. Wrapper around FileUtils.mv
+# Options: force noop verbose.
+#
+# @param  dst   [respond_to(:to_path)] The destination.
+#
+# @param  opts  [hash]                 Options to pass to FileUtils.mv
+#
+# @return [Fs::Path] The destination as Fs::Path.
+#
+# TODO: Unit testing and verifying and documenting the behaviour of FileUtils.mv.
+#
+def move( dst, **opts )
+
+	FileUtils.mv( self.to_path, dst.to_path, opts )
+
+	dst.path
+
+end
+
+alias :mv :move
+
+
+def rename newName
+
+	newName = newName.path
+	newName.absolute? or newName = self.dirname/newName
+
+	move newName
+
+	newName
+
+end
 
 end # class  Pathname
 end # module Fs
