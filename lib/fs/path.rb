@@ -6,6 +6,7 @@ module Fs
 
 class Path < Pathname
 
+alias :ls :entries
 
 # Make a new Fs::Path object.
 #
@@ -203,6 +204,9 @@ def +( other )
   self.class.new( plus( @path, other.to_path ) )
 
 end
+
+alias :/  :+
+alias :[] :+
 
 
 
