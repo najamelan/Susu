@@ -32,6 +32,7 @@ def self.eat( object )
 end
 
 
+# The opposite of Array.eat. If an array only contains one element, return the element.
 # This allows to call a method with an array without having to splat on caller side.
 # The method needs to splat their arguments on the parameter list.
 #
@@ -51,7 +52,7 @@ end
 #
 def self.spit args
 
-	args.length == 1  &&  args.first.kind_of?( Array ) and args = args.first
+	args.kind_of?(Array) && args.length == 1  and  args = args.first
 
 	args
 
