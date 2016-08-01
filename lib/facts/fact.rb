@@ -27,7 +27,7 @@ end
 
 
 
-attr_reader :depend, :state, :status, :params, :stateMachine, :address, :conditions, :operation
+attr_reader :depend, :state, :status, :params, :sm, :address, :conditions, :operation
 
 
 
@@ -170,7 +170,6 @@ end
 
 
 
-
 def analyze
 
 	checkDepends  or  ( analyzeFailed; return false )
@@ -188,6 +187,7 @@ def analyze
 end
 
 
+
 def check
 
 	checkDepends  or  ( checkFailed; return false )
@@ -203,6 +203,7 @@ def check
 	return checkPassed? ? true : false
 
 end
+
 
 
 def fix
@@ -268,8 +269,6 @@ def createParams
 	params
 
 end
-
-
 
 
 
