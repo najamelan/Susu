@@ -15,9 +15,9 @@ include Options::Configurable, Status, InstanceCount
 #
 def self.sanitize key, value
 
-	if [ :params, :metas ].include? key
+	if [ :params, :metas, :indexKeys ].include? key
 
-		value = value.map!( &:to_sym )
+		value = Array.eat( value ).map!( &:to_sym )
 
 	end
 
