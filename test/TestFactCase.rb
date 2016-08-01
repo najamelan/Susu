@@ -8,14 +8,14 @@ class TestFactCase < Test::Unit::TestCase
 
 def self.startup
 
-	@@tmp  = Dir.mktmpdir self.class.lastname
+	@@tmp  = Dir.mktmpdir( self.class.lastname ).path
 
 end
 
 
 def self.shutdown
 
-	FileUtils.remove_entry_secure @@tmp
+	@@tmp.rm_secure
 
 end
 
@@ -29,7 +29,7 @@ end
 
 def teardown
 
-	FileUtils.remove_entry_secure @@tmpdir
+	@@tmpdir.rm_secure
 
 end
 
@@ -141,6 +141,6 @@ end
 
 
 
-end # class  TestFactPath
+end # class  TestFactCase
 end # module Facts
 end # module TidBits
