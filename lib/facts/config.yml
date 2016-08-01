@@ -35,46 +35,6 @@ default:
     #
     followSymlinks: true
 
-
-  Git:
-
-    RepoExist:
-
-      params: [ path, bare ]
-      exist : true
-
-
-    Repo:
-
-      params  : [ path, remotes, branches ]
-      bare    : false
-      remotes : []
-      branches: []
-
-
-    RemoteExist:
-
-      params: [ path ]
-      exist : true
-
-
-    Remote:
-
-      params: [ path, name ]
-      name  : origin
-
-
-    BranchExist:
-
-      params: [ path ]
-      exist : true
-
-
-    Branch:
-
-      params: [ path, name ]
-      name  : master
-
   Conditions:
 
     Condition: {}

@@ -30,13 +30,7 @@ def setupDefaults profile
 	@cfg.setup( Path                 , :Path         , sanitizer: Path.method( :sanitize ) )
 	@cfg.setup( RecursivePath        , :RecursivePath, sanitizer: Path.method( :sanitize ) )
 
-	@cfg.setup( Conditions::Condition, :Condition )
-	# @cfg.setup( Git::RepoExist   , :Git, :RepoExist   )
-	# @cfg.setup( Git::Repo        , :Git, :Repo        )
-	# @cfg.setup( Git::RemoteExist , :Git, :RemoteExist )
-	# @cfg.setup( Git::Remote      , :Git, :Remote      )
-	# @cfg.setup( Git::BranchExist , :Git, :BranchExist )
-	# @cfg.setup( Git::Branch      , :Git, :Branch      )
+	@cfg.setup( Conditions::Condition, :Conditions, :Condition )
 
 	profile == :testing or return
 
