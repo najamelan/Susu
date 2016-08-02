@@ -27,7 +27,8 @@ end
 
 
 
-attr_reader :depend, :state, :status, :params, :sm, :address, :conditions, :operation
+attr_reader   :depend, :state, :status, :params, :sm, :address, :conditions, :operation
+attr_accessor :fixedAny
 
 
 
@@ -182,7 +183,8 @@ def analyze
 	states.none? { |state| state.include? :analyzeFailed }  ?  analyzePassed : analyzeFailed
 
 	@operation == :analyze and @operation = nil
-	return analyzePassed? ? true : false
+
+	analyzePassed? ? true : false
 
 end
 
@@ -200,7 +202,8 @@ def check
 	states.none? { |state| state.include? :checkFailed }  ?  checkPassed : checkFailed
 
 	@operation == :check and @operation = nil
-	return checkPassed? ? true : false
+
+	checkPassed? ? true : false
 
 end
 
@@ -226,10 +229,11 @@ def fix
 	end
 
 
-	checkPassed? ?  fixPassed  :  fixFailed
+	checkPassed?  ?  fixPassed  :  fixFailed
 
 	@operation == :fix and @operation = nil
-	return fixPassed? ? true : false
+
+	fixPassed? ? true : false
 
 end
 

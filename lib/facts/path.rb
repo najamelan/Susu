@@ -205,13 +205,25 @@ def fix
 
 		else
 
-			type = @sm.desire( @factAddr )[ :type ]  ||  options.createType
+			options.has_key? :type  or
 
-			type == :file ? options.path.touch : options.path.mkdir
+				raise "In order to create a path, you must specify :type on Facts::Path."
+
+
+			type = @sm.desire( @factAddr )[ :type ]
+
+			case type
+
+			when :file     ; options.path.touch
+			when :directory; options.path.mkdir
+
+			else
+
+				raise "Creating path of type: #{type}, not implemented"
+
+			end
 
 		end
-
-		true
 
 	end
 
@@ -249,8 +261,6 @@ class StatCondition < Condition
 	def reset
 
 		super
-
-		fresh? or raise
 
 		@fact.statCalled = false
 

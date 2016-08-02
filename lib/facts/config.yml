@@ -18,11 +18,6 @@ default:
     #
     followSymlinks: true
 
-    # This is just a default value for Conditions::Path::Exist when it needs to fix
-    # a non existing file. If a type is specified, that will be used instead.
-    #
-    createType : file
-
 
   RecursivePath:
 

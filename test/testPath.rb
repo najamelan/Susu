@@ -35,12 +35,12 @@ def test01Exist
 	path = @@tmpdir + 'doesntexist'
 
 	assert ! path.exist?
-	f = Path.new( path: path )
+	f = Path.new( path: path, type: :file )
 
-	assert_analyze    f
-	assert_check_fail f
-	assert_fix        f
-	assert            f.fixedAny?
+	assert_analyze_fail f
+	assert_check_fail   f
+	assert_fix          f
+	assert              f.fixedAny?
 
 	assert  path.file?
 
@@ -61,14 +61,14 @@ def test01Exist
 	# Test create directory
 	#
 	assert( ! path.exist? )
-	f = Path.new( path: path, createType: :directory )
+	f = Path.new( path: path, type: :directory )
 
-	assert_analyze    f
-	assert_check_fail f
-	assert_fix        f
+	assert_analyze_fail f
+	assert_check_fail   f
+	assert_fix          f
 
-	assert            f.fixedAny?
-	assert            path.directory?
+	assert              f.fixedAny?
+	assert              path.directory?
 
 
 	# Test create file call fix without calling analyze and check
@@ -76,7 +76,7 @@ def test01Exist
 	path.rm_secure
 	assert ! path.exist?
 
-	f = Path.new( path: path )
+	f = Path.new( path: path, type: :file )
 
 	assert_fix  f
 	assert      f.fixedAny?
@@ -176,7 +176,7 @@ def test03Own
 	# Change owner on existing file
 	#
 	path = @@tmpdir + 'fix'
-	f = Path.new( path: path )
+	f = Path.new( path: path, type: :file )
 
 	assert_fix f
 
@@ -210,10 +210,10 @@ def test04Mode
 	assert_check_fail g
 
 
-	# Create file with different mode
+	# Create file with specific mode
 	#
 	path = @@tmpdir + 'mode'
-	f = Path.new( path: path, mode: 0100640 )
+	f = Path.new( path: path, type: :file, mode: 0100640 )
 
 	assert_fix   f
 	assert       path.file?
@@ -240,7 +240,7 @@ def test04Mode
 	# Change owner on existing file
 	#
 	path = @@tmpdir + 'fix'
-	f = Path.new( path: path )
+	f = Path.new( path: path, type: :file )
 
 	assert_fix f
 
