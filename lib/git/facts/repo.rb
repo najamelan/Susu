@@ -6,107 +6,6 @@ module Facts
 
 # Options (* means mandatory)
 #
-# path*       : Path to the repository directory (workingDir with .git)
-# exist : bool   (default=true)
-#
-class RepoExist < TidBits::Facts::Fact
-
-attr_reader :repo
-
-
-def initialize( path:, bare: false, **opts )
-
-	super( **opts, path: path.path, bare: bare )
-
-
-	if options.exist
-
-		dependOn( Path, { path: @path }, type: 'directory' )
-
-	elsif options.bare
-
-		 dependOn( PathExist, { path: @path }, exist: false )
-
-	end
-
-
-	@repo = TidBits::Git::Repo.new( @path )
-
-end
-
-
-
-def analyze( update = false )
-
-	super == 'return'  and  return @analyzePassed
-
-	@state[ :exist ][ :found ] = @repo.valid?
-
-	@analyzePassed
-
-end
-
-
-
-def check( update = false )
-
-	super == 'return'  and  return @checkPassed
-
-	key = :exist
-
-	@state[ key ][ :passed ] = found( key ) == expect( key )  and  return @checkPassed
-
-	# Failure
-	#
-	@checkPassed             = false
-	@state[ key ][ :passed ] = false
-
-	expect( key )  and  warn "#{@path.inspect} is not a git repo."
-	expect( key )  or   warn "#{@path.inspect} is a git repo but it shouldn't."
-
-	@checkPassed
-
-end
-
-
-
-def fix( update = false )
-
-	super == 'return'  and  return @fixPassed
-
-
-	@state[ :exist ][ :fixed ] = true
-
-	# TODO: catch exceptions and report
-	#
-	if expect( :exist )
-
-		@repo.init params.bare
-
-	else
-
-		@repo.deinit
-
-	end
-
-
-	@fixPassed = check( true )
-
-
-	_fixed( :exist ) and @state[ :exist ][ :fixed ] = @state[ :exist ][ :passed ]
-
-	@fixPassed
-
-end
-
-
-end # class  RepoExist
-
-
-
-
-# Options (* means mandatory)
-#
 # path*  : Path to the repository directory (workingDir with .git)
 # head   : String      (the ref name head should point to, eg. a branch name)
 # clean  : Boolean     (whether the working dir is clean)
@@ -173,12 +72,15 @@ def fix
 
 	super do
 
-		# TODO: catch exceptions and report
-		#
 		if @expect
 
-			bare = @sm.desire( @factAddr )[ :bare ]  ||  options.createBare
-			@fact.repo.init( bare )
+			options.has_key? :bare  or
+
+				raise "In order to create a git repository, you must specify :bare on Git::Facts::Repo."
+
+			# TODO: catch exceptions from init or deinit and report
+			#
+			@fact.repo.init( options.bare )
 
 		else
 
@@ -195,6 +97,39 @@ def fix
 end
 
 end # class Exist < Condition
+
+
+class Bare < TidBits::Facts::Conditions::Condition
+
+
+def analyze
+
+	dependOn( @factAddr.dup.push( :exist ), true )
+
+	super @fact.repo.bare?
+
+end
+
+
+def fix
+
+	super do
+
+		old = options.path.mv( options.path.to_path + '.bak' )
+
+		Git::Repo.clone( old, options.path, bare: @expect )
+
+		old.rm_secure
+
+		true
+
+	end
+
+	@status
+
+end
+
+end # class Bare < Condition
 
 
 end # module Conditions

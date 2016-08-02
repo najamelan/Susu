@@ -20,6 +20,17 @@ attr_reader :remotes
 attr_reader :branches
 
 
+def self.clone src, dst, **opts
+
+	src.respond_to?( :to_path ) and src = src.to_path
+	dst.respond_to?( :to_path ) and dst = dst.to_path
+
+	Rugged::Repository.clone_at( src, dst, opts )
+	Module.nesting.first.new( dst )
+
+end
+
+
 def initialize( path, **opts )
 
 	setupOptions( opts )
