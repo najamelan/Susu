@@ -50,12 +50,12 @@ end
 def init
 
 	@mustDepend    = Array.eat( options.mustDepend   )
-	@depend        = Array.eat( options.dependOn     )
+	@depends       = Array.eat( options.dependOn     )
 	@metas         = Array.eat( options.metas        )
 	@factPool      = Array.eat( options.factPool   )
 
 
-	@log           = Logger.new(STDERR)
+	@log           = Logger.new( STDERR )
 	@log.progname  = self.class.name
 
 	@indexKeys     = Array.eat( options.indexKeys )
@@ -64,8 +64,8 @@ def init
 	@address       = createAddress
 	@params        = createParams
 	@state         = createState
-	@desire        = @sm.desire!( @address )
-	@conditions    = @sm.conditions.dig!( *@address )
+	@desire        = @sm.desire!      @address
+	@conditions    = @sm.conditions!  @address
 	@facts         = @sm.facts
 
 	@facts.set @address, self
@@ -76,12 +76,12 @@ def init
 end
 
 
-
+protected :reset
 def reset
 
 	super
 
-	@depend    .each { |dep      | dep .reset }
+	@depends   .each { |dep      | dep .reset }
 	@conditions.each { |key, cond| cond.reset }
 
 end
@@ -125,7 +125,7 @@ def createDesire
 
 	@state.each do | key, value |
 
-		if @desire[ key ] && desire[ key ] != value.expect
+		if @desire[ key ] && @desire[ key ] != value.expect
 
 			raise "Conflicting wanted states for: #{@address[ key ].ai}
 			       desire: #{ value.expect }, but value already present is:
@@ -151,7 +151,7 @@ def createConditions
 
 		@conditions[ key ] and  raise "The condition already exists: #{address.ai}"
 
-		@conditions[ key ] = klass.new( **options, address: address, stateMachine: @sm)
+		@conditions[ key ] = klass.new( **options.dup, address: address, stateMachine: @sm )
 
 	end
 
@@ -160,31 +160,17 @@ def createConditions
 end
 
 
-
-def fixedAny?
-
-	@fixedAny and return true
-
-	@depend.any? { |dep| dep.fixedAny? }
-
-end
-
-
-
 def analyze
 
-	checkDepends  or  ( analyzeFailed; return false )
+	super
 
-	@operation ||= :analyze
+	analyzed?              and  return analyzePassed?
+	runDepends( :analyze )  or  return analyzeFailed
 
-	analyzePassed?  and  return @status
-	states = @conditions.map { |key, cond| cond.analyze }
+	@conditions.values.map( &:analyze ).all? ?
 
-	states.none? { |state| state.include? :analyzeFailed }  ?  analyzePassed : analyzeFailed
-
-	@operation == :analyze and @operation = nil
-
-	analyzePassed? ? true : false
+		  analyzePassed
+		: analyzeFailed
 
 end
 
@@ -192,18 +178,18 @@ end
 
 def check
 
-	checkDepends  or  ( checkFailed; return false )
+	super
 
-	@operation ||= :check
+	checked?             and  return checkPassed?
 
-	analyzed? or analyze
-	states = @conditions.map { |key, cond| cond.check }
+	analyze               or  return false
+	runDepends( :check )  or  return checkFailed
 
-	states.none? { |state| state.include? :checkFailed }  ?  checkPassed : checkFailed
 
-	@operation == :check and @operation = nil
+	@conditions.values.map( &:check ).all? ?
 
-	checkPassed? ? true : false
+		  checkPassed
+		: checkFailed
 
 end
 
@@ -211,29 +197,24 @@ end
 
 def fix
 
-	fixDepends  or  ( fixFailed; return false )
+	fixed?  and  return fixPassed?
 
-	@operation ||= :fix
+	# If check passes, we didn't change the system, so don't set fixPassed
+	#
+	check  and  return true
 
-	checked?       or  check
-	checkPassed?  and  ( fixPassed; return true )
+	# Calls Status#fix to change our state to fixing
+	#
+	super
 
-	@conditions.map { |key, cond| cond.fix }
+	runDepends( :fix )  or  return fixFailed
 
-	if @conditions.any? { |key, cond| cond.fixed? }
+	@conditions.values.map( &:fix )
 
-		@fixedAny = true
-		reset
-		check
-
-	end
-
+	reset
+	check
 
 	checkPassed?  ?  fixPassed  :  fixFailed
-
-	@operation == :fix and @operation = nil
-
-	fixPassed? ? true : false
 
 end
 
@@ -276,45 +257,20 @@ end
 
 
 
-def checkDepends
+def runDepends( operation )
 
-	@depend.each do | dep |
+	@depends.map do |dep|
 
-		!dep.checked?  and  dep.check
+		ret = dep.send( operation )
 
-		if !dep.checkPassed?
+		ret or warn  "#{self.class.name}: Dependency #{dep.class.name} #{dep.params.ai} failed operation: #{operation}."
 
-			warn "#{self.class.name}: Dependency #{dep.class.name} #{dep.params.ai} failed."
-			return false
+		ret
 
-		end
-
-	end
-
-	true
+	end.all?
 
 end
 
-
-
-def fixDepends( update = false, **options )
-
-	@depend.each do | dep |
-
-		!dep.fixed?  and  dep.fix
-
-		if !dep.fixPassed?
-
-			warn "#{self.class.name}: Dependency #{dep.class.name} #{dep.params.ai} could not be fixed."
-			return false
-
-		end
-
-	end
-
-	true
-
-end
 
 
 
@@ -330,16 +286,16 @@ def dependOn( klass, args, **opts )
 
 	if result = recycleDepend?( :pool, [], klass, args, **opts )
 
-		result.equal?( self )  or  @depend.push result
+		result.equal?( self )  or  @depends.push result
 		return result
 
 	end
 
 	opts.factPool = Array.eat( opts.factPool )
-	opts.factPool += [self] + @depend
-	@depend.push klass.new( **args, **opts )
+	opts.factPool += [self] + @depends
+	@depends.push klass.new( **args, **opts )
 
-	@depend.last
+	@depends.last
 
 end
 
@@ -369,7 +325,7 @@ def recycleDepend?( type, visited = [], klass, args, **opts )
 	end
 
 
-	@depend.each do |fact|
+	@depends.each do |fact|
 
 		f = fact.recycleDepend?( type, visited, klass, args, **opts ) and return f
 

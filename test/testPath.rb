@@ -27,7 +27,7 @@ def test01Exist
 	assert_check   f
 	assert_fix     f
 
-	assert ! f.fixedAny?
+	assert ! f.fixed?
 	assert   @@tmpdir.directory?
 
 	# Test create file
@@ -38,9 +38,8 @@ def test01Exist
 	f = Path.new( path: path, type: :file )
 
 	assert_analyze_fail f
-	assert_check_fail   f
 	assert_fix          f
-	assert              f.fixedAny?
+	assert              f.fixed?
 
 	assert  path.file?
 
@@ -54,7 +53,7 @@ def test01Exist
 	assert_check_fail f
 	assert_fix        f
 
-	assert            f.fixedAny?
+	assert            f.fixed?
 	assert            ! path.exist?
 
 
@@ -64,10 +63,9 @@ def test01Exist
 	f = Path.new( path: path, type: :directory )
 
 	assert_analyze_fail f
-	assert_check_fail   f
 	assert_fix          f
 
-	assert              f.fixedAny?
+	assert              f.fixed?
 	assert              path.directory?
 
 
@@ -79,7 +77,7 @@ def test01Exist
 	f = Path.new( path: path, type: :file )
 
 	assert_fix  f
-	assert      f.fixedAny?
+	assert      f.fixed?
 
 	assert      path.file?
 
@@ -95,7 +93,7 @@ def test02Type
 	assert_check     f
 	assert_fix       f
 
-	assert         ! f.fixedAny?
+	assert         ! f.fixed?
 	assert           @@tmpdir.directory?
 
 	# Test create directory
@@ -118,7 +116,7 @@ def test02Type
 	assert_check_fail f
 	assert_fix        f
 
-	assert            f.fixedAny?
+	assert            f.fixed?
 	assert            path.file?
 
 
@@ -129,7 +127,7 @@ def test02Type
 	f = Path.new( path: path, type: :directory )
 
 	assert_fix  f
-	assert      f.fixedAny?
+	assert      f.fixed?
 
 	assert      path.directory?
 
@@ -271,7 +269,7 @@ def test05RecursivePath
 	f = RecursivePath.new( path: path, dirMode: path.stat.mode, fileMode: f1.stat.mode, own: { uid: options.uid, gid: options.gid } )
 
 	assert_check   f
-	assert       ! f.fixedAny?
+	assert       ! f.fixed?
 
 
 	# Change mode and owner
@@ -279,7 +277,7 @@ def test05RecursivePath
 	f = RecursivePath.new( path: path, dirMode: 040700, fileMode: 0100640, own: { uid: options.uid2, gid: options.gid2 } )
 
 	assert_fix f
-	assert     f.fixedAny?
+	assert     f.fixed?
 
 	assert       path.directory?
 	assert       sub .directory?
@@ -308,7 +306,7 @@ def test05RecursivePath
 	f = RecursivePath.new( path: path, dirMode: 040700, own: { uid: options.uid2, gid: options.gid2 } )
 
 	assert_fix   f
-	assert       f.fixedAny?
+	assert       f.fixed?
 	assert       path.directory?
 	assert_equal 040700, path.stat.mode
 

@@ -8,6 +8,8 @@ include Options::Configurable, Status, InstanceCount
 
 attr_reader :expect, :found, :status, :fact
 
+protected :reset
+
 def initialize **opts
 
 	super
@@ -23,6 +25,8 @@ def initialize **opts
 	@fact     = @sm.facts( @factAddr )
 	@expect   = @sm.desire( @address )
 
+	@systemChanged = false
+
 	reset
 
 end
@@ -31,7 +35,7 @@ end
 
 def analyze found
 
-	analyzePassed?  and  return @status
+	analyzed?  and  return analyzePassed?
 
 	@sm.actual.set( @address, found )
 
@@ -43,19 +47,14 @@ end
 
 def check
 
-	checkPassed? and return @status
-	analyzed?     or analyze
+	checked?  and  return checkPassed?
+	analyze    or  return false
 
-	if @sm.desire( @address ) == @sm.actual( @address )
+	result = @sm.desire( @address ) == @sm.actual( @address )
 
-		return checkPassed
+	result or @fact.debug "Check failed for #{@address.ai}, expect: #{@expect.ai}, found: #{@sm.actual( @address ).ai}"
 
-	else
-
-		@fact.debug "Check failed for #{@address.ai}, expect: #{@expect.ai}, found: #{@sm.actual( @address ).ai}"
-		return checkFailed
-
-	end
+	result  ?  checkPassed  :  checkFailed
 
 end
 
@@ -63,17 +62,20 @@ end
 
 def fix &block
 
-	block_given? or raise ArgumentError.new "Condition#fix requires a block"
+	block_given? or raise ArgumentError.new "#{self.class.name}#fix requires a block"
 
-	checked?       or  check
-	checkPassed?  and  fixPassed
-	fixPassed?    and  return @status
+	fixed?          and  return fixPassed?
+	check           and  return true
+
+	# If we we can't analyze, we can't check, let alone fix
+	#
+	analyzePassed?   or  return false
 
 	yield
 	reset
 	check
 
-	checkPassed? ? fixPassed : fixFailed
+	checkPassed?  ?  fixPassed  :  fixFailed
 
 end
 
@@ -83,22 +85,33 @@ end
 # together. This method will make sure the operation on the corresponding condition
 # is run at this moment if it hasn't already run.
 #
-# @param  address    The address in the statemachine to the property you want to depend on.
+# @param  address    [Array] The address in the statemachine to the property you want to depend on.
 # @param  value      The value the property needs to hold for the dependency to be met, optional.
-# @param  operation  The operation of the dependency that needs to pass, default :fix.
-#                    Can be :analyze, :check or :fix.
+# @param  operation  [Symbol] The operation of the dependency that needs to pass, default :fix.
+#                             Can be :analyze, :check or :fix.
+# @param  opts       [Hash]   Options for the condition in case it needs to be created.
 #
 # @return true on success, false on failure.
 #
-def dependOn( address, value = nil, operation = :fix )
+def dependOn( address, value = nil, operation = :fix, **opts )
+# def dependOn( condition, value = nil, fact: @fact, **opts )
 
 	desire = @sm.desire    ( address )
 	cond   = @sm.conditions( address )
 
 
-	cond  or
+	if !value.nil? && !cond
 
-		raise "Failed to find dependency for #{address}. Caller: #{self}"
+		# Add the desired value to the options hash
+		#
+		opts[ address.last ] = value
+		opts[ :address     ] = address
+		fClass = Object.const_get( address.first )
+		cClass = fClass.const_get( fClass.options.conditions ).const_get( address.last.to_s.capitalize! )
+		cond  = @sm.conditions.set( address, cClass.new( opts ) )
+		@sm.desire.set( address, value )
+
+	end
 
 
 	case operation
@@ -118,11 +131,9 @@ def dependOn( address, value = nil, operation = :fix )
 		# Conditions can depend on eachother, however if the client didn't tell us to
 		# fix, we shouldn't make changes to the system, so check @fact.operation.
 		#
-		if @fact.operation == :fix
+		if @fact.fixing?
 
 			cond.fix
-			result = cond.fixPassed?
-			result and cond.fact.fixedAny = true
 
 		# As a second best, if check passes, there was no need to fix, so we shall consider
 		# this a success.
@@ -141,14 +152,21 @@ def dependOn( address, value = nil, operation = :fix )
 	# this condition exists (eg. to create a file, it needs to be known whether we should create a
 	# file or a directory, but both are fine).
 	#
-	value.nil? || desire == value  or
+	value.nil? || desire.nil? || desire == value  or
 
-		raise "Failed to satisfy dependency for #{address}, which should be #{value}, but desired state already has #{desire}. Caller #{self}"
+		raise "Failed to satisfy dependency for #{address.ai}, which should be #{value.ai}, but desired state already has #{desire.ai}. Caller #{self}"
 
 
 	result
 
 end
+
+
+def systemChanged?; @systemChanged end
+
+protected
+
+def systemChanged; @systemChanged = true end
 
 
 end # class Condition

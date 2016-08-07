@@ -210,24 +210,20 @@ def fix
 				raise "In order to create a path, you must specify :type on Facts::Path."
 
 
-			type = @sm.desire( @factAddr )[ :type ]
+			case options.type
 
-			case type
+				when :file     ; options.path.touch
+				when :directory; options.path.mkdir
 
-			when :file     ; options.path.touch
-			when :directory; options.path.mkdir
+				else
 
-			else
-
-				raise "Creating path of type: #{type}, not implemented"
+					raise "Creating path of type: #{type}, not implemented"
 
 			end
 
 		end
 
 	end
-
-	@status
 
 end
 
@@ -280,7 +276,7 @@ class Type < StatCondition
 
 				@fact.info "Did not change type on #{options.path} to #{@expect} because the file exists and force is not set. Current type: #{@sm.actual( @address )}"
 
-				return fixFailed
+				return false
 
 			end
 
@@ -301,13 +297,12 @@ class Own < StatCondition
 
 	def check
 
-		super
-
 		@sm.actual( @address ).nil? and raise "Analyze for #{self.ai} returned nil"
 
-		@status
+		super
 
 	end
+
 
 	def fix
 
@@ -323,21 +318,11 @@ class Mode < StatCondition
 
 	def check
 
-		analyzed?     or analyze
-		checkPassed? and return @status
-
 		@sm.actual( @address ).nil? and raise
 
-		if @sm.desire( @address ) == @sm.actual( @address )
+		super or @fact.debug "Check failed for #{@address.ai}, expect: #{@expect.to_s( 8 )}, found: #{@sm.actual( @address ).to_s( 8 )}"
 
-			return checkPassed
-
-		else
-
-			@fact.debug "Check failed for #{@address.ai}, expect: #{@expect.to_s( 8 )}, found: #{@sm.actual( @address ).to_s( 8 )}"
-			return checkFailed
-
-		end
+		checkPassed?
 
 	end
 

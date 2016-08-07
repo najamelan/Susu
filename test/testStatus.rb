@@ -10,6 +10,8 @@ class StatusTest
 
 	attr_accessor :status
 
+	public :analyzePassed, :checkPassed, :fixPassed, :analyzeFailed, :checkFailed, :fixFailed, :reset
+
 end # class StatusTest
 
 
@@ -273,17 +275,22 @@ def test09Reset
 
 	assert   @s.fresh?
 
+	assert ! @s.operating?
+
 	assert ! @s.analyzed?
 	assert ! @s.analyzePassed?
 	assert ! @s.analyzeFailed?
+	assert ! @s.analyzing?
 
 	assert ! @s.checked?
 	assert ! @s.checkPassed?
 	assert ! @s.checkFailed?
+	assert ! @s.checking?
 
 	assert ! @s.fixed?
 	assert ! @s.fixPassed?
 	assert ! @s.fixFailed?
+	assert ! @s.fixing?
 
 end
 

@@ -120,8 +120,8 @@ end
 def assert_fix fact
 
 	assert   fact.fix
-	assert   fact.fixed?
-	assert   fact.fixPassed?
+	assert   fact.checked?
+	assert   fact.checkPassed?
 	assert ! fact.fixFailed?
 	assert ! fact.fresh?
 
