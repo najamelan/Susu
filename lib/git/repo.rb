@@ -74,7 +74,8 @@ def createBackend
 	#
 	rescue Rugged::RepositoryError, Rugged::OSError, ArgumentError => e
 
-		@rug = @git = @remotes = @branches = nil
+		@rug = @git = nil
+		@remotes, @branches = {}, {}
 
 	end
 
@@ -142,7 +143,7 @@ end
 
 
 
-def workingDirClean?()
+def clean?()
 
 	pwd = Dir.pwd
 	Dir.chdir @path

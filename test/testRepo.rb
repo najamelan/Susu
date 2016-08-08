@@ -12,21 +12,21 @@ def test00Constructor
 	assert_equal        @@repo, r.path
 
 	assert                r.valid?
-	assert                r.workingDirClean?
+	assert                r.clean?
 	assert              ! r.bare?
 
 end
 
 
-def test01CleanWorkingDir
+def test01clean
 
 	r = Repo.new @@repo
 
-	assert r.workingDirClean?
+	assert r.clean?
 
 	pollute r.path
 
-	assert ! r.workingDirClean?
+	assert ! r.clean?
 
 end
 

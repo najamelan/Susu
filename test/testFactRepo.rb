@@ -76,6 +76,16 @@ def test02Bare
 end
 
 
+def test03Clean
+
+	f = Facts::Repo.new( path: @@repo, clean: true )
+
+	assert_analyze f
+	assert_check   f
+
+end
+
+
 end # class  TestFactRepo
 end # module Git
 end # module TidBits

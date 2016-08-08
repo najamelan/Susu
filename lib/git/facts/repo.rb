@@ -88,15 +88,11 @@ def fix
 
 		end
 
-		true
-
 	end
-
-	@status
 
 end
 
-end # class Exist < Condition
+end # class Exist < TidBits::Facts::Conditions::Condition
 
 
 class Bare < TidBits::Facts::Conditions::Condition
@@ -121,15 +117,44 @@ def fix
 
 		old.rm_secure
 
-		true
-
 	end
-
-	@status
 
 end
 
-end # class Bare < Condition
+end # class Bare < TidBits::Facts::Conditions::Condition
+
+
+# Verify whether the working directory is clean
+#
+class Clean < TidBits::Facts::Conditions::Condition
+
+
+def analyze
+
+	dependOn( @factAddr.dup.push( :bare ), false, :check, options.dup )
+
+	super @fact.repo.clean?
+
+end
+
+
+def fix
+
+	super do
+
+		if @expect
+
+
+		else
+
+
+		end
+
+	end
+
+end
+
+end # class Clean < TidBits::Facts::Conditions::Condition
 
 
 end # module Conditions
