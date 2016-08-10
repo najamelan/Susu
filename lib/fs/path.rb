@@ -254,23 +254,28 @@ def chdir &block
 end
 
 
-# Returns an array of children of the Path.
+# Returns an array of children of the Path. Extends Pathname#children with recursive functionality, the possibility
+# to filter entries with a block, to follow symlinks or not. The order of the output is undefined, eg. files might
+# not be returned in alphabetical order.
 #
 # @param  options  The options accepted are :
-#                  - dir:       true
-#                  - file:      true
-#                  - follow:    true
-#                  - recursive: false
+#                  - withDir:   prefix current path to results @see Pathname#children. Note that Pathname#children always
+#                               sets withDir to false if the current path is '.',  default: true
+#                  - follow:    follow symlinks            , default: true
+#                  - recursive: recurse into subdirectories, default: false
 #
-# @param  block    an optional block
+# @param  block    an optional block which will receive each entry as it is found. If the block returns true,
+#                  the entry will end up in the list returned, if block returns a path object, the current entry
+#                  will be replaced by this path object, and else the entry will be omitted.
 #
-# @return { description_of_the_return_value }
+#                  Note that when recursive is true, the block will receive each entry as it is found, so if the block
+#                  doesn't return a directory, it will not be recursed into. You can use this to recurse selectively.
 #
-def children( dir: true, file: true, follow: true, recursive: false, &block )
+# @return [Array] The list of entries below the current path.
+#
+def children( follow: true, recursive: false, withDir: true, &block )
 
-	toddlers = super( dir )
-
-	file   or toddlers.delete_if { |entry| entry.file? }
+	toddlers = super( withDir )
 
 	block_given? and toddlers.map! do |entry|
 
@@ -291,12 +296,12 @@ def children( dir: true, file: true, follow: true, recursive: false, &block )
 			!follow && path.link? and next []
 			path.directory?        or next []
 
-			path.children( dir: dir, file: file, follow: follow, recursive: recursive, &block )
+			path.children( follow: follow, recursive: recursive, withDir: withDir, &block )
 
 		end.flatten
 
 
-	return toddlers
+	toddlers
 
 end
 

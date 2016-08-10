@@ -166,29 +166,66 @@ def test04Glob
 end
 
 
+# TODO: verify follow and withDir options
+#
 def test05Children
 
-	p = @@tmp.path
+	p = @@tmp.path.mkpath
+	sub = p.mkdir 'sub'
 
-	p.mkdir
+	assert_instance_of( Path, p        )
+	assert_instance_of( Path, sub      )
+	assert            ( p  .directory? )
+	assert            ( sub.directory? )
 
+	haha = p.touch 'haha'
+	hihi = p.touch 'hihi'
 
+	ssub = sub .mkdir 'ssub'
+	hoho = sub .touch 'hoho'
+	hehe = ssub.touch 'hehe'
 
-	f = @@tmp.path
+	aP    = [ hihi, haha, sub ]
+	aSub  = [ hoho, ssub      ]
+	aSsub = [ hehe            ]
 
-	assert_instance_of( Path, f      )
-	assert            ( f.exist?     )
-	assert            ( f.directory? )
+	cP    = p   .children
+	cSub  = sub .children
+	cSsub = ssub.children
 
-	f.touch 'haha'
-	f.touch 'hihi'
+	assert_instance_of( Array, cP )
+	assert_equal(       aP   , cP )
+	assert( cP.all? { |e| e.kind_of? Path } )
 
-	d = f.glob( '*' )
+	assert_instance_of( Array, cSub )
+	assert_equal(       cSub, aSub )
+	assert( cSub.all? { |e| e.kind_of? Path } )
 
-	assert_instance_of( Array, d        )
-	assert_equal(       2    , d.length )
+	assert_instance_of( Array, cSsub )
+	assert_equal(       cSsub, aSsub )
+	assert( cSsub.all? { |e| e.kind_of? Path } )
 
-	assert( d.all? { |p| p.kind_of? Path } )
+	# recursive
+
+	arSsub = aSsub
+	arSub  = aSub  + aSsub
+	arP    = aP    + aSub  + aSsub
+
+	crP    = p   .children( recursive: true )
+	crSub  = sub .children( recursive: true )
+	crSsub = ssub.children( recursive: true )
+
+	assert_instance_of( Array, crP )
+	assert_equal(       arP   , crP )
+	assert( crP.all? { |e| e.kind_of? Path } )
+
+	assert_instance_of( Array, crSub )
+	assert_equal(       crSub, arSub )
+	assert( crSub.all? { |e| e.kind_of? Path } )
+
+	assert_instance_of( Array, crSsub )
+	assert_equal(       crSsub, arSsub )
+	assert( crSsub.all? { |e| e.kind_of? Path } )
 
 end
 
