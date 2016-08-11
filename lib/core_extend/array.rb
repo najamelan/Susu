@@ -25,7 +25,7 @@ end
 def self.eat( object )
 
   object.nil?              and return []
-  object.kind_of?( Array ) and return object
+  object.kind_of?( self ) and return object
 
   [object]
 
@@ -52,7 +52,7 @@ end
 #
 def self.spit args
 
-	args.kind_of?(Array) && args.length == 1  and  args = args.first
+	args.kind_of?( self ) && args.length == 1  and  args = args.first
 
 	args
 
