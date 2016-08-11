@@ -8,7 +8,7 @@ class TestFactCase < Test::Unit::TestCase
 
 def self.startup
 
-	@@tmp  = Dir.mktmpdir( self.class.lastname ).path
+	@@tmp  = Dir.mktmpdir( [ '', self.lastname ] ).path
 
 end
 
@@ -69,73 +69,73 @@ end
 
 
 
-def assert_analyze fact
+def assert_analyze fact, msg = ''
 
-	assert   fact.analyze
-	assert   fact.analyzed?
-	assert   fact.analyzePassed?
-	assert ! fact.analyzeFailed?
-	assert ! fact.fresh?
-
-end
-
-
-
-def assert_analyze_fail fact
-
-	assert ! fact.analyze
-	assert   fact.analyzed?
-	assert ! fact.analyzePassed?
-	assert   fact.analyzeFailed?
-	assert ! fact.fresh?
+	assert(   fact.analyze       , msg.ai )
+	assert(   fact.analyzed?     , msg.ai )
+	assert(   fact.analyzePassed?, msg.ai )
+	assert( ! fact.analyzeFailed?, msg.ai )
+	assert( ! fact.fresh?        , msg.ai )
 
 end
 
 
 
-def assert_check fact
+def assert_analyze_fail fact, msg = ''
 
-	assert   fact.check
-	assert   fact.checked?
-	assert   fact.checkPassed?
-	assert ! fact.checkFailed?
-	assert ! fact.fresh?
-
-end
-
-
-
-def assert_check_fail fact
-
-	assert ! fact.check
-	assert   fact.checked?
-	assert ! fact.checkPassed?
-	assert   fact.checkFailed?
-	assert ! fact.fresh?
+	assert( ! fact.analyze       , msg.ai )
+	assert(   fact.analyzed?     , msg.ai )
+	assert( ! fact.analyzePassed?, msg.ai )
+	assert(   fact.analyzeFailed?, msg.ai )
+	assert( ! fact.fresh?        , msg.ai )
 
 end
 
 
 
-def assert_fix fact
+def assert_check fact, msg = ''
 
-	assert   fact.fix
-	assert   fact.checked?
-	assert   fact.checkPassed?
-	assert ! fact.fixFailed?
-	assert ! fact.fresh?
+	assert(   fact.check         , msg.ai )
+	assert(   fact.checked?      , msg.ai )
+	assert(   fact.checkPassed?  , msg.ai )
+	assert( ! fact.checkFailed?  , msg.ai )
+	assert( ! fact.fresh?        , msg.ai )
 
 end
 
 
 
-def assert_fix_fail fact
+def assert_check_fail fact, msg = ''
 
-	assert ! fact.fix
-	assert   fact.fixed?
-	assert ! fact.fixPassed?
-	assert   fact.fixFailed?
-	assert ! fact.fresh?
+	assert( ! fact.check         , msg.ai )
+	assert(   fact.checked?      , msg.ai )
+	assert( ! fact.checkPassed?  , msg.ai )
+	assert(   fact.checkFailed?  , msg.ai )
+	assert( ! fact.fresh?        , msg.ai )
+
+end
+
+
+
+def assert_fix fact, msg = ''
+
+	assert(   fact.fix           , msg.ai )
+	assert(   fact.checked?      , msg.ai )
+	assert(   fact.checkPassed?  , msg.ai )
+	assert( ! fact.fixFailed?    , msg.ai )
+	assert( ! fact.fresh?        , msg.ai )
+
+end
+
+
+
+def assert_fix_fail fact, msg = ''
+
+	assert( ! fact.fix           , msg.ai )
+	assert(   fact.fixed?        , msg.ai )
+	assert( ! fact.fixPassed?    , msg.ai )
+	assert(   fact.fixFailed?    , msg.ai )
+	assert( ! fact.fresh?        , msg.ai )
 
 end
 
