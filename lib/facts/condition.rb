@@ -33,9 +33,14 @@ end
 
 
 
-def analyze found
+def analyze &block
+
+	block_given? or raise ArgumentError.new "Condition#Analyze requires a block."
 
 	analyzed?  and  return analyzePassed?
+
+	found = yield
+	analyzeFailed? and return false
 
 	@sm.actual.set( @address, found )
 
@@ -45,12 +50,16 @@ end
 
 
 
-def check
+def check &block
 
 	checked?  and  return checkPassed?
 	analyze    or  return false
 
-	result = @sm.desire( @address ) == @sm.actual( @address )
+	result = block_given? ?
+
+		  yield
+		: @sm.desire( @address ) == @sm.actual( @address )
+
 
 	result or @fact.debug "Check failed for #{@address.ai}, expect: #{@expect.ai}, found: #{@sm.actual( @address ).ai}"
 
@@ -62,7 +71,7 @@ end
 
 def fix &block
 
-	block_given? or raise ArgumentError.new "#{self.class.name}#fix requires a block"
+	block_given? or raise ArgumentError.new "Condition#fix requires a block."
 
 	fixed?          and  return fixPassed?
 	check           and  return true
@@ -81,85 +90,59 @@ end
 
 
 
-# Let's a condition depend on another condition, possibly from another fact all
-# together. This method will make sure the operation on the corresponding condition
-# is run at this moment if it hasn't already run.
+# Let's a condition depend on another condition from the same fact. If it doesn't exist, it will be added to the fact.
+# This method will test check on the corresponding condition at this and if it hasn't already run and we are fixing it
+# will attempt to fix the condition. If the method returns false, you should abort your operation.
 #
-# @param  address    [Array] The address in the statemachine to the property you want to depend on.
-# @param  value      The value the property needs to hold for the dependency to be met, optional.
-# @param  operation  [Symbol] The operation of the dependency that needs to pass, default :fix.
-#                             Can be :analyze, :check or :fix.
-# @param  opts       [Hash]   Options for the condition in case it needs to be created.
+# @param  condition  The condition
+# @param  value      The value the property needs to hold for the dependency to
+#                    be met, optional.
+# @param  opts       [Hash] Possible overrides of options to be used if the condition needs to be created.
 #
 # @return true on success, false on failure.
 #
-def dependOn( address, value = nil, operation = :fix, **opts )
-# def dependOn( condition, value = nil, fact: @fact, **opts )
+def dependOn( condition, value, **opts )
 
-	desire = @sm.desire    ( address )
+	address = @factAddr.dup << condition
+
+
+	# If the condition doesn't exist, create it
+	#
+	if !@sm.conditions( address )
+
+		opts              = options.deep_merge opts
+		opts[ condition ] = value
+
+		@fact.addCondition( condition, value )
+
+	end
+
+
 	cond   = @sm.conditions( address )
 
+	case @fact.operation
 
-	if !value.nil? && !cond
-
-		# Add the desired value to the options hash
-		#
-		opts[ address.last ] = value
-		opts[ :address     ] = address
-		fClass = Object.const_get( address.first )
-		cClass = fClass.const_get( fClass.options.conditions ).const_get( address.last.to_s.capitalize! )
-		cond  = @sm.conditions.set( address, cClass.new( opts ) )
-		@sm.desire.set( address, value )
+		when :fixing; cond.fix
+		else          cond.check
 
 	end
-
-
-	case operation
-
-	when :analyze
-
-		cond.analyze
-		result = cond.analyzePassed?
-
-	when :check
-
-		cond.check
-		result = cond.checkPassed?
-
-	when :fix
-
-		# Conditions can depend on eachother, however if the client didn't tell us to
-		# fix, we shouldn't make changes to the system, so check @fact.operation.
-		#
-		if @fact.fixing?
-
-			cond.fix
-
-		# As a second best, if check passes, there was no need to fix, so we shall consider
-		# this a success.
-		#
-		else
-
-			cond.check
-			result = cond.checkPassed?
-
-		end
-
-	end
-
-
-	# If value is nil, the client doesn't care what the value is, but depends on the fact that
-	# this condition exists (eg. to create a file, it needs to be known whether we should create a
-	# file or a directory, but both are fine).
-	#
-	value.nil? || desire.nil? || desire == value  or
-
-		raise "Failed to satisfy dependency for #{address.ai}, which should be #{value.ai}, but desired state already has #{desire.ai}. Caller #{self}"
-
-
-	result
 
 end
+
+
+
+def dependOnFact( factClass, **opts )
+
+	fact = @sm.facts
+
+	# Add the desired value to the options hash
+	#
+	fClass = Object.const_get( address.first )
+	cClass = fClass.const_get( fClass.options.conditions ).const_get( address.last.to_s.capitalize! )
+	cond  = @sm.conditions.set( address, cClass.new( opts ) )
+	@sm.desire.set( address, value )
+end
+
 
 
 def systemChanged?; @systemChanged end

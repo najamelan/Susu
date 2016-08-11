@@ -74,7 +74,7 @@ class Exist < Condition
 
 def analyze
 
-	super options.path.exist?
+	super { options.path.exist? }
 
 end
 
@@ -97,7 +97,7 @@ def fix
 			case options.type
 
 				when :file     ; options.path.touch
-				when :directory; options.path.mkdir
+				when :directory; options.path.mkpath
 
 				else
 
@@ -121,7 +121,7 @@ class StatCondition < Condition
 		analyzePassed?    and  return @status
 		@fact.statCalled  and  return analyzePassed
 
-		dependOn( @factAddr.dup.push( :exist ), true )  or  return analyzeFailed
+		dependOn( :exist, true )  or  return analyzeFailed
 
 		stat = options.followSymlinks  ?  options.path.stat  :  options.path.lstat
 		@fact.statCalled = true

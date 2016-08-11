@@ -63,15 +63,13 @@ def init
 	@sm            = options.stateMachine || StateMachine.new
 	@address       = createAddress
 	@params        = createParams
-	@state         = createState
 	@desire        = @sm.desire!      @address
 	@conditions    = @sm.conditions!  @address
+
 	@facts         = @sm.facts
+	@facts.set       @address, self
 
-	@facts.set @address, self
-
-	createDesire
-	createConditions
+	@state         = createState
 
 end
 
@@ -88,11 +86,15 @@ end
 
 
 
-def createAddress
+def self.createAddress( **opts )
 
-	@indexKeys.map { |key| options[ key ] }.unshift self.class.name
+	opts = self.options.deep_merge( opts )
+	opts.indexKeys.map { |key| opts[ key ] }.unshift self.name
 
 end
+
+def createAddress; self.class.createAddress( options ) end
+
 
 
 # create a state object from options, only setting expect
@@ -111,6 +113,7 @@ def createState( opts = options )
 	   each do | key, value |
 
 			state[ key ] = { expect: value }
+			addCondition( key, value )
 
 	   end
 
@@ -119,52 +122,40 @@ def createState( opts = options )
 end
 
 
-# put the state on the stateMachine
-#
-def createDesire
+def addCondition( name, value )
 
-	@state.each do | key, value |
+	if @desire[ name ] && @desire[ name ] != value
 
-		if @desire[ key ] && @desire[ key ] != value.expect
+		raise "Conflicting wanted states for: #{@address[ name ].ai}
+		       desire: #{ value }, but value already present is:
+		       desire: #{ @desire[ name ]}.
+				"
 
-			raise "Conflicting wanted states for: #{@address[ key ].ai}
-			       desire: #{ value.expect }, but value already present is:
-			       desire: #{ @desire[ key ]}.
-					"
+	else
 
-		end
-
-		@desire[ key ] = value.expect
+		@desire[ name ] = value
 
 	end
 
+
+	klass = Object.const_get( options.conditions ).const_get( name.to_s.capitalize! )
+	address = @address.dup << name
+
+	@conditions[ name ] and  raise "The condition already exists: #{address.ai}"
+
+	@conditions[ name ] = klass.new( **options.dup, address: address, stateMachine: @sm )
+
+
 end
 
-
-
-def createConditions
-
-	@state.each do | key, value |
-
-		klass = Object.const_get( options.conditions ).const_get( key.to_s.capitalize! )
-		address = @address.dup << key
-
-		@conditions[ key ] and  raise "The condition already exists: #{address.ai}"
-
-		@conditions[ key ] = klass.new( **options.dup, address: address, stateMachine: @sm )
-
-	end
-
-	@conditions
-
-end
 
 
 def analyze
 
-	super
-
 	analyzed?              and  return analyzePassed?
+
+	operating? or super
+
 	runDepends( :analyze )  or  return analyzeFailed
 
 	@conditions.values.map( &:analyze ).all? ?
@@ -178,9 +169,9 @@ end
 
 def check
 
-	super
-
 	checked?             and  return checkPassed?
+
+	operating? or super
 
 	analyze               or  return false
 	runDepends( :check )  or  return checkFailed
@@ -199,13 +190,13 @@ def fix
 
 	fixed?  and  return fixPassed?
 
+	# Calls Status#fix to change our state to fixing. Must be set before check so dependencies can be fixed.
+	#
+	operating? or super
+
 	# If check passes, we didn't change the system, so don't set fixPassed
 	#
 	check  and  return true
-
-	# Calls Status#fix to change our state to fixing
-	#
-	super
 
 	runDepends( :fix )  or  return fixFailed
 

@@ -17,19 +17,20 @@ def analyzeFailed?;  @status.include? :analyzeFailed  end
 def checkFailed?  ;  @status.include? :checkFailed    end
 def fixFailed?    ;  @status.include? :fixFailed      end
 
-def analyzed?;  @status.intersect? [ :analyzeFailed, :analyzePassed ].to_set end
-def checked? ;  @status.intersect? [ :checkFailed  , :checkPassed   ].to_set end
-def fixed?   ;  @status.intersect? [ :fixFailed    , :fixPassed     ].to_set end
+def analyzed?;  @status.intersect? Set[ :analyzeFailed, :analyzePassed ] end
+def checked? ;  @status.intersect? Set[ :checkFailed  , :checkPassed   ] end
+def fixed?   ;  @status.intersect? Set[ :fixFailed    , :fixPassed     ] end
 
-def operating?; @status.intersect? [ :analyzing, :checking, :fixing ].to_set end
+def operating?; @status.intersect? Set[ :analyzing, :checking, :fixing ]    end
+def operation ; ( @status & [ :analyzing, :checking, :fixing ] ).to_a.first end
 
 protected
 
 def initialize( *a, &b ) super; @status = [ :fresh ].to_set; end
 
-def analyze;  operating? and return @status; @status << :analyzing;  @status.delete :fresh;  @status  end
-def check  ;  operating? and return @status; @status << :checking ;  @status.delete :fresh;  @status  end
-def fix    ;  operating? and return @status; @status << :fixing   ;  @status.delete :fresh;  @status  end
+def analyze; operating? and raise " Already operating, status: #{@status.ai}"; @status << :analyzing; @status.delete :fresh; @status end
+def check  ; operating? and raise " Already operating, status: #{@status.ai}"; @status << :checking ; @status.delete :fresh; @status end
+def fix    ; operating? and raise " Already operating, status: #{@status.ai}"; @status << :fixing   ; @status.delete :fresh; @status end
 
 def analyzePassed;  @status << :analyzePassed;  @status -= [ :fresh, :analyzing, :analyzeFailed ];  true  end
 def checkPassed  ;  @status << :checkPassed  ;  @status -= [ :fresh, :checking , :checkFailed   ];  true  end
@@ -44,7 +45,7 @@ def fixFailed    ;  @status << :fixFailed    ;  @status -= [ :fresh, :fixing   ,
 # fixPassed is a way to verify whether changes to the system have been made,
 # so it must survive reset.
 #
-def reset;  @status = [ :fresh ].to_set + ( @status & [ :fixPassed ].to_set ) end
+def reset;  @status = [ :fresh ].to_set + ( @status & Set[ :fixPassed ] ) end
 
 
 end # module Status
