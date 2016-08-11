@@ -19,17 +19,6 @@ default:
     followSymlinks: true
 
 
-  RecursivePath:
-
-    indexKeys : path
-    params    : [ path, followSymlinks, dirMode, fileMode, own ]
-    conditions: TidBits::Facts::Conditions::RecursivePath
-    force     : false
-
-    # Whether to work on symbolic links, or their targets.
-    #
-    followSymlinks: true
-
   Conditions:
 
     Condition: {}
