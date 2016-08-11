@@ -58,5 +58,24 @@ def self.spit args
 
 end
 
+
+
+def first= value
+
+	self[ 0 ] = value
+
+end
+
+
+
+def last= value
+
+	empty? ?
+
+		  self.first = value
+		: self[ -1 ] = value
+
+end
+
 end
 

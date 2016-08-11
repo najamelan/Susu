@@ -84,6 +84,74 @@ def test02Nest_concat!
 end
 
 
+
+def test03first=
+
+	# Format: message, original array, value, expect
+	#
+	data =
+	[
+			[                                     \
+				  "Empty array"                    \
+				, []                               \
+				, 1                                \
+				, [ 1 ]                            \
+			]                                     \
+                                               \
+		,  [                                     \
+				  "Basic usage"                    \
+				, [ 9, 8 ]                         \
+				, 1                                \
+				, [ 1, 8 ]                         \
+			]                                     \
+	]
+
+
+	data.each do | arr |
+
+		arr[ 1 ].first = arr[ 2 ]
+
+		assert_equal( arr[ 3 ], arr[ 1 ], "\n\nTEST: " + arr.first + "\n" )
+
+	end
+
+end
+
+
+
+def test04last=
+
+	# Format: message, original array, value, expect
+	#
+	data =
+	[
+			[                                     \
+				  "Empty array"                    \
+				, []                               \
+				, 1                                \
+				, [ 1 ]                            \
+			]                                     \
+                                               \
+		,  [                                     \
+				  "Basic usage"                    \
+				, [ 9, 8 ]                         \
+				, 1                                \
+				, [ 9, 1 ]                         \
+			]                                     \
+	]
+
+
+	data.each do | arr |
+
+		arr[ 1 ].last = arr[ 2 ]
+
+		assert_equal( arr[ 3 ], arr[ 1 ], "\n\nTEST: " + arr.first + "\n" )
+
+	end
+
+end
+
+
 end # class  TestArray
 end # module CoreExtend
 end # module TidBits
