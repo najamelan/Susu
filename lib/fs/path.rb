@@ -33,9 +33,8 @@ end
 #
 def self.pushd( path, &block )
 
-
 	@pwds << path
-	chdir    path
+	cd       path
 
 	if block_given?
 
@@ -55,10 +54,9 @@ def self.popd
 
 	@pwds.length <= 1 and raise "Current working dir stack is empty, please don't call Path.popd more than you called Path.pushd."
 	@pwds.pop
-	chdir @pwds.last
+	cd @pwds.last
 
 end
-
 
 
 
@@ -66,7 +64,7 @@ def self.pwd
 
 	# When the current working directory gets deleted, things go pear shaped.
 	# Dir.pwd will throw an exception and even `pwd` will choke. In that case
-	# just set the old pwd to the users home dir.
+	# just set the pwd to the users home dir.
 	#
 	pwd = ''
 
@@ -86,7 +84,8 @@ def self.pwd
 end
 
 
-def self.chdir newCWD
+
+def self.cd newCWD
 
 	Dir.chdir newCWD.to_path
 	@pwds.pop
