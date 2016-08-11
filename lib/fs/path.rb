@@ -6,7 +6,7 @@ module Fs
 
 class Path < Pathname
 
-@pwds = [ Dir.pwd ]
+@pwds = []
 
 alias :ls :entries
 
@@ -33,17 +33,13 @@ end
 #
 def self.pushd( path, &block )
 
-	@pwds << path
+	@pwds << pwd
 	cd       path
 
-	if block_given?
+	block_given? or return path.path
 
-		begin ; result = yield path
-		ensure; popd
-		end
-
-		result
-
+	begin ; yield path.path
+	ensure; popd
 	end
 
 end
@@ -52,9 +48,8 @@ end
 
 def self.popd
 
-	@pwds.length <= 1 and raise "Current working dir stack is empty, please don't call Path.popd more than you called Path.pushd."
-	@pwds.pop
-	cd @pwds.last
+	@pwds.length == 0 and raise "Current working dir stack is empty, please don't call Path.popd more than you called Path.pushd."
+	cd @pwds.pop
 
 end
 
@@ -85,15 +80,13 @@ end
 
 
 
-def self.cd newCWD
+def self.cd path
 
-	Dir.chdir newCWD.to_path
-	@pwds.pop
-	@pwds.push newCWD
+	Dir.chdir path.to_path
 
-	newCWD.kind_of?( self ) or newCWD = self.new( newCWD )
+	path.kind_of?( self ) or path = self.new( path )
 
-	newCWD
+	path
 
 end
 

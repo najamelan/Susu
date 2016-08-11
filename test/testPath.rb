@@ -32,7 +32,17 @@ end
 
 def setup
 
+	@@pwd = Dir.pwd
 	@@tmp = File.join @@tmpd, method_name
+
+end
+
+
+
+def teardown
+
+	@@tmp = File.join @@tmpd, method_name
+	Dir.chdir @@pwd
 
 end
 
@@ -226,6 +236,74 @@ def test05Children
 	assert_instance_of( Array, crSsub )
 	assert_equal(       crSsub, arSsub )
 	assert( crSsub.all? { |e| e.kind_of? Path } )
+
+end
+
+
+
+def test06Pwd
+
+	Dir.chdir '/home'
+	path = Path.pwd
+
+	assert_instance_of Path        , path
+	assert_equal       '/home'.path, path
+
+	# Reover form unexisting pwd
+	#
+	Dir.mktmpdir do |dir|
+
+		Dir.chdir dir
+
+	end
+
+	path = Path.pwd
+
+	assert_instance_of Path         , path
+	assert_equal       Dir.home.path, path
+
+end
+
+
+
+def test07Cd
+
+	path = Path.cd '/home'
+
+	assert_instance_of Path        , path
+	assert_equal       '/home'.path, Dir.pwd.path
+
+end
+
+
+
+def test08PushdPopd
+
+	orig = Path.pwd
+
+	path = Path.pushd '/home'
+
+	assert_instance_of Path        , path
+	assert_equal       '/home'.path, Dir.pwd.path
+
+	assert_equal orig, Path.popd
+
+
+	# Change the working dir in another way
+	#
+	orig = Path.cd '/'
+
+	path1 = Path.pushd '/home'
+	path2 = Path.cd    '/var'
+	path3 = Path.pushd '/usr'
+
+	assert_instance_of Path , orig
+	assert_instance_of Path , path1
+	assert_instance_of Path , path2
+	assert_instance_of Path , path3
+
+	assert_equal       path2, Path.popd
+	assert_equal       orig , Path.popd
 
 end
 
