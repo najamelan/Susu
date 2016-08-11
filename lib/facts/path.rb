@@ -179,15 +179,6 @@ end # class Exist < Condition
 
 class Own < StatCondition
 
-	def check
-
-		@sm.actual( @address ).nil? and raise "Analyze for #{self.ai} returned nil"
-
-		super
-
-	end
-
-
 	def fix
 
 		super { options.path.chown( @expect[ :uid ], @expect[ :gid ] ) }
@@ -199,17 +190,6 @@ end # class Own < StatCondition
 
 
 class Mode < StatCondition
-
-	def check
-
-		@sm.actual( @address ).nil? and raise
-
-		super or @fact.debug "Check failed for #{@address.ai}, expect: #{@expect.to_s( 8 )}, found: #{@sm.actual( @address ).to_s( 8 )}"
-
-		checkPassed?
-
-	end
-
 
 	def fix
 
