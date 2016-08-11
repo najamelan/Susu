@@ -24,7 +24,7 @@ end
 
 def randomString
 
-	SecureRandom.base64( 5 )
+	SecureRandom.uuid[0...8]
 
 end
 
@@ -34,12 +34,11 @@ def pollute path
 
 	out = []
 
-	file = randomString
+	out += cmd "touch   polluteWorkingDir" , path
+	out += cmd "touch   polluteIndex"      , path
+	out += cmd "git add polluteIndex"      , path
 
-	out += cmd "touch #{file}"   , path
-	out += cmd "git add #{file}" , path
-
-	return file, out
+	return out
 
 end
 
@@ -127,7 +126,7 @@ def cmd cmds, cwd = Fs::Path.pwd, **options
 
 		stdout, stderr, status = Open3.capture3( cmd, options )
 
-		output << { cmd: cmd, options: options, stdout: stdout, stderr: stderr, status: status }
+		output << { cmd: cmd, cwd: cwd.to_path, options: options, stdout: stdout, stderr: stderr, status: status }
 
 	end
 

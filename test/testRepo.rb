@@ -24,9 +24,24 @@ def test01clean
 
 	assert r.clean?
 
-	pollute r.path
+	r.pollute
 
-	assert ! r.clean?
+	assert  ! r.clean?
+
+end
+
+
+def test02AddAll
+
+	r = Repo.new @@repo
+
+	assert r.clean?
+
+	r.pollute
+	r.addAll
+	r.commit 'clean working dir'
+
+	assert  r.clean?
 
 end
 

@@ -145,17 +145,56 @@ end
 
 def clean?()
 
-	pwd = Dir.pwd
-	Dir.chdir @path
+	Fs::Path.pushd( @path ) do
 
-	clean = `git status -s`.lines.length == 0
+		`git status -s`.lines.length == 0
 
-	# Does not work
-	# @rug.diff_workdir( @rug.head.name ).size == 0
+		# Does not work
+		# @rug.diff_workdir( @rug.head.name ).size == 0
 
-	Dir.chdir pwd
+	end
 
-	clean
+end
+
+
+
+def add pathspec
+
+	@git.add pathspec
+
+end
+
+
+
+def addAll
+
+	!@rug and createBackend
+
+	@git.add( all: true )
+
+end
+
+
+
+def commit( message, **opts )
+
+	!@rug and createBackend
+
+	# Rugged doesn't seem to have commit
+	#
+	@git.commit( message, opts )
+
+end
+
+
+
+def pollute
+
+	!@rug and createBackend
+
+	@path.touch 'polluteWorkingDir'
+	@path.touch 'polluteIndex'
+	@git .add   'polluteIndex'
 
 end
 

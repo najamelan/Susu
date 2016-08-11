@@ -63,7 +63,7 @@ class Exist < TidBits::Facts::Conditions::Condition
 
 def analyze
 
-	super @fact.repo.valid?
+	super { @fact.repo.valid? }
 
 end
 
@@ -100,9 +100,9 @@ class Bare < TidBits::Facts::Conditions::Condition
 
 def analyze
 
-	dependOn( @factAddr.dup.push( :exist ), true )
+	dependOn( :exist, true )
 
-	super @fact.repo.bare?
+	super { @fact.repo.bare? }
 
 end
 
@@ -131,22 +131,25 @@ class Clean < TidBits::Facts::Conditions::Condition
 
 def analyze
 
-	dependOn( @factAddr.dup.push( :bare ), false, :check, options.dup )
+	dependOn( :bare, false ) or return analyzeFailed
 
-	super @fact.repo.clean?
+	super { @fact.repo.clean? }
 
 end
 
 
-def fix
+def fix( msg = "Commit added by #{self.class.name} in order to have clean working dir" )
 
-	super do
+	super() do
 
 		if @expect
 
+			@fact.repo.addAll
+			@fact.repo.commit msg
 
 		else
 
+			@fact.repo.pollute
 
 		end
 

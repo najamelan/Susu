@@ -83,6 +83,16 @@ def test03Clean
 	assert_analyze f
 	assert_check   f
 
+
+	f = Facts::Repo.new( path: @@repo, clean: true )
+
+	f.repo.pollute
+	assert ! f.repo.clean?
+
+	assert_analyze    f
+	assert_check_fail f
+	assert_fix        f
+
 end
 
 
