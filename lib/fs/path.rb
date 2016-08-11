@@ -6,6 +6,8 @@ module Fs
 
 class Path < Pathname
 
+@pwds = [ Dir.pwd ]
+
 alias :ls :entries
 
 # Make a new Fs::Path object.
@@ -19,6 +21,45 @@ def self.new path = self.pwd
 	super path.to_path
 
 end
+
+
+# Push a new directory on the stack of current working dirs and change pwd to
+# it.
+#
+# @param  path    The directory to become pwd
+# @param  &block  When a block is given, execute it and then pop the working dir.
+#
+# @return Then new working dir as an Fs::Path or if a block is given, the result of the block.
+#
+def self.pushd( path, &block )
+
+
+	@pwds << path
+	chdir    path
+
+	if block_given?
+
+		begin ; result = yield path
+		ensure; popd
+		end
+
+		result
+
+	end
+
+end
+
+
+
+def self.popd
+
+	@pwds.length <= 1 and raise "Current working dir stack is empty, please don't call Path.popd more than you called Path.pushd."
+	@pwds.pop
+	chdir @pwds.last
+
+end
+
+
 
 
 def self.pwd
@@ -48,8 +89,12 @@ end
 def self.chdir newCWD
 
 	Dir.chdir newCWD.to_path
+	@pwds.pop
+	@pwds.push newCWD
 
-	newCWD.to_path.path
+	newCWD.kind_of?( self ) or newCWD = self.new( newCWD )
+
+	newCWD
 
 end
 
@@ -256,7 +301,7 @@ end
 
 # Returns an array of children of the Path. Extends Pathname#children with recursive functionality, the possibility
 # to filter entries with a block, to follow symlinks or not. The order of the output is undefined, eg. files might
-# not be returned in alphabetical order.
+# not be returned in alphabetical order. Call `path.children.sort` if you need alphabetical output.
 #
 # @param  options  The options accepted are :
 #                  - withDir:   prefix current path to results @see Pathname#children. Note that Pathname#children always
