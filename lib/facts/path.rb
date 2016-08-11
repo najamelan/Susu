@@ -30,7 +30,7 @@ def self.sanitize key, value
 
 	key, value = super
 
-	if [ :type, :createType ].include? key
+	if [ :type ].include? key
 
 		value = value.to_sym
 
@@ -56,24 +56,6 @@ def reset
 	super
 
 	@statCalled = false
-
-end
-
-
-
-# Make sure path is always a string for the address
-#
-def createAddress
-
-	@indexKeys.map do |key|
-
-		ret = options[ key ]
-
-		key.to_sym == :path and  ret = ret.expand_path.to_path
-
-		ret
-
-	end.unshift self.class.name
 
 end
 
