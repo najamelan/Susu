@@ -147,7 +147,10 @@ def clean?()
 
 	Fs::Path.pushd( @path ) do
 
-		`git status -s`.lines.length == 0
+		ret = `git status -s`.lines.count == 0
+		$CHILD_STATUS == 0 or raise "Git returned an error, Results are not reliable."
+
+		ret
 
 		# Does not work
 		# @rug.diff_workdir( @rug.head.name ).size == 0
@@ -160,7 +163,7 @@ end
 
 def add pathspec
 
-	@git.add pathspec
+	cleanupAfterRubyGit { @git.add pathspec }
 
 end
 
@@ -170,7 +173,7 @@ def addAll
 
 	!@rug and createBackend
 
-	@git.add( all: true )
+	cleanupAfterRubyGit { @git.add( all: true ) }
 
 end
 
@@ -182,7 +185,7 @@ def commit( message, **opts )
 
 	# Rugged doesn't seem to have commit
 	#
-	@git.commit( message, opts )
+	cleanupAfterRubyGit { @git.commit( message, opts ) }
 
 end
 
@@ -194,9 +197,26 @@ def pollute
 
 	@path.touch 'polluteWorkingDir'
 	@path.touch 'polluteIndex'
-	@git .add   'polluteIndex'
+
+	cleanupAfterRubyGit { @git.add 'polluteIndex' }
 
 end
+
+
+# Keep ruby-git from messing with the environment variables
+#
+def cleanupAfterRubyGit
+
+	env = ENV.to_h
+
+	yield
+
+ensure
+
+	ENV.replace env
+
+end
+
 
 
 end # class  Repo
