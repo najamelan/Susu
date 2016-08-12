@@ -27,9 +27,7 @@ end
 
 
 
-attr_reader   :depend, :state, :status, :params, :sm, :address, :conditions, :operation
-attr_accessor :fixedAny
-
+attr_reader   :depend, :state, :status, :params, :sm, :address, :operation
 
 
 def initialize( **opts )
@@ -63,13 +61,9 @@ def init
 	@sm            = options.stateMachine || StateMachine.new
 	@address       = createAddress
 	@params        = createParams
-	@desire        = @sm.desire!      @address
-	@conditions    = @sm.conditions!  @address
 
 	@facts         = @sm.facts
 	@facts.set       @address, self
-
-	@state         = createState
 
 end
 
@@ -79,8 +73,8 @@ def reset
 
 	super
 
-	@depends   .each { |dep      | dep .reset }
-	@conditions.each { |key, cond| cond.reset }
+	@depends  .each { |dep | dep .reset }
+	conditions.each { |cond| cond.reset }
 
 end
 
@@ -99,9 +93,11 @@ def createAddress; self.class.createAddress( options ) end
 
 # create a state object from options, only setting expect
 #
-def createState( opts = options )
+def conditionList( opts = options )
 
-	state = TidBits::Options::Settings.new
+	@conditionList and return @conditionList
+
+	@conditionList = []
 
 	# Only take actual tests
 	#
@@ -112,39 +108,72 @@ def createState( opts = options )
 
 	   each do | key, value |
 
-			state[ key ] = { expect: value }
-			addCondition( key, value )
+			@conditionList << key
 
 	   end
 
-	state
+	@conditionList.uniq!
+	@conditionList.sort!
+	@conditionList
 
 end
 
 
-def addCondition( name, value )
 
-	if @desire[ name ] && @desire[ name ] != value
+def conditions
 
-		raise "Conflicting wanted states for: #{@address[ name ].ai}
-		       desire: #{ value }, but value already present is:
-		       desire: #{ @desire[ name ]}.
-				"
+	@conditions and return @conditions
 
-	else
+	# Make sure we create address in the state machine unless it already exists.
+	#
+	sm = @sm.conditions! @address
 
-		@desire[ name ] = value
+	@conditions = conditionList.map do |name|
+
+		sm[ name ] and next sm[ name ]
+
+		condition( name, options[ name ] )
 
 	end
 
+end
+
+
+
+# Returns the named condition and creates it if it doesn't exist.
+#
+# @param  name   [Symbol] The name of the condition, will be searched in the statemachine at the address of the
+#                         current fact.
+# @param  value  [Object] The value that is desired, if the condition exists, this must be the same as the already
+#                         wanted value.
+# @param  opts   [TidBits::Options::Settings] Potential overrides for the fact options to send to the condition
+#                                             When creating
+#
+# @return { description_of_the_return_value }
+#
+def condition( name, value = nil, opts = {} )
+
+	address = @address.dup << name
+	cond    = @sm.conditions( address )
+
+	if cond
+
+		value.nil? || cond.expect == value  or
+
+			raise "Conflicting desired states for: #{address.ai}.
+		          desire: #{ value.ai }, but wanted differently before: #{ cond.expect.ai }."
+
+		return cond
+
+	end
+
+	value.nil? and raise ArgumentError.new "Cannot create condition #{name} with nil value."
+
+	opts[ name ] = value
+	opts         = options.deep_merge opts
 
 	klass = Object.const_get( options.conditions ).const_get( name.to_s.capitalize! )
-	address = @address.dup << name
-
-	@conditions[ name ] and  raise "The condition already exists: #{address.ai}"
-
-	@conditions[ name ] = klass.new( **options.dup, address: address, stateMachine: @sm )
-
+	@sm.conditions.set( address, klass.new( **opts.dup, address: address, stateMachine: @sm ) )
 
 end
 
@@ -158,7 +187,7 @@ def analyze
 
 	runDepends( :analyze )  or  return analyzeFailed
 
-	@conditions.values.map( &:analyze ).all? ?
+	conditions.map { |cond| cond.fact = self; cond.analyze }.all? ?
 
 		  analyzePassed
 		: analyzeFailed
@@ -177,7 +206,7 @@ def check
 	runDepends( :check )  or  return checkFailed
 
 
-	@conditions.values.map( &:check ).all? ?
+	conditions.map { |cond| cond.fact = self; cond.check }.all? ?
 
 		  checkPassed
 		: checkFailed
@@ -200,7 +229,7 @@ def fix
 
 	runDepends( :fix )  or  return fixFailed
 
-	@conditions.values.map( &:fix )
+	conditions.map { |cond| cond.fact = self; cond.fix }
 
 	reset
 	check

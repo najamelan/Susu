@@ -30,27 +30,8 @@ class StateMachine
 def initialize( **opts )
 
 	@actual     = Pash.new
-	@desire     = Pash.new
 	@facts      = Pash.new
 	@conditions = Pash.new
-
-end
-
-
-
-#-------------------------------------------------------------------------------
-# Will dig into the desired state to retrieve the value located at given address.
-#
-# @param  address [Array|segment1, segment2, ...] The path to the requested value as
-#                 an array of path segments. Can also be several parameters not in array.
-#
-# @return The item at requested location or nil if it doesn't exist.
-#
-def desire( *address )
-
-	address = Array.spit address
-
-	@desire.dig( *address )
 
 end
 
@@ -105,25 +86,6 @@ def facts( *address )
 	address = Array.spit address
 
 	@facts.dig( *address )
-
-end
-
-
-
-#-------------------------------------------------------------------------------
-# Will dig! into the desired state to retrieve the value located at given address.
-# The location keys that don't exist yet will be created.
-#
-# @param  address [Array|segment1, segment2, ...] The path to the requested value as
-#                 an array of path segments. Can also be several parameters not in array.
-#
-# @return The item at requested location or nil if it doesn't exist.
-#
-def desire!( *address )
-
-	address = Array.spit address
-
-	@desire.dig!( *address )
 
 end
 

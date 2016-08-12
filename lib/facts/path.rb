@@ -45,18 +45,6 @@ def initialize( path:, **opts )
 
 	super( **opts, path: path.to_path.path )
 
-	@statCalled = false
-
-end
-
-
-
-def reset
-
-	super
-
-	@statCalled = false
-
 end
 
 
@@ -114,24 +102,26 @@ end
 end # class Exist < Condition
 
 
+
 class StatCondition < Condition
 
 	def analyze
 
 		analyzePassed?    and  return @status
-		@fact.statCalled  and  return analyzePassed
+		@sm.actual( @factAddr.dup << :statCalled  )  and  return analyzePassed
 
 		dependOn( :exist, true )  or  return analyzeFailed
 
 		stat = options.followSymlinks  ?  options.path.stat  :  options.path.lstat
-		@fact.statCalled = true
 
-		@sm.actual.set( @factAddr.dup.push( :type  ), stat.ftype.to_sym                            )
-		@sm.actual.set( @factAddr.dup.push( :mode  ), stat.mode                                    )
-		@sm.actual.set( @factAddr.dup.push( :ctime ), stat.ctime                                   )
-		@sm.actual.set( @factAddr.dup.push( :mtime ), stat.mtime                                   )
-		@sm.actual.set( @factAddr.dup.push( :atime ), stat.atime                                   )
-		@sm.actual.set( @factAddr.dup.push( :own   ), { uid: stat.uid, gid: stat.gid }.to_settings )
+		@sm.actual.set( @factAddr.dup.push( :statCalled  ), true                                         )
+
+		@sm.actual.set( @factAddr.dup.push( :type        ), stat.ftype.to_sym                            )
+		@sm.actual.set( @factAddr.dup.push( :mode        ), stat.mode                                    )
+		@sm.actual.set( @factAddr.dup.push( :ctime       ), stat.ctime                                   )
+		@sm.actual.set( @factAddr.dup.push( :mtime       ), stat.mtime                                   )
+		@sm.actual.set( @factAddr.dup.push( :atime       ), stat.atime                                   )
+		@sm.actual.set( @factAddr.dup.push( :own         ), { uid: stat.uid, gid: stat.gid }.to_settings )
 
 		analyzePassed
 
@@ -142,7 +132,7 @@ class StatCondition < Condition
 
 		super
 
-		@fact.statCalled = false
+		@sm.actual.set( @factAddr.dup.push( :statCalled  ), false )
 
 	end
 

@@ -6,7 +6,8 @@ class Condition
 
 include Options::Configurable, Status, InstanceCount
 
-attr_reader :expect, :found, :status, :fact
+attr_accessor :fact
+attr_reader   :expect, :found, :status
 
 protected :reset
 
@@ -14,16 +15,15 @@ def initialize **opts
 
 	super
 
+	@fact     = fact
 	@sm       = options.stateMachine
 	@address  = options.address
-	@factAddr = options.address[0...-1]
+	@factAddr = options.address[ 0...-1 ]
 	@name     = options.address.last
 
-	@desire   = @sm.desire
 	@actual   = @sm.actual
 
-	@fact     = @sm.facts( @factAddr )
-	@expect   = @sm.desire( @address )
+	@expect   = options[ @name ]
 
 	@systemChanged = false
 
@@ -50,18 +50,21 @@ end
 
 
 
+# TODO: Let the user set a value that responds to call and use that to check rather than
+# below options. The block is not really an alternative, since users don't usually call
+# check manually, its been called from a fact. However the block is good for subclasses that want to override the check.
+#
 def check &block
 
 	checked?  and  return checkPassed?
 	analyze    or  return false
 
+
 	result = block_given? ?
 
-		  yield
-		: @sm.desire( @address ) == @sm.actual( @address )
+		  yield( @expect, @sm.actual( @address ) )
+		: @expect == @sm.actual( @address )
 
-
-	result or @fact.debug "Check failed for #{@address.ai}, expect: #{@expect.ai}, found: #{@sm.actual( @address ).ai}"
 
 	result  ?  checkPassed  :  checkFailed
 
@@ -94,31 +97,17 @@ end
 # This method will test check on the corresponding condition at this and if it hasn't already run and we are fixing it
 # will attempt to fix the condition. If the method returns false, you should abort your operation.
 #
-# @param  condition  The condition
-# @param  value      The value the property needs to hold for the dependency to
-#                    be met, optional.
-# @param  opts       [Hash] Possible overrides of options to be used if the condition needs to be created.
+# @param  name   [Symbol]  Which condition to depend on (lower case)
+# @param  value  [Object]  The value the property needs to hold for the dependency to
+#                          be met, optional.
+# @param  opts   [Hash]    Possible overrides of options to be used if the condition needs to be created.
 #
 # @return true on success, false on failure.
 #
-def dependOn( condition, value, **opts )
+def dependOn( name, value, opts = {} )
 
-	address = @factAddr.dup << condition
-
-
-	# If the condition doesn't exist, create it
-	#
-	if !@sm.conditions( address )
-
-		opts              = options.deep_merge opts
-		opts[ condition ] = value
-
-		@fact.addCondition( condition, value )
-
-	end
-
-
-	cond   = @sm.conditions( address )
+	cond = @fact.condition( name, value, opts )
+	cond.fact = fact
 
 	case @fact.operation
 

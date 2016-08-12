@@ -2,14 +2,12 @@ default:
 
   Fact:
 
-    quiet   : false
     force   : true
-    factPool: []
-    metas   : [ metas, params, quiet, dependOn, mustDepend, factPool, force, stateMachine, indexKeys, conditions ]
+    metas   : [ metas, params, dependOn, mustDepend, force, stateMachine, indexKeys, conditions ]
 
   Path:
 
-    params        : [ path, createType, followSymlinks ]
+    params        : [ path, followSymlinks ]
     indexKeys     : path
     conditions    : TidBits::Facts::Conditions::Path
     exist         : true
