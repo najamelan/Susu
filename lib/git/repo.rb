@@ -132,12 +132,12 @@ end
 
 def deinit
 
-	bare = bare?
+	bare? ?
+
+		  @path.rm_secure
+		: @path[ '.git' ].rm_secure
 
 	@rug = @git = @remotes = @branches = nil
-
-	bare and @path.rm_secure
-	bare or  @path.join( '.git' ).rm_secure
 
 end
 
