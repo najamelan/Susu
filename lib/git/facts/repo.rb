@@ -100,7 +100,7 @@ class Bare < TidBits::Facts::Conditions::Condition
 
 def analyze
 
-	dependOn( :exist, true )
+	dependOn( :exist, true ) or return analyzeFailed
 
 	super { @fact.repo.bare? }
 
