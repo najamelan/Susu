@@ -36,7 +36,7 @@ end
 
 def self.run
 
-	Test::Unit::UI::Console::TestRunner.run( self )
+	Test::Unit::UI::Console::TestRunner.run( self, output_level: Test::Unit::UI::Console::OutputLevel::VERBOSE )
 
 end
 
