@@ -79,12 +79,12 @@ module Susu
 	#
 	def self.su                  \
 	(
-		user:     nil             ,
+		user:     'nobody'        ,
 		setEuid:  true            ,
 		setRuid:  true            ,
 		setSuid:  true            ,
 
-		# group:    nil             ,
+		group:    nil             ,
 		setEgid:  true            ,
 		setRgid:  true            ,
 		setSgid:  true            ,
@@ -102,23 +102,33 @@ module Susu
 	)
 		# Find the user in the password database.
 		#
+		currentUser  = Etc.getpwuid( Process::euid )
+		currentGroup = Etc.getgrgid( Process::egid )
+
+		# Target user
+		#
 		u = ( user .is_a? Integer ) ? Etc.getpwuid( user ) : Etc.getpwnam( user  )
 
-		# TODO: what about setting the primary group? like sg
-		# group ||= u.gid
-		# g = ( group.is_a? Integer ) ? Etc.getpwgid( group ) : Etc.getpwnam( group )
+		# Target group
+		#
+		g = case group
 
+			when Integer; Etc.getgrgid( group )
+			when String ; Etc.getgrnam( group )
+			else        ; Etc.getgrgid( u.gid )
+
+		end
 
 		# Set the supplementary groups for the new user
 		#
-		initGroups and Process.initgroups( u.name, u.gid )
+		initGroups and Process.initgroups( u.name, g.gid )
 
 
 		# Change the GID (after dropping privileges, we won't be able anymore)
 		#
-		setRgid  and Process::Sys.setresgid( u.gid, -1, -1 )
-		setEgid  and Process::Sys.setresgid( -1, u.gid, -1 )
-		setSuid  and Process::Sys.setresgid( -1, -1, u.gid )
+		setRgid  and Process::Sys.setresgid( g.gid, -1, -1 )
+		setEgid  and Process::Sys.setresgid( -1, g.gid, -1 )
+		setSuid  and Process::Sys.setresgid( -1, -1, g.gid )
 
 
 		unsetEnvStandard and ENV.delete_if { | key | key  =~ /^HOME|^PWD|^USER|^PATH/ }
@@ -131,9 +141,9 @@ module Susu
 		#
 		if setEnvStandard
 
-			env = `su --login --command printenv #{ user }`.split( "\n" )
+			env = `su --login --command printenv #{ u.name }`.split( "\n" )
 
-			env.map do | line |
+			env.map! do | line |
 
 											 arr              = line.split( '=', 2 )
 				arr.length == 2  and  ENV[ arr.first ] = arr.last
