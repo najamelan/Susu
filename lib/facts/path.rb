@@ -94,7 +94,6 @@ class StatCondition < Condition
 
 	def analyze
 
-		analyzePassed?    and  return @status
 		@sm.actual( @factAddr.dup << :statCalled  )  and  return analyzePassed
 
 		dependOn( :exist, true )  or  return analyzeFailed
