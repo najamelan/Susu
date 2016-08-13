@@ -27,7 +27,7 @@ end
 
 
 
-attr_reader   :depend, :state, :status, :params, :sm, :address, :operation
+attr_reader   :depends, :status, :params, :sm, :address, :operation
 
 
 def initialize( **opts )
@@ -47,11 +47,8 @@ end
 
 def init
 
-	@mustDepend    = Array.eat( options.mustDepend   )
-	@depends       = Array.eat( options.dependOn     )
-	@metas         = Array.eat( options.metas        )
-	@factPool      = Array.eat( options.factPool   )
-
+	@depends       = Array.eat( options.dependOn )
+	@metas         = Array.eat( options.metas    )
 
 	@log           = Logger.new( STDERR )
 	@log.progname  = self.class.name
@@ -62,8 +59,8 @@ def init
 	@address       = createAddress
 	@params        = createParams
 
-	@facts         = @sm.facts
-	@facts.set       @address, self
+	@sm.facts( @address ) or @sm.facts.set( @address, [] )
+	@sm.facts( @address ) << self
 
 end
 
@@ -91,7 +88,7 @@ def createAddress; self.class.createAddress( options ) end
 
 
 
-# create a state object from options, only setting expect
+# create a list with the names of all conditions from options
 #
 def conditionList( opts = options )
 
@@ -298,74 +295,47 @@ end
 # depend on a fact of the same type who's options are a subset of the one
 # we're told to add.
 #
-def dependOn( klass, args, **opts )
+def dependOn( klass, **opts )
 
 	opts = opts.to_settings
+	addr = klass.createAddress opts
 
-	result = recycleDepend?( :dep, [], klass, args, **opts )  and  return result
+	f = satisfyDependency?( klass, opts )
 
-	if result = recycleDepend?( :pool, [], klass, args, **opts )
+	if f
 
-		result.equal?( self )  or  @depends.push result
-		return result
+		@depends << f
+		return f
 
 	end
 
-	opts.factPool = Array.eat( opts.factPool )
-	opts.factPool += [self] + @depends
-	@depends.push klass.new( **args, **opts )
 
+	@sm.facts( addr ) or @sm.facts.set( addr, [] )
+	facts = @sm.facts( addr )
+
+	f = facts.find { |fact| fact.options == opts }
+
+	if f
+
+		@depends << f
+		return f
+
+	end
+
+	# Create it
+	#
+	@depends << klass.new( opts )
 	@depends.last
 
 end
 
 
 
-# type == :dep Check in our dependency chain if a dependency that is a superset of this has already been
-# depended on. This prevents useless creation of Facts that check the same things over
-# and over again.
-#
-# type == :pool Check in the pool of available facts to see whether there is one exactly like the
-# depend we need. In this case we will depend on it.
-#
-def recycleDepend?( type, visited = [], klass, args, **opts )
+def satisfyDependency?( klass, **opts )
 
-	visited.include? object_id and return false
-	visited.push object_id
+	klass == self.class  &&  opts.subset?( options ) and return self
 
-
-	if type == :pool
-
-		@factPool.each do |fact|
-
-			f = fact.recycleDepend?( type, visited, klass, args, **opts ) and return f
-
-		end
-
-	end
-
-
-	@depends.each do |fact|
-
-		f = fact.recycleDepend?( type, visited, klass, args, **opts ) and return f
-
-	end
-
-
-	klass == self.class  or  return false
-
-	otherState = createState( self.class.options.deep_merge opts  )
-
-	case type
-
-		when :pool; stateComp = otherState      ==  createState
-		when :dep ; stateComp = otherState.subset?( createState )
-
-		else raise ArgumentError.new "Fact#recycleDepend? only accepts :pool or :dep as type parameter. Got #{type}"
-
-	end
-
-	args == params && stateComp  and  return self
+	@depends.lazy.each { |dep| f = dep.satisfyDependency?( klass, opts ) and return f }
 
 	false
 

@@ -35,6 +35,9 @@ def setupDefaults profile
 
 	@cfg.setup( TestFactPath, :TestFactPath )
 
+	@cfg.setup( DummyFact   , :DummyFact, sanitizer: Fact.method( :sanitize ))
+	@cfg.setup( MockFact    , :MockFact , sanitizer: Fact.method( :sanitize ))
+
 end
 
 
