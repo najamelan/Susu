@@ -3,10 +3,10 @@ module Facts
 
 class Condition
 
-include Options::Configurable, Status, InstanceCount
+include Options::Configurable, State, InstanceCount
 
 attr_accessor :fact
-attr_reader   :expect, :found, :status
+attr_reader   :expect, :found, :state
 
 protected :reset
 

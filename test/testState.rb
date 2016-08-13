@@ -4,30 +4,30 @@ module TidBits
 module Facts
 
 
-class StatusTest
+class StateTest
 
-	include Status
+	include State
 
-	attr_accessor :status
+	attr_accessor :state
 
 	public :analyzePassed, :checkPassed, :fixPassed, :analyzeFailed, :checkFailed, :fixFailed, :reset
 
-end # class StatusTest
+end # class StateTest
 
 
-class TestStatus < Test::Unit::TestCase
+class TestState < Test::Unit::TestCase
 
 
 def setup
 
-	@s = StatusTest.new
+	@s = StateTest.new
 
 end
 
 
 def test00Constructor
 
-	assert_equal  [ :fresh ].to_set, @s.status
+	assert_equal  [ :fresh ].to_set, @s.state
 
 end
 
@@ -54,7 +54,7 @@ def test02AnalyzePassed
 
 	@s.analyzePassed
 
-	assert_equal  [ :analyzePassed ].to_set, @s.status
+	assert_equal  [ :analyzePassed ].to_set, @s.state
 
 	assert ! @s.fresh?
 
@@ -78,7 +78,7 @@ def test03AnalyzeFailed
 
 	@s.analyzeFailed
 
-	assert_equal  [ :analyzeFailed ].to_set, @s.status
+	assert_equal  [ :analyzeFailed ].to_set, @s.state
 
 	assert ! @s.fresh?
 
@@ -101,7 +101,7 @@ def test03CheckPassed
 
 	@s.checkPassed
 
-	assert_equal  [ :checkPassed ].to_set, @s.status
+	assert_equal  [ :checkPassed ].to_set, @s.state
 
 	assert ! @s.fresh?
 
@@ -124,7 +124,7 @@ def test04CheckFailed
 
 	@s.checkFailed
 
-	assert_equal  [ :checkFailed ].to_set, @s.status
+	assert_equal  [ :checkFailed ].to_set, @s.state
 
 	assert ! @s.fresh?
 
@@ -147,7 +147,7 @@ def test05FixPassed
 
 	@s.fixPassed
 
-	assert_equal  [ :fixPassed ].to_set, @s.status
+	assert_equal  [ :fixPassed ].to_set, @s.state
 
 	assert ! @s.fresh?
 
@@ -170,7 +170,7 @@ def test06FixFailed
 
 	@s.fixFailed
 
-	assert_equal  [ :fixFailed ].to_set, @s.status
+	assert_equal  [ :fixFailed ].to_set, @s.state
 
 	assert ! @s.fresh?
 
@@ -195,7 +195,7 @@ def test07CombinePassed
 	@s  .checkPassed
 	@s    .fixPassed
 
-	assert_equal  [ :analyzePassed, :checkPassed, :fixPassed ].to_set, @s.status
+	assert_equal  [ :analyzePassed, :checkPassed, :fixPassed ].to_set, @s.state
 
 	assert ! @s.fresh?
 
@@ -220,7 +220,7 @@ def test07CombineFailed
 	@s  .checkFailed
 	@s    .fixFailed
 
-	assert_equal  [ :analyzeFailed, :checkFailed, :fixFailed ].to_set, @s.status
+	assert_equal  [ :analyzeFailed, :checkFailed, :fixFailed ].to_set, @s.state
 
 	assert ! @s.fresh?
 
@@ -245,7 +245,7 @@ def test08CombineMixed
 	@s  .checkFailed
 	@s    .fixFailed
 
-	assert_equal  [ :analyzePassed, :checkFailed, :fixFailed ].to_set, @s.status
+	assert_equal  [ :analyzePassed, :checkFailed, :fixFailed ].to_set, @s.state
 
 	assert ! @s.fresh?
 
@@ -271,7 +271,7 @@ def test09Reset
 	@s    .fixFailed
 	@s        .reset
 
-	assert_equal  [ :fresh ].to_set, @s.status
+	assert_equal  [ :fresh ].to_set, @s.state
 
 	assert   @s.fresh?
 
@@ -295,6 +295,6 @@ def test09Reset
 end
 
 
-end # class  TestStatus
+end # class  TestState
 end # module Facts
 end # module TidBits

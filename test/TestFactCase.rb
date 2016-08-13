@@ -39,7 +39,7 @@ def assert_state state, fact
 
 	state.kind_of?( Set )  or  state = Array.eat( state )
 
-	assert_equal  state.to_set, fact.status
+	assert_equal  state.to_set, fact.state
 
 end
 

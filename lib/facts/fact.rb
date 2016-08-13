@@ -1,4 +1,4 @@
-require_relative 'status'
+require_relative 'state'
 require_relative 'instance_count'
 require_relative 'condition'
 
@@ -8,7 +8,7 @@ module Facts
 
 class Fact
 
-include Options::Configurable, Status, InstanceCount
+include Options::Configurable, State, InstanceCount
 
 
 # Yaml can't have symbols as rvalues
@@ -27,7 +27,7 @@ end
 
 
 
-attr_reader   :depends, :status, :params, :sm, :address, :operation
+attr_reader   :depends, :state, :params, :sm, :address, :operation
 
 
 def initialize( **opts )
@@ -216,7 +216,7 @@ def fix
 
 	fixed?  and  return fixPassed?
 
-	# Calls Status#fix to change our state to fixing. Must be set before check so dependencies can be fixed.
+	# Calls State#fix to change our state to fixing. Must be set before check so dependencies can be fixed.
 	#
 	operating? or super
 
