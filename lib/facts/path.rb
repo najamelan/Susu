@@ -48,15 +48,10 @@ def initialize( path:, **opts )
 end
 
 
-end # class  Path
 
 
-
-
-module Conditions
-module Path
-
-
+# Conditions
+#
 class Exist < Condition
 
 
@@ -96,8 +91,6 @@ def fix
 		end
 
 	end
-
-end
 
 end # class Exist < Condition
 
@@ -190,8 +183,7 @@ class Mode < StatCondition
 end # class Mode < StatCondition
 
 
-end # module Path
-end # module Conditions
 
+end # class  Path
 end # module Facts
 end # module TidBits

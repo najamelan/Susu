@@ -29,7 +29,7 @@ def setupDefaults profile
 	@cfg.setup( Fact                 , :Fact         , sanitizer: Fact.method( :sanitize ) )
 	@cfg.setup( Path                 , :Path         , sanitizer: Path.method( :sanitize ) )
 
-	@cfg.setup( Conditions::Condition, :Conditions, :Condition )
+	@cfg.setup( Condition, :Condition )
 
 	profile == :testing or return
 

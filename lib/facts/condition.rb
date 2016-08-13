@@ -1,6 +1,5 @@
 module TidBits
 module Facts
-module Conditions
 
 class Condition
 
@@ -141,11 +140,6 @@ protected
 def systemChanged; @systemChanged = true end
 
 
-end # class Condition
-
-end # module Conditions
-
-
-
+end # class  Condition
 end # module Facts
 end # module TidBits

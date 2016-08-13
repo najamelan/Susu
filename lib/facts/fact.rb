@@ -172,7 +172,7 @@ def condition( name, value = nil, opts = {} )
 	opts[ name ] = value
 	opts         = options.deep_merge opts
 
-	klass = Object.const_get( options.conditions ).const_get( name.to_s.capitalize! )
+	klass = Object.const_get( self.class.name ).const_get( name.to_s.capitalize! )
 	@sm.conditions.set( address, klass.new( **opts.dup, address: address, stateMachine: @sm ) )
 
 end
