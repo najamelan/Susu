@@ -20,9 +20,6 @@ class Path < Fact
 
 include InstanceCount
 
-attr_accessor :statCalled
-
-
 
 # Yaml can't have symbols as rvalues
 #
@@ -49,42 +46,39 @@ end
 
 
 
-
 # Conditions
 #
 class Exist < Condition
 
 
-def analyze
-
-	super { options.path.exist? }
-
-end
+	def analyze; super { options.path.exist? } end
 
 
-def fix
+	def fix
 
-	super do
+		super do
 
-		if ! @expect
+			if ! @expect
 
-			options.path.rm_secure( options.force )
+				options.path.rm_secure( options.force )
 
-		else
+			else
 
-			options.has_key? :type  or
+				options.has_key? :type  or
 
-				raise "In order to create a path, you must specify :type on Facts::Path."
+					raise "In order to create a path, you must specify :type on Facts::Path."
 
 
-			case options.type
+				case options.type
 
-				when :file     ; options.path.touch
-				when :directory; options.path.mkpath
+					when :file     ; options.path.touch
+					when :directory; options.path.mkpath
 
-				else
+					else
 
-					raise "Creating path of type: #{type}, not implemented"
+						raise "Creating path of type: #{type}, not implemented"
+
+				end
 
 			end
 
