@@ -1,0 +1,16 @@
+lib/**/*.rb
+
+--protected
+
+--exclude lib/vfs
+--exclude lib/microtest
+--exclude lib/susu
+--exclude lib/sigslot
+--exclude lib/git
+--exclude lib/rush
+
+--main README.md
+
+- lib/**/*.md
+
+
