@@ -1,0 +1,13 @@
+include: user.yml
+
+default:
+
+  level1:
+
+    foo: bar
+
+    list: [ A,B,C ]
+
+    level2:
+
+      foo: bar

@@ -1,0 +1,13 @@
+runit:
+
+  level1:
+
+    foo: bar
+
+    list: [ D,E,F ]
+
+    level2testing:
+
+      foo: chinchin
+
+  runit: 'fun'

@@ -1,0 +1,22 @@
+testing:
+
+  level1:
+
+    foo: bar
+
+    list: [ D,E,F ]
+
+    level2testing:
+
+      foo: chinchin
+
+  TestHelper:
+
+      helperOption: one
+      second      : two
+
+  TestHelperChild:
+
+      helperOption: three
+      third       : four
+
