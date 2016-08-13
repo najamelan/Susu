@@ -10,7 +10,6 @@ default:
 
       params    : [ path, remotes, branches ]
       indexKeys : path
-      conditions: TidBits::Git::Facts::Conditions::Repo
       exist     : true
       remotes   : []
       branches  : []

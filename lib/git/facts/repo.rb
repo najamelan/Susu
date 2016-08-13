@@ -25,6 +25,17 @@ def initialize( path:, **opts )
 	@repo = TidBits::Git::Repo.new( @path )
 
 
+	# if options.exist
+
+	# 	dependOn( Path, { path: @path }, type: 'directory' )
+
+	# elsif options.bare
+
+	# 	 dependOn( PathExist, { path: @path }, exist: false )
+
+	# end
+
+
 	# Having them depend on exist explicitly means they will respect the bare option
 	#
 	# remotes .each {|remote| dependOn( Remote, remote.merge( path: @path, dependOn: exist ) ) }
@@ -51,14 +62,11 @@ def createAddress
 end
 
 
-end # class  Repo
 
 
-module Conditions
-module Repo
-
-
-class Exist < TidBits::Facts::Conditions::Condition
+# Conditions
+#
+class Exist < TidBits::Facts::Condition
 
 
 def analyze
@@ -92,10 +100,10 @@ def fix
 
 end
 
-end # class Exist < TidBits::Facts::Conditions::Condition
+end # class Exist < TidBits::Facts::Condition
 
 
-class Bare < TidBits::Facts::Conditions::Condition
+class Bare < TidBits::Facts::Condition
 
 
 def analyze
@@ -121,12 +129,12 @@ def fix
 
 end
 
-end # class Bare < TidBits::Facts::Conditions::Condition
+end # class Bare < TidBits::Facts::Condition
 
 
 # Verify whether the working directory is clean
 #
-class Clean < TidBits::Facts::Conditions::Condition
+class Clean < TidBits::Facts::Condition
 
 
 def analyze
@@ -157,14 +165,9 @@ def fix( msg = "Commit added by #{self.class.name} in order to have clean workin
 
 end
 
-end # class Clean < TidBits::Facts::Conditions::Condition
+end # class Clean < TidBits::Facts::Condition
 
-
-end # module Conditions
-end # module Repo
-
-
-
+end # class  Repo
 end # module Facts
 end # module Git
 end # module TidBits

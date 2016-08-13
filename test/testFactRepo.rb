@@ -4,6 +4,22 @@ module Git
 class TestFactRepo < TestRepoCase
 
 
+
+def test00DependOnPath
+
+	path = @@tmpdir/'doesnotexist/haha'
+
+	f = Facts::Repo.new( path: path, bare: false )
+
+	assert !path.exist?
+
+	assert_fix f
+	assert     path          .directory?
+	assert     path[ '.git' ].directory?
+
+end
+
+
 def test01Exist
 
 	assert @@repo[ '.git' ].exist?
