@@ -6,8 +6,6 @@ class String
 	#
 	def path
 
-		require_relative '../../../fs/lib/fs'
-
 		Susu::Fs::Path.new self
 
 	end
@@ -20,8 +18,6 @@ class String
 	# @return returns a Pathname object relative to from.
 	#
 	def relpath( from = caller_locations( 1 ).first.absolute_path )
-
-		require_relative '../../../fs/lib/fs'
 
 		Susu::Fs::Path.new File.join( File.dirname( from ), self )
 
