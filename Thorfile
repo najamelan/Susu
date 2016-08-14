@@ -16,7 +16,7 @@ def test
 
 	require_relative 'test/run'
 
-	Susu::TestSuite.run
+	::Susu::TestSuite.run
 
 end
 
