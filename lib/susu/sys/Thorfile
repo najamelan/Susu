@@ -11,7 +11,7 @@ def test
 
 	require_relative 'test/run'
 
-	TidBits::Sys::TestSuite.run
+	Susu::Sys::TestSuite.run
 
 end
 

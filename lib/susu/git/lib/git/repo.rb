@@ -1,4 +1,4 @@
-module TidBits
+module Susu
 module Git
 
 class Repo
@@ -11,11 +11,11 @@ include Options::Configurable
 #
 attr_reader :path
 
-# An array of TidBits::Remote objects for the repository.
+# An array of Susu::Remote objects for the repository.
 #
 attr_reader :remotes
 
-# An array of TidBits::Branch objects for the repository.
+# An array of Susu::Branch objects for the repository.
 #
 attr_reader :branches
 
@@ -221,4 +221,4 @@ end
 
 end # class  Repo
 end # module Git
-end # module TidBits
+end # module Susu

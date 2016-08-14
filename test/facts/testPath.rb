@@ -1,6 +1,6 @@
 require 'etc'
 
-module TidBits
+module Susu
 module Facts
 
 class TestFactPath < TestFactCase
@@ -256,4 +256,4 @@ end
 
 end # class  TestFactPath
 end # module Facts
-end # module TidBits
+end # module Susu

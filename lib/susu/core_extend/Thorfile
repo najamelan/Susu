@@ -11,7 +11,7 @@ class CoreExtend < Thor
 desc 'test', 'Run the unit tests for the CoreExtend library'
 def test
 
-	TidBits::CoreExtend::TestSuite.run
+	Susu::CoreExtend::TestSuite.run
 
 end
 

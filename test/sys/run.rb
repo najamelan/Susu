@@ -16,14 +16,14 @@ end
 
 
 
-module TidBits
+module Susu
 module Sys
 class  TestSuite
 
 
 def self.suite
 
-	suite =  Test::Unit::TestSuite.new( "TidBits::Sys Unit Tests" )
+	suite =  Test::Unit::TestSuite.new( "Susu::Sys Unit Tests" )
 
 	# suite << TestThorfile.suite
 	suite << TestSys.suite
@@ -41,5 +41,5 @@ end
 
 end # TestSuite
 end # Sys
-end # TidBits
+end # Susu
 

@@ -14,7 +14,7 @@ Dir.entries( File.dirname( __FILE__ ) ).sort.
 
 
 
-module TidBits
+module Susu
 module Git
 
 
@@ -45,4 +45,4 @@ end # TestSuite
 
 
 end # Git
-end # TidBits
+end # Susu

@@ -2,7 +2,7 @@ require_relative 'state'
 require_relative 'instance_count'
 require_relative 'condition'
 
-module TidBits
+module Susu
 module Facts
 
 
@@ -143,7 +143,7 @@ end
 #                         current fact.
 # @param  value  [Object] The value that is desired, if the condition exists, this must be the same as the already
 #                         wanted value.
-# @param  opts   [TidBits::Options::Settings] Potential overrides for the fact options to send to the condition
+# @param  opts   [Susu::Options::Settings] Potential overrides for the fact options to send to the condition
 #                                             When creating
 #
 # @return { description_of_the_return_value }
@@ -257,7 +257,7 @@ protected
 
 def createParams
 
-	params = TidBits::Options::Settings.new
+	params = Susu::Options::Settings.new
 
 	options.params.each do |key|
 
@@ -376,4 +376,4 @@ end
 
 end # class  Fact
 end # module Facts
-end # module TidBits
+end # module Susu

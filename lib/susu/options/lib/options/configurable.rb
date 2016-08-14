@@ -1,4 +1,4 @@
-module TidBits
+module Susu
 module Options
 
 # Mixin module to allow a class or module to have a hash of options.
@@ -24,5 +24,5 @@ end
 
 end # Configurable
 end # Options
-end # TidBits
+end # Susu
 

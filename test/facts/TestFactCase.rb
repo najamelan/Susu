@@ -1,6 +1,6 @@
 require 'etc'
 
-module TidBits
+module Susu
 module Facts
 
 class TestFactCase < Test::Unit::TestCase
@@ -143,4 +143,4 @@ end
 
 end # class  TestFactCase
 end # module Facts
-end # module TidBits
+end # module Susu

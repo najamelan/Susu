@@ -1,6 +1,6 @@
 require_relative 'TestHelper'
 
-module TidBits
+module Susu
 module Options
 
 class TestConfig < Test::Unit::TestCase
@@ -12,7 +12,7 @@ def test00ClassProperties
 
 	assert( ! TestHelper.configured? )
 
-	config = TidBits::Options::Config.new
+	config = Susu::Options::Config.new
 	config.setup TestHelper
 
 	assert( TestHelper.configured? )
@@ -32,7 +32,7 @@ def test01Defaults
 	one = { a: 1 }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: one )
+	config = Susu::Options::Config.new( default: one )
 	config.setup TestHelper
 
 	assert_equal( one   , TestHelper.settings.default )
@@ -52,7 +52,7 @@ def test02DefaultsArray
 	expect = { a: 1, b: { c: 2, d: 4 } }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: [ one, two ] )
+	config = Susu::Options::Config.new( default: [ one, two ] )
 	config.setup TestHelper
 
 	assert_equal( expect, TestHelper.settings.default  )
@@ -72,11 +72,11 @@ def test03OverridingAll
 	three  = {       b: { c: 5       } }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: one, userset: two, runtime: three )
+	config = Susu::Options::Config.new( default: one, userset: two, runtime: three )
 	config.setup TestHelper
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new
+	config = Susu::Options::Config.new
 	config.setup TestHelper
 
 
@@ -95,7 +95,7 @@ def test04Userset
 	one = { a: 1 }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( userset: one )
+	config = Susu::Options::Config.new( userset: one )
 	config.setup TestHelper
 
 	assert_equal( {}    , TestHelper.settings.default  )
@@ -115,7 +115,7 @@ def test05UsersetArray
 	expect = { a: 1, b: { c: 2, d: 4 } }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( userset: [ one, two ] )
+	config = Susu::Options::Config.new( userset: [ one, two ] )
 	config.setup TestHelper
 
 	assert_equal( {}    , TestHelper.settings.default  )
@@ -133,7 +133,7 @@ def test06Runtime
 	one = { a: 1 }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( runtime: one )
+	config = Susu::Options::Config.new( runtime: one )
 	config.setup TestHelper
 
 	assert_equal( {}    , TestHelper.settings.default  )
@@ -153,7 +153,7 @@ def test07RuntimeArray
 	expect = { a: 1, b: { c: 2, d: 4 } }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( runtime: [ one, two ] )
+	config = Susu::Options::Config.new( runtime: [ one, two ] )
 	config.setup TestHelper
 
 	assert_equal( {}    , TestHelper.settings.default  )
@@ -174,7 +174,7 @@ def test08Combine
 	expect = { a: 1, b: { c: 5, d: 4 } }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: one, userset: two, runtime: three )
+	config = Susu::Options::Config.new( default: one, userset: two, runtime: three )
 	config.setup TestHelper
 
 	assert_equal( one   , TestHelper.settings.default  )
@@ -195,7 +195,7 @@ def test09FromRelFile
 	expect = { a: 1, b: { c: 5, d: 4 } }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: one, userset: two, runtime: three )
+	config = Susu::Options::Config.new( default: one, userset: two, runtime: three )
 	config.setup TestHelper
 
 	two = Settings.load two
@@ -218,7 +218,7 @@ def test10FromRelString
 	expect = { a: 1, b: { c: 5, d: 4 } }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: one, userset: two, runtime: three )
+	config = Susu::Options::Config.new( default: one, userset: two, runtime: three )
 	config.setup TestHelper
 
 	two = Settings.load two.relpath
@@ -238,7 +238,7 @@ def test11FromDirectory
 	data = 'data'
 
 	TestHelper.reset
-	assert_nothing_raised { TidBits::Options::Config.new( default: data ) }
+	assert_nothing_raised { Susu::Options::Config.new( default: data ) }
 	# config.setup TestHelper
 
 	# two = Settings.load two
@@ -261,7 +261,7 @@ def test12FromInclude
 	expect = { a: 1, b: { c: 5, d: 4 } }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: one, runtime: three )
+	config = Susu::Options::Config.new( default: one, runtime: three )
 	config.setup TestHelper
 
 	one.delete :include
@@ -285,7 +285,7 @@ def test13SetupPartial
 	expect = { a: 1, b: { c: 5, d: 4 } }
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: one, runtime: three )
+	config = Susu::Options::Config.new( default: one, runtime: three )
 	config.setup TestHelper, :b
 
 	one.delete :include
@@ -317,10 +317,10 @@ def test14Inheritance
 
 	assert( ! TestHelperChild.configured? )
 
-	config  = TidBits::Options::Config.new( default: one, runtime: three  )
+	config  = Susu::Options::Config.new( default: one, runtime: three  )
 	config.setup TestHelper
 
-	configC = TidBits::Options::Config.new( default: one, runtime: threeC )
+	configC = Susu::Options::Config.new( default: one, runtime: threeC )
 	configC.setup TestHelperChild
 
 	assert( TestHelperChild.configured? )
@@ -353,7 +353,7 @@ def test15IncludeFromFile
 	expect = Settings.load( one ).deep_merge!( Settings.load( two ) ).deep_merge!( Settings.load( three ) )
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: 'data/include.yml' )
+	config = Susu::Options::Config.new( default: 'data/include.yml' )
 	config.setup TestHelper
 
 
@@ -375,7 +375,7 @@ def test16NestedInclude
 	expect = Settings.load( one ).deep_merge!( Settings.load( two ) ).deep_merge!( Settings.load( three ) )
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: { include: 'data/include.yml' } )
+	config = Susu::Options::Config.new( default: { include: 'data/include.yml' } )
 	config.setup TestHelper
 
 
@@ -400,7 +400,7 @@ def test17AbsolutePath
 
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: { include: defInclude } )
+	config = Susu::Options::Config.new( default: { include: defInclude } )
 	config.setup TestHelper
 
 
@@ -442,7 +442,7 @@ def test18Sanitizer
 
 
 	TestHelper.reset
-	config = TidBits::Options::Config.new( default: one, userset: two )
+	config = Susu::Options::Config.new( default: one, userset: two )
 	config.setup( TestHelper, sanitizer: san )
 
 	assert_equal( expectDefault, TestHelper.settings.default  )
@@ -456,4 +456,4 @@ end
 
 end # class  TestConfig
 end # module Options
-end # module TidBits
+end # module Susu

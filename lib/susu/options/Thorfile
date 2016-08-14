@@ -15,7 +15,7 @@ desc 'test', 'Run the unit tests for the Options library'
 
 def test
 
-	TidBits::Options::TestSuite.run
+	Susu::Options::TestSuite.run
 
 end
 

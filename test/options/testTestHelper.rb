@@ -1,6 +1,6 @@
 require_relative 'TestHelper'
 
-module TidBits
+module Susu
 module Options
 
 class TestTestHelper < Test::Unit::TestCase
@@ -24,4 +24,4 @@ end
 
 end # class  TestTestHelper
 end # module Options
-end # module TidBits
+end # module Susu

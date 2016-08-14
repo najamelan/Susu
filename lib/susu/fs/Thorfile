@@ -20,7 +20,7 @@ class Fs < Thor
 desc 'test', 'Run the unit tests for the Fs library'
 def test
 
-	TidBits::Fs::TestSuite.run
+	Susu::Fs::TestSuite.run
 
 end
 

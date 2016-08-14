@@ -13,7 +13,7 @@ Dir.entries( File.dirname( __FILE__ ) ).
 
 
 
-module TidBits
+module Susu
 module Options
 
 
@@ -45,4 +45,4 @@ end # TestSuite
 
 
 end # Options
-end # TidBits
+end # Susu

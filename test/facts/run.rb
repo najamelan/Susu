@@ -14,7 +14,7 @@ Dir.entries( File.dirname( __FILE__ ) ).sort.
 
 
 
-module TidBits
+module Susu
 module Facts
 
 
@@ -47,4 +47,4 @@ end # TestSuite
 
 
 end # Facts
-end # TidBits
+end # Susu

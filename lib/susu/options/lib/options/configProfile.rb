@@ -1,5 +1,5 @@
 
-module TidBits
+module Susu
 module Options
 
 class ConfigProfile < Config
@@ -88,5 +88,5 @@ end
 
 end # ConfigProfile
 end # Options
-end # TidBits
+end # Susu
 

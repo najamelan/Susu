@@ -1,4 +1,4 @@
-module TidBits
+module Susu
 module CoreExtend
 
 class TestString < Test::Unit::TestCase
@@ -31,4 +31,4 @@ end
 
 end # class  TestString
 end # module CoreExtend
-end # module TidBits
+end # module Susu

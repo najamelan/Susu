@@ -1,6 +1,6 @@
 require 'etc'
 
-module TidBits
+module Susu
 module Facts
 
 
@@ -297,4 +297,4 @@ end
 
 end # class  TestState
 end # module Facts
-end # module TidBits
+end # module Susu

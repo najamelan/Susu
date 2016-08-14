@@ -1,5 +1,5 @@
 
-module TidBits
+module Susu
 module Git
 module Facts
 
@@ -8,7 +8,7 @@ module Facts
 # path*    : Path to the repository directory (workingDir with .git)
 # name*    : string  (default=origin)
 #
-class RemoteExist < TidBits::Facts::Fact
+class RemoteExist < Susu::Facts::Fact
 
 attr_reader :repo
 
@@ -20,7 +20,7 @@ def initialize( path:, **opts )
 
 	dependOn( RepoExist, { path: @path } )
 
-	@repo    = TidBits::Git::Repo.new( @path )
+	@repo    = Susu::Git::Repo.new( @path )
 	@remotes = @repo.remotes
 
 end
@@ -80,7 +80,7 @@ end # class  RemoteExist
 # name  : string  (default=origin)
 # url   : bool    (whether the working dir is clean)
 #
-class Remote < TidBits::Facts::Fact
+class Remote < Susu::Facts::Fact
 
 attr_reader :repo
 
@@ -92,7 +92,7 @@ def initialize( path:, **opts )
 
 	dependOn( RemoteExist, { path: @path, name: name } )
 
-	@repo   = TidBits::Git::Repo.new( @path )
+	@repo   = Susu::Git::Repo.new( @path )
 	@remote = @repo.remotes[ name ]
 
 end
@@ -162,4 +162,4 @@ end # class  Remote
 
 end # module Facts
 end # module Git
-end # module TidBits
+end # module Susu

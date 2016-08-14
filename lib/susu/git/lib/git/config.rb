@@ -1,4 +1,4 @@
-module TidBits
+module Susu
 module Git
 
 
@@ -11,7 +11,7 @@ def initialize( profile = :default, runtime = [], **opts )
 
 	# get options from <installDir>/conf into defaults
 	#
-	@cfg = TidBits::Options::ConfigProfile.new( profile: @profile, default: 'config.yml'.relpath, runtime: runtime )
+	@cfg = Susu::Options::ConfigProfile.new( profile: @profile, default: 'config.yml'.relpath, runtime: runtime )
 
 	@cfg.setup( self.class )
 	setupOptions opts
@@ -30,7 +30,7 @@ def setupDefaults profile
 	@cfg.setup( Remote       , :Remote         )
 	@cfg.setup( Branch       , :Branch         )
 
-	@cfg.setup( Facts::Repo  , :Facts, :Repo   , sanitizer: TidBits::Facts::Fact.method( :sanitize ) )
+	@cfg.setup( Facts::Repo  , :Facts, :Repo   , sanitizer: Susu::Facts::Fact.method( :sanitize ) )
 	@cfg.setup( Facts::Remote, :Facts, :Remote )
 	@cfg.setup( Facts::Branch, :Facts, :Branch )
 
@@ -46,4 +46,4 @@ end # class  Config
 
 
 end # module Git
-end # module TidBits
+end # module Susu

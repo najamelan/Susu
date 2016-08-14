@@ -1,5 +1,5 @@
 
-module TidBits
+module Susu
 module Options
 
 class Settings < Hashie::Mash
@@ -82,13 +82,13 @@ end
 #
 #   # Enforce uppercase values
 #   #
-#   h = TidBits::Options::Settings[ { bla: 'kaboom' } ]
+#   h = Susu::Options::Settings[ { bla: 'kaboom' } ]
 #
 #   h._sanitizer_ = lambda { |key, value| [ key, value.upcase! ] }
 #
 #   h[ :bli ] = 'haha'
 #
-#   puts h # => #<TidBits::Options::Settings bla="KABOOM" bli="HAHA">
+#   puts h # => #<Susu::Options::Settings bla="KABOOM" bli="HAHA">
 #
 # @example Recursive:
 #
@@ -185,14 +185,14 @@ end
 
 end # Settings
 end # Options
-end # TidBits
+end # Susu
 
 
 class Hash
 
 	def to_settings
 
-		TidBits::Options::Settings.new self
+		Susu::Options::Settings.new self
 
 	end
 

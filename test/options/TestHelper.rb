@@ -1,4 +1,4 @@
-module TidBits
+module Susu
 module Options
 
 class TestHelper
@@ -39,4 +39,4 @@ class TestHelperChild < TestHelper
 end # class TestHelper
 
 end # module Options
-end # module TidBits
+end # module Susu

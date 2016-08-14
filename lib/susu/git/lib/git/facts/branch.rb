@@ -1,5 +1,5 @@
 
-module TidBits
+module Susu
 module Git
 module Facts
 
@@ -8,7 +8,7 @@ module Facts
 # path*    : Path to the repository directory (workingDir with .git)
 # name*    : string  (default=master)
 #
-class BranchExist < TidBits::Facts::Fact
+class BranchExist < Susu::Facts::Fact
 
 attr_reader :repo
 
@@ -20,7 +20,7 @@ def initialize( path:, **opts )
 
 	dependOn( RepoExist, { path: @path } )
 
-	@repo     = TidBits::Git::Repo.new( @path )
+	@repo     = Susu::Git::Repo.new( @path )
 	@branches = @repo.branches
 
 
@@ -83,7 +83,7 @@ end # class  BranchExist
 # behind?   : bool    (will check for current branch)
 # diverged? : bool    (will check for current branch)
 #
-class Branch < TidBits::Facts::Fact
+class Branch < Susu::Facts::Fact
 
 attr_reader :repo
 
@@ -97,7 +97,7 @@ def initialize( path:, **opts )
 
 	options.track and dependOn( BranchExist, { path: @path, name: options.track } )
 
-	@repo   = TidBits::Git::Repo.new( @path )
+	@repo   = Susu::Git::Repo.new( @path )
 	@branch = @repo.branches[ name ]
 
 end
@@ -224,4 +224,4 @@ end # class  Branch
 
 end # module Facts
 end # module Git
-end # module TidBits
+end # module Susu

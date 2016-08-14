@@ -1,4 +1,4 @@
-# TidBits_Ruby_Facts
+# Susu_Ruby_Facts
 Declarative OOP facts for tracking and fixing states 
 
 
@@ -29,7 +29,7 @@ Conditions have a method called `dependOn` as well, it returns a boolean and if 
 
 - To require that a different option is set on the fact, just do (in analyze, check or fix):
 
-         # This is the code for TidBits::Fs::Facts::Path::Conditions::Exist
+         # This is the code for Susu::Fs::Facts::Path::Conditions::Exist
          # 
          def fix
 
@@ -77,14 +77,14 @@ Conditions have a method called `dependOn` as well, it returns a boolean and if 
          
          # Now if the user has done this, analyze will fail:
          # 
-         TidBits::Git::Facts::Repo.new( path: someDir, clean: true, bare: true )
+         Susu::Git::Facts::Repo.new( path: someDir, clean: true, bare: true )
 
 
 - To depend on a condition of another fact (in analyze, check or fix):
    
          # Imagine for a specific condition, a certain path must be a directory. 
          #
-         dependOnFact( TidBits::Fs::Facts::Path, path: someDir, type: directory ) or break checkFailed
+         dependOnFact( Susu::Fs::Facts::Path, path: someDir, type: directory ) or break checkFailed
 
          # Now the fact will be added to the statemachine, will be checked and if it fails
          # and we are currently fixing (if the user calls analyze or check no changes to the system will be made)

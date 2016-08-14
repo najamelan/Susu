@@ -1,4 +1,4 @@
-module TidBits
+module Susu
 module Facts
 
 module InstanceCount
@@ -38,4 +38,4 @@ end
 
 
 end # module Facts
-end # module TidBits
+end # module Susu

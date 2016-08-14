@@ -4,10 +4,10 @@ require 'open3'
 require_relative '../../facts/test/TestFactCase'
 
 
-module TidBits
+module Susu
 module Git
 
-class TestRepoCase < TidBits::Facts::TestFactCase
+class TestRepoCase < Susu::Facts::TestFactCase
 
 
 
@@ -141,4 +141,4 @@ end
 
 end # class  TestRepoCase
 end # module Git
-end # module TidBits
+end # module Susu

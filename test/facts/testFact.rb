@@ -1,10 +1,10 @@
-module TidBits
+module Susu
 module Facts
 
 
 class DummyFact < Fact
 
-include InstanceCount, TidBits::Options::Configurable
+include InstanceCount, Susu::Options::Configurable
 
 def initialize( path:, **opts )
 
@@ -26,7 +26,7 @@ end # class DummyFact
 
 class MockFact < Fact
 
-include InstanceCount, TidBits::Options::Configurable
+include InstanceCount, Susu::Options::Configurable
 
 def initialize( path:, **opts )
 
@@ -49,7 +49,7 @@ end # class MockFact
 
 class TestFact < TestFactCase
 
-# include TidBits::Options::Configurable
+# include Susu::Options::Configurable
 
 
 
@@ -148,4 +148,4 @@ end
 
 end # class  TestFact
 end # module Facts
-end # module TidBits
+end # module Susu

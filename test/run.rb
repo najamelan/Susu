@@ -14,7 +14,7 @@ require_relative '../lib/facts/test/run'
 require_relative '../lib/susu/test/run'
 
 
-module TidBits
+module Susu
 
 
 class TestSuite
@@ -22,13 +22,13 @@ class TestSuite
 
 def self.suite
 
-	suite =  Test::Unit::TestSuite.new( "TidBits Unit Tests" )
+	suite =  Test::Unit::TestSuite.new( "Susu Unit Tests" )
 
-	suite << TidBits::CoreExtend::TestSuite .suite
-	suite << TidBits::Fs::TestSuite         .suite
-	suite << TidBits::Options::TestSuite    .suite
-	suite << TidBits::Facts::TestSuite      .suite
-	# suite << TidBits::Sys::TestSuite       .suite
+	suite << Susu::CoreExtend::TestSuite .suite
+	suite << Susu::Fs::TestSuite         .suite
+	suite << Susu::Options::TestSuite    .suite
+	suite << Susu::Facts::TestSuite      .suite
+	# suite << Susu::Sys::TestSuite       .suite
 
 
 end
@@ -45,4 +45,4 @@ end
 end # TestSuite
 
 
-end # TidBits
+end # Susu

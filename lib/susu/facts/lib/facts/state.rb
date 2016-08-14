@@ -1,4 +1,4 @@
-module TidBits
+module Susu
 module Facts
 
 module State
@@ -51,4 +51,4 @@ def reset;  @state = [ :fresh ].to_set + ( @state & Set[ :fixPassed ] ) end
 end # module State
 
 end # module Facts
-end # module TidBits
+end # module Susu

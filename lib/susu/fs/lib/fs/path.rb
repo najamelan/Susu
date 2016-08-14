@@ -1,7 +1,7 @@
 require 'pathname'
 
 
-module TidBits
+module Susu
 module Fs
 
 class Path < Pathname
@@ -14,7 +14,7 @@ alias :ls :entries
 #
 # @param path [Object.respond_to?( :to_path )] The path, may be any object that responds to #to_path. Defaults to the current working directory.
 #
-# @return [TidBits::Fs::Path] The new instance.
+# @return [Susu::Fs::Path] The new instance.
 #
 def self.new path = self.pwd
 
@@ -415,4 +415,4 @@ end
 
 end # class  Pathname
 end # module Fs
-end # module TidBits
+end # module Susu

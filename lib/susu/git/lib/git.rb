@@ -17,4 +17,4 @@ AwesomePrint.defaults = {
 
 
 require_relative 'git/config'
-TidBits::Git::Config.new
+Susu::Git::Config.new

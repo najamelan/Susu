@@ -1,6 +1,6 @@
 require 'etc'
 
-module TidBits
+module Susu
 module Fs
 
 class TestPath < Test::Unit::TestCase
@@ -312,4 +312,4 @@ end
 
 end # class  TestPath
 end # module Fs
-end # module TidBits
+end # module Susu

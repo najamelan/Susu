@@ -1,6 +1,6 @@
 require_relative 'fact'
 
-module TidBits
+module Susu
 module Facts
 
 # Options (* means mandatory)
@@ -179,4 +179,4 @@ end # class Mode < StatCondition
 
 end # class  Path
 end # module Facts
-end # module TidBits
+end # module Susu

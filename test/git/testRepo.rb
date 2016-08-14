@@ -1,4 +1,4 @@
-module TidBits
+module Susu
 module Git
 
 class TestRepo < TestRepoCase
@@ -48,4 +48,4 @@ end
 
 end # class  TestRepo
 end # module Git
-end # module TidBits
+end # module Susu

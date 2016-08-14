@@ -8,7 +8,7 @@ class String
 
 		require_relative '../../../fs/lib/fs'
 
-		TidBits::Fs::Path.new self
+		Susu::Fs::Path.new self
 
 	end
 
@@ -23,7 +23,7 @@ class String
 
 		require_relative '../../../fs/lib/fs'
 
-		TidBits::Fs::Path.new File.join( File.dirname( from ), self )
+		Susu::Fs::Path.new File.join( File.dirname( from ), self )
 
 	end
 

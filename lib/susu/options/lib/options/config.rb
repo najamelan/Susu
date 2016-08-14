@@ -1,5 +1,5 @@
 
-module TidBits
+module Susu
 module Options
 
 class Config
@@ -28,7 +28,7 @@ end
 # Put options on a class. It will create a settings and an options object on your class with
 # the following layout:
 #
-#  - settings.cfgObj  => A reference to this TidBits::Options::Config object.
+#  - settings.cfgObj  => A reference to this Susu::Options::Config object.
 #
 #  - settings.default => usually application defaults that ship with the app
 #  - settings.userset => extra configuration files from /etc or the home directory
@@ -162,7 +162,7 @@ end
 
 def filename2array file, from
 
-	file.respond_to?( :to_path ) or raise ArgumentError.new "Unsupported input type for TidBits::Options::Config: #{file.ai} or path did not exist. Supported are Hash and subclasses or String/Pathname representing a file or a directory or something that resolves to a valid string path when answering to #to_path."
+	file.respond_to?( :to_path ) or raise ArgumentError.new "Unsupported input type for Susu::Options::Config: #{file.ai} or path did not exist. Supported are Hash and subclasses or String/Pathname representing a file or a directory or something that resolves to a valid string path when answering to #to_path."
 
 	file = file.to_path.path
 
@@ -222,7 +222,7 @@ end
 # Parses the configuration files
 #
 # @param  [String|Array<String>] files File or directory to parse or an array of such
-# @return [TidBits::Options:Settings]
+# @return [Susu::Options:Settings]
 #
 def parseFile path
 
@@ -242,5 +242,5 @@ end
 
 end # Config
 end # Options
-end # TidBits
+end # Susu
 

@@ -1,5 +1,5 @@
 
-module TidBits
+module Susu
 module Git
 module Facts
 
@@ -12,9 +12,9 @@ module Facts
 # remotes: Array<Hash> A list of settings for Fact::Git::Remote to depend on.
 # remotes: Array<Hash> A list of settings for Fact::Git::Branch to depend on.
 #
-class Repo < TidBits::Facts::Fact
+class Repo < Susu::Facts::Fact
 
-include TidBits::Facts::InstanceCount
+include Susu::Facts::InstanceCount
 
 attr_reader :repo
 
@@ -22,7 +22,7 @@ attr_reader :repo
 def initialize( path:, **opts )
 
 	super( **opts, path: path.to_path.path )
-	@repo = TidBits::Git::Repo.new( @path )
+	@repo = Susu::Git::Repo.new( @path )
 
 
 	# if options.exist
@@ -66,7 +66,7 @@ end
 
 # Conditions
 #
-class Exist < TidBits::Facts::Condition
+class Exist < Susu::Facts::Condition
 
 
 def analyze
@@ -100,10 +100,10 @@ def fix
 
 end
 
-end # class Exist < TidBits::Facts::Condition
+end # class Exist < Susu::Facts::Condition
 
 
-class Bare < TidBits::Facts::Condition
+class Bare < Susu::Facts::Condition
 
 
 def analyze
@@ -129,12 +129,12 @@ def fix
 
 end
 
-end # class Bare < TidBits::Facts::Condition
+end # class Bare < Susu::Facts::Condition
 
 
 # Verify whether the working directory is clean
 #
-class Clean < TidBits::Facts::Condition
+class Clean < Susu::Facts::Condition
 
 
 def analyze
@@ -165,9 +165,9 @@ def fix( msg = "Commit added by #{self.class.name} in order to have clean workin
 
 end
 
-end # class Clean < TidBits::Facts::Condition
+end # class Clean < Susu::Facts::Condition
 
 end # class  Repo
 end # module Facts
 end # module Git
-end # module TidBits
+end # module Susu

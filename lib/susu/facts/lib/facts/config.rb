@@ -1,4 +1,4 @@
-module TidBits
+module Susu
 module Facts
 
 
@@ -11,7 +11,7 @@ def initialize( profile = :default, runtime = [], **opts )
 
 	# get options from <installDir>/conf into defaults
 	#
-	@cfg = TidBits::Options::ConfigProfile.new( profile: @profile, default: 'config.yml'.relpath, runtime: runtime )
+	@cfg = Susu::Options::ConfigProfile.new( profile: @profile, default: 'config.yml'.relpath, runtime: runtime )
 
 	@cfg.setup( self.class )
 	setupOptions opts
@@ -46,4 +46,4 @@ end # class  Config
 
 
 end # module Facts
-end # module TidBits
+end # module Susu

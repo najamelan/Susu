@@ -1,4 +1,4 @@
-module TidBits
+module Susu
 module Facts
 
 class Condition
@@ -142,4 +142,4 @@ def systemChanged; @systemChanged = true end
 
 end # class  Condition
 end # module Facts
-end # module TidBits
+end # module Susu

@@ -1,5 +1,5 @@
 
-module TidBits
+module Susu
 module CoreExtend
 
 class TestHash < Test::Unit::TestCase
@@ -237,4 +237,4 @@ end
 
 end # class  TestHash
 end # module CoreExtend
-end # module TidBits
+end # module Susu

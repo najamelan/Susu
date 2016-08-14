@@ -5,7 +5,7 @@ require 'active_support/core_ext/hash/except'
 require 'awesome_print'
 
 
-module TidBits
+module Susu
 module Sys
 
 class TestSys < Test::Unit::TestCase
@@ -204,4 +204,4 @@ end
 
 end # class TestSys
 end # module Sys
-end # module TidBits
+end # module Susu

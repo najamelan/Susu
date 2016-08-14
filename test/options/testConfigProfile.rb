@@ -1,6 +1,6 @@
 require_relative 'TestHelper'
 
-module TidBits
+module Susu
 module Options
 
 class TestConfigProfile < Test::Unit::TestCase
@@ -71,4 +71,4 @@ end
 
 end # class  TestConfigProfile
 end # module Options
-end # module TidBits
+end # module Susu

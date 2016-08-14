@@ -15,4 +15,4 @@ AwesomePrint.defaults = {
 
 
 require_relative 'facts/config'
-TidBits::Facts::Config.new
+Susu::Facts::Config.new

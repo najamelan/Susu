@@ -23,7 +23,7 @@ def test
 	$stdout.sync=true
 	$stderr.sync=true
 
-	TidBits::Facts::TestSuite.run
+	Susu::Facts::TestSuite.run
 
 end
 

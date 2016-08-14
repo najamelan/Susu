@@ -1,5 +1,5 @@
 
-module TidBits
+module Susu
 module CoreExtend
 
 class TestArray < Test::Unit::TestCase
@@ -154,4 +154,4 @@ end
 
 end # class  TestArray
 end # module CoreExtend
-end # module TidBits
+end # module Susu

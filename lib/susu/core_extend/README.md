@@ -1,6 +1,6 @@
 # @title CoreExtend README
 
-# TidBits_Ruby_CoreExtend
+# Susu_Ruby_CoreExtend
  
 Extensions to modules and classes from the ruby core library. Currently very basic, only extends Hash with a recursive_merge.
 
@@ -14,7 +14,7 @@ For more fine-grained control, you can require only specific classes:
 
 ```require 'lib/core_extend/hash'```
 
-CoreExtend is part of the [TidBits Ruby library](https://github.com/najamelan/TidBits_Ruby). You can also include TidBits Ruby entirely to get CoreExtend with it.
+CoreExtend is part of the [Susu Ruby library](https://github.com/najamelan/Susu_Ruby). You can also include Susu Ruby entirely to get CoreExtend with it.
 
 ## Unit testing
 

@@ -41,7 +41,7 @@
 #
 #   Process.wait pid
 #
-module TidBits
+module Susu
 module Sys
 
 	# Change credentials of the current process on unix compatible systems
@@ -299,4 +299,4 @@ module Sys
 	end
 
 end # module Sys
-end # module TidBits
+end # module Susu

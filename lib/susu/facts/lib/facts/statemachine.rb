@@ -1,4 +1,4 @@
-module TidBits
+module Susu
 module Facts
 
 class Pash < Options::Settings
@@ -152,4 +152,4 @@ end # class  StateMachine
 
 
 end # module Facts
-end # module TidBits
+end # module Susu

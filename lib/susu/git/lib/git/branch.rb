@@ -1,5 +1,5 @@
 
-module TidBits
+module Susu
 module Git
 
 
@@ -87,4 +87,4 @@ end
 
 end # class  Repo
 end # module Git
-end # module TidBits
+end # module Susu
