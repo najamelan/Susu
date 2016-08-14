@@ -23,6 +23,22 @@ refine Numeric do
 	alias :humanSize :to_human_size
 
 
+
+def respond_to? name, include_all = false
+
+  super and return true
+
+  [
+
+    :to_bool        ,
+    :to_human_size  ,
+    :humanSize      ,
+
+  ].include? name.to_sym
+
+end
+
+
 end # refine String
 
 end # module RefineNumeric

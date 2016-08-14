@@ -42,6 +42,9 @@ def test01Nest_concat
 
 	end
 
+
+	assert [].respond_to? :nest_concat
+
 end
 
 
@@ -82,6 +85,9 @@ def test02Nest_concat!
 
 	end
 
+
+	assert [].respond_to? :nest_concat!
+
 end
 
 
@@ -116,6 +122,9 @@ def test03first=
 
 	end
 
+
+	assert [].respond_to? :first=
+
 end
 
 
@@ -149,6 +158,9 @@ def test04last=
 		assert_equal( arr[ 3 ], arr[ 1 ], "\n\nTEST: " + arr.first + "\n" )
 
 	end
+
+
+	assert [].respond_to? :last=
 
 end
 

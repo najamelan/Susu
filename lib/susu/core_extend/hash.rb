@@ -81,6 +81,24 @@ end
 
 
 
+def respond_to? name, include_all = false
+
+  super and return true
+
+  [
+
+    :dig        ,
+    :dig!       ,
+    :diff       ,
+    :superset?  ,
+    :subset?
+
+  ].include? name.to_sym
+
+end
+
+
+
 end # refine Hash
 
 end # module RefineHash

@@ -82,6 +82,23 @@ def last= value
 end
 
 
+
+def respond_to? name, include_all = false
+
+	super and return true
+
+	[
+
+		:nest_concat   ,
+		:nest_concat!  ,
+		:first=        ,
+		:last=
+
+	].include? name.to_sym
+
+end
+
+
 end # refine Array
 
 end # module RefineArray
