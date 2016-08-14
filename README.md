@@ -11,6 +11,8 @@ Even though you don't have to use it, I recommend using Thor to build the comman
 
 ### Runtime
 - active_support
+- awesome_print
+- hashie
 
 ### Development
 - thor

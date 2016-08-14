@@ -1,5 +1,7 @@
 require_relative 'TestHelper'
 
+eval Susu::ALL_REFINES, binding
+
 module Susu
 module Options
 

@@ -1,3 +1,4 @@
+eval Susu::ALL_REFINES, binding
 
 module Susu
 module Options
@@ -188,15 +189,6 @@ end # Options
 end # Susu
 
 
-class Hash
-
-	def to_settings
-
-		Susu::Options::Settings.new self
-
-	end
-
-end
 
 
 

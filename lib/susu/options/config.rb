@@ -1,3 +1,4 @@
+eval Susu::ALL_REFINES, binding
 
 module Susu
 module Options
@@ -162,7 +163,7 @@ end
 
 def filename2array file, from
 
-	file.respond_to?( :to_path ) or raise ArgumentError.new "Unsupported input type for Susu::Options::Config: #{file.ai} or path did not exist. Supported are Hash and subclasses or String/Pathname representing a file or a directory or something that resolves to a valid string path when answering to #to_path."
+	file.respond_to?( :to_path ) or raise ArgumentError.new "Unsupported input type for Susu::Options::Config: #{file.class.name} - #{file.ai} or path did not exist. Supported are Hash and subclasses or String/Pathname representing a file or a directory or something that resolves to a valid string path when answering to #to_path."
 
 	file = file.to_path.path
 
