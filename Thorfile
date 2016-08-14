@@ -4,21 +4,21 @@ require          'awesome_print'
 require          'byebug'
 require          'pry'
 
-require_relative 'lib/tidbits'
+require_relative 'lib/susu'
 
 
-class Tidbits < Thor
+class Susu < Thor
 
 
-desc 'test', 'Run the unit tests for the TidBits library'
+desc 'test', 'Run the unit tests for the Susu library'
 
 def test
 
 	require_relative 'test/run'
 
-	TidBits::TestSuite.run
+	Susu::TestSuite.run
 
 end
 
 
-end # class Options
+end # class Susu
