@@ -10,6 +10,8 @@ require_relative 'refine/run'
 require_relative 'fs/run'
 require_relative 'options/run'
 require_relative 'facts/run'
+require_relative 'git/run'
+# require_relative 'sys/run'
 
 
 module Susu
@@ -26,6 +28,7 @@ def self.suite
 	suite << Susu::Fs::TestSuite      .suite
 	suite << Susu::Options::TestSuite .suite
 	suite << Susu::Facts::TestSuite   .suite
+	suite << Susu::Git::TestSuite     .suite
 	# suite << Susu::Sys::TestSuite       .suite
 
 

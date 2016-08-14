@@ -1,8 +1,9 @@
 require 'securerandom'
 require 'open3'
 
-require_relative '../../facts/test/TestFactCase'
+require_relative '../facts/TestFactCase'
 
+eval Susu::ALL_REFINES, binding
 
 module Susu
 module Git
