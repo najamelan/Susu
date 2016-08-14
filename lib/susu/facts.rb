@@ -2,16 +2,18 @@ require 'logger'
 require 'awesome_print'
 require 'set'
 
+using Susu::Refine::Module
+
 module Susu
 module Facts
 
-	autoload :Condition     , File.join( __dir__, 'facts/condition'       )
-	autoload :Config        , File.join( __dir__, 'facts/config'          )
-	autoload :Fact          , File.join( __dir__, 'facts/fact'            )
-	autoload :InstanceCount , File.join( __dir__, 'facts/instance_count'  )
-	autoload :Path          , File.join( __dir__, 'facts/path'            )
-	autoload :State         , File.join( __dir__, 'facts/state'           )
-	autoload :StateMachine  , File.join( __dir__, 'facts/state_machine'   )
+	autoload_relative  :Condition     , 'facts/condition'
+	autoload_relative  :Config        , 'facts/config'
+	autoload_relative  :Fact          , 'facts/fact'
+	autoload_relative  :InstanceCount , 'facts/instance_count'
+	autoload_relative  :Path          , 'facts/path'
+	autoload_relative  :State         , 'facts/state'
+	autoload_relative  :StateMachine  , 'facts/state_machine'
 
 end # module Facts
 end # module Susu

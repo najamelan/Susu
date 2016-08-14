@@ -3,20 +3,21 @@ require 'awesome_print'
 require 'rugged'
 require 'git'
 
+using Susu::Refine::Module
 
 module Susu
 module Git
 
-	autoload :Branch  , File.join( __dir__, 'git/branch' )
-	autoload :Config  , File.join( __dir__, 'git/config' )
-	autoload :Remote  , File.join( __dir__, 'git/remote' )
-	autoload :Repo    , File.join( __dir__, 'git/repo'   )
+	autoload_relative :Branch  , 'git/branch'
+	autoload_relative :Config  , 'git/config'
+	autoload_relative :Remote  , 'git/remote'
+	autoload_relative :Repo    , 'git/repo'
 
 	module Facts
 
-		autoload :Branch , File.join( __dir__, 'git/facts/branch' )
-		autoload :Remote , File.join( __dir__, 'git/facts/remote' )
-		autoload :Repo   , File.join( __dir__, 'git/facts/repo'   )
+		autoload_relative :Branch , 'git/facts/branch'
+		autoload_relative :Remote , 'git/facts/remote'
+		autoload_relative :Repo   , 'git/facts/repo'
 
 	end
 

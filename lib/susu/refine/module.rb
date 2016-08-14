@@ -4,6 +4,23 @@ module Module
 
 refine ::Module do
 
+# Returns the last component of a Module name.
+#
+# @example Usage:
+#
+#   module X
+#   class  Y
+#
+#      def initialize
+#
+#         p self.class.name      #=> X::Y
+#         p self.class.lastname  #=> Y
+#
+#      end
+#
+#    end # class  Y
+#    end # module X
+#
 def lastname
 
 	name.split( '::' ).last
@@ -12,13 +29,24 @@ end
 
 
 
-def respond_to? name, include_all = false
+# Autoload equivalent of require_relative
+#
+def autoload_relative( name, path )
+
+	autoload( name, File.expand_path( path, File.dirname( caller_locations.first.absolute_path ) ) )
+
+end
+
+
+
+def respond_to?( name, include_all = false )
 
   super and return true
 
   [
 
-    :lastname
+    :lastname          ,
+    :autoload_relative
 
   ].include? name.to_sym
 
