@@ -28,7 +28,7 @@ def self.suite
 	suite << TidBits::Fs::TestSuite         .suite
 	suite << TidBits::Options::TestSuite    .suite
 	suite << TidBits::Facts::TestSuite      .suite
-	# suite << TidBits::Susu::TestSuite       .suite
+	# suite << TidBits::Sys::TestSuite       .suite
 
 
 end

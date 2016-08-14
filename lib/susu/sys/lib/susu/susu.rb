@@ -1,4 +1,4 @@
-# Module Susu provides finegrained functionality for changing the credentials of the current process.
+# Module Sys provides finegrained functionality for changing the credentials of the current process.
 #
 # Security is opt-out, so by default the most restrictive settings are used
 #
@@ -21,7 +21,7 @@
 #
 #     module Rush
 #
-#         include Susu
+#         include Sys
 #
 #         ...
 #
@@ -33,7 +33,7 @@
 #
 #   pid = Process.fork do
 #
-#       Susu.su( user: 'alice' )
+#       Sys.su( user: 'alice' )
 #
 #       my_cool_code_here
 #
@@ -42,7 +42,7 @@
 #   Process.wait pid
 #
 module TidBits
-module Susu
+module Sys
 
 	# Change credentials of the current process on unix compatible systems
 	#
@@ -298,5 +298,5 @@ module Susu
 
 	end
 
-end # module Susu
+end # module Sys
 end # module TidBits

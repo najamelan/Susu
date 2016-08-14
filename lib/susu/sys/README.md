@@ -1,4 +1,4 @@
-# @title Susu README
+# @title Sys README
 # @author Naja Melan <najamelan ꗈ autistici ꗈ org>
 
 # susu

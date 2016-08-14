@@ -1,17 +1,17 @@
 require          'thor'
 
 
-class Susu < Thor
+class Sys < Thor
 
 # package_name "susu"
 
 
-desc 'test', 'Run the unit tests for the Susu library'
+desc 'test', 'Run the unit tests for the Sys library'
 def test
 
 	require_relative 'test/run'
 
-	TidBits::Susu::TestSuite.run
+	TidBits::Sys::TestSuite.run
 
 end
 

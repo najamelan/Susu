@@ -6,9 +6,9 @@ require 'awesome_print'
 
 
 module TidBits
-module Susu
+module Sys
 
-class TestSusu < Test::Unit::TestCase
+class TestSys < Test::Unit::TestCase
 
 
 @@user  = 'user'
@@ -20,7 +20,7 @@ class TestSusu < Test::Unit::TestCase
 #
 @@whitelist = [:tgid]
 
-# This basically tells Susu to do nothing, so we can test each parameter independantly.
+# This basically tells Sys to do nothing, so we can test each parameter independantly.
 #
 @@params =
 {
@@ -62,17 +62,17 @@ def userInfo &block
 
 	if block
 
-		result[ :before ] = Susu::info
+		result[ :before ] = Sys::info
 
 		yield
 
-		result[ :after  ] = Susu::info
+		result[ :after  ] = Sys::info
 		result[ :diff   ] = result[ :before ].diff result[ :after  ]
 		result[ :rdiff  ] = result[ :after  ].diff result[ :before ]
 
 	else
 
-		result = Susu::info
+		result = Sys::info
 
 	end
 
@@ -94,7 +94,7 @@ def test_change_uid()
 	# Structure:
 	#
 	# elem[ 0 ] = message
-	# elem[ 1 ] = params for Susu.su merged with defaults that disable everything
+	# elem[ 1 ] = params for Sys.su merged with defaults that disable everything
 	# elem[ 2 ] = which keys should have the new user id
 	#
 	data =
@@ -123,9 +123,9 @@ def test_change_uid()
 
 	data.each do | arr |
 
-		info = Susu.fork do
+		info = Sys.fork do
 
-			userInfo { Susu.su( @@params.merge arr[ 1 ] ) }
+			userInfo { Sys.su( @@params.merge arr[ 1 ] ) }
 
 		end
 
@@ -154,7 +154,7 @@ def test_change_gid()
 	# Structure:
 	#
 	# elem[ 0 ] = message
-	# elem[ 1 ] = params for Susu.su merged with defaults that disable everything
+	# elem[ 1 ] = params for Sys.su merged with defaults that disable everything
 	# elem[ 2 ] = which keys should have the new user id
 	#
 	data =
@@ -183,9 +183,9 @@ def test_change_gid()
 
 	data.each do | arr |
 
-		info = Susu.fork do
+		info = Sys.fork do
 
-			userInfo { Susu.su( @@params.merge arr[ 1 ] ) }
+			userInfo { Sys.su( @@params.merge arr[ 1 ] ) }
 
 		end
 
@@ -202,6 +202,6 @@ def test_change_gid()
 end
 
 
-end # class TestSusu
-end # module Susu
+end # class TestSys
+end # module Sys
 end # module TidBits
