@@ -6,7 +6,7 @@ require 'test/unit/ui/console/testrunner'
 #
 defined?( Test::Unit::AutoRunner ) and Test::Unit::AutoRunner.need_auto_run = false
 
-require_relative 'core_extend/run'
+require_relative 'refine/run'
 require_relative 'fs/run'
 require_relative 'options/run'
 # require_relative 'facts/run'
@@ -21,9 +21,9 @@ class TestSuite
 
 def self.suite
 
-	suite =  Test::Unit::TestSuite.new( "Susu Unit Tests" )
+	suite =  Test::Unit::TestSuite.new( "Susu TestSuite" )
 
-	suite << Susu::CoreExtend::TestSuite .suite
+	suite << Susu::Refine::TestSuite .suite
 	suite << Susu::Fs::TestSuite         .suite
 	suite << Susu::Options::TestSuite    .suite
 	# suite << Susu::Facts::TestSuite      .suite

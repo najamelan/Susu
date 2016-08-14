@@ -1,10 +1,10 @@
 # Contains new methods to extend the native Hash class with extra functionality.
 #
 module Susu
-module CoreExtend
-module RefineHash
+module Refine
+module Hash
 
-refine Hash do
+refine ::Hash do
 
 # Searches in nested hashes for a certain path.
 #
@@ -101,6 +101,6 @@ end
 
 end # refine Hash
 
-end # module RefineHash
-end # module CoreExtend
+end # module Hash
+end # module Refine
 end # module Susu

@@ -1,8 +1,8 @@
 module Susu
-module CoreExtend
-module RefineNumeric
+module Refine
+module Numeric
 
-refine Numeric do
+refine ::Numeric do
 
 	def to_bool
 
@@ -41,7 +41,7 @@ end
 
 end # refine String
 
-end # module RefineNumeric
-end # module CoreExtend
+end # module Numeric
+end # module Refine
 end # module Susu
 

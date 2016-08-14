@@ -21,7 +21,7 @@ class TestSuite
 
 def self.suite
 
-	suite =  Test::Unit::TestSuite.new( "Fs Unit Tests" )
+	suite =  Test::Unit::TestSuite.new( "Fs TestSuite" )
 
 	suite << TestRefine .suite
 	suite << TestPath   .suite

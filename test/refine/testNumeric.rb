@@ -1,7 +1,7 @@
 eval Susu::ALL_REFINES, binding
 
 module Susu
-module CoreExtend
+module Refine
 
 class TestNumeric < Test::Unit::TestCase
 
@@ -18,5 +18,5 @@ end
 
 
 end # class  TestNumeric
-end # module CoreExtend
+end # module Refine
 end # module Susu

@@ -25,7 +25,7 @@ def self.suite
 
 	Config.new :testing, 'test.yml'.relpath
 
-	suite =  Test::Unit::TestSuite.new( "Git Unit Tests" )
+	suite =  Test::Unit::TestSuite.new( "Git TestSuite" )
 
 	suite << TestRepo     .suite
 	suite << TestFactRepo .suite

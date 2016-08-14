@@ -1,0 +1,19 @@
+require          'thor'
+
+require_relative 'lib/refine'
+require_relative 'test/run'
+
+
+
+class Refine < Thor
+
+
+desc 'test', 'Run the unit tests for the Refine library'
+def test
+
+	Susu::Refine::TestSuite.run
+
+end
+
+
+end # class Refine

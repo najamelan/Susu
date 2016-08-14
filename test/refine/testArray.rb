@@ -1,7 +1,7 @@
 eval Susu::ALL_REFINES, binding
 
 module Susu
-module CoreExtend
+module Refine
 
 class TestArray < Test::Unit::TestCase
 
@@ -166,5 +166,5 @@ end
 
 
 end # class  TestArray
-end # module CoreExtend
+end # module Refine
 end # module Susu

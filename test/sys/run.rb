@@ -1,5 +1,5 @@
 require 'test/unit/ui/console/testrunner'
-require_relative '../../core_extend/lib/core_extend'
+require_relative '../../refine/lib/refine'
 require 'pp'
 
 
@@ -23,7 +23,7 @@ class  TestSuite
 
 def self.suite
 
-	suite =  Test::Unit::TestSuite.new( "Susu::Sys Unit Tests" )
+	suite =  Test::Unit::TestSuite.new( "Sys TestSuite" )
 
 	# suite << TestThorfile.suite
 	suite << TestSys.suite

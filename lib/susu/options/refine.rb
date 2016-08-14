@@ -1,4 +1,4 @@
-using Susu::CoreExtend::RefineHash
+using Susu::Refine::Hash
 
 module Susu
 module Options
@@ -33,5 +33,5 @@ end # refine Hashie::Mash
 
 
 end # module Refine
-end # module CoreExtend
+end # module Refine
 end # module Susu

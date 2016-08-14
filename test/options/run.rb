@@ -22,7 +22,7 @@ class TestSuite
 
 def self.suite
 
-	suite =  Test::Unit::TestSuite.new( "Options Unit Tests" )
+	suite =  Test::Unit::TestSuite.new( "Options TestSuite" )
 
 	suite << TestTestHelper    .suite
 	suite << TestSettings      .suite

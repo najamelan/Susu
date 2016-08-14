@@ -14,7 +14,7 @@ Dir.entries( File.dirname( __FILE__ ) ).
 
 
 module Susu
-module CoreExtend
+module Refine
 
 
 class TestSuite
@@ -22,7 +22,7 @@ class TestSuite
 
 def self.suite
 
-	suite =  Test::Unit::TestSuite.new( "CoreExtend Unit Tests" )
+	suite =  Test::Unit::TestSuite.new( "Refine TestSuite" )
 
 	suite << TestArray   .suite
 	suite << TestHash    .suite
@@ -43,5 +43,5 @@ end
 end # TestSuite
 
 
-end # CoreExtend
+end # Refine
 end # Susu

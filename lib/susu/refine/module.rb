@@ -1,8 +1,8 @@
 module Susu
-module CoreExtend
-module RefineModule
+module Refine
+module Module
 
-refine Module do
+refine ::Module do
 
 def lastname
 
@@ -27,6 +27,6 @@ end
 
 end # refine Module
 
-end # module RefineModule
-end # module CoreExtend
+end # module Module
+end # module Refine
 end # module Susu

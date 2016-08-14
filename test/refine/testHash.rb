@@ -1,7 +1,7 @@
 eval Susu::ALL_REFINES, binding
 
 module Susu
-module CoreExtend
+module Refine
 
 class TestHash < Test::Unit::TestCase
 
@@ -252,5 +252,5 @@ end
 
 
 end # class  TestHash
-end # module CoreExtend
+end # module Refine
 end # module Susu

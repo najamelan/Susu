@@ -25,7 +25,7 @@ def self.suite
 
 	Config.new :testing, 'test.yml'.relpath
 
-	suite =  Test::Unit::TestSuite.new( "Facts Unit Tests" )
+	suite =  Test::Unit::TestSuite.new( "Facts TestSuite" )
 
 	suite << TestState    .suite
 	suite << TestFact     .suite

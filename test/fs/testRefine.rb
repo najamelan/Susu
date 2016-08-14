@@ -42,5 +42,5 @@ end
 
 
 end # class  TestString
-end # module CoreExtend
+end # module Refine
 end # module Susu
