@@ -34,6 +34,21 @@ refine String do
 	end
 
 
+	def respond_to? name, include_all = false
+
+		super and return true
+
+		[
+
+			:path     ,
+			:relpath  ,
+			:to_path
+
+		].include? name.to_sym
+
+	end
+
+
 end # refine String
 
 end # module Refine
