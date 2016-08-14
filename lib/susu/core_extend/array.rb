@@ -1,4 +1,8 @@
-class Array
+module Susu
+module CoreExtend
+module RefineArray
+
+refine Array do
 
 def nest_concat! other
 
@@ -22,7 +26,7 @@ end
 #
 # coercing nil returns an empty array.
 #
-def self.eat( object )
+def Array.eat( object )
 
   object.nil?              and return []
   object.kind_of?( self ) and return object
@@ -50,7 +54,7 @@ end
 #   some  [ :key1, :key2 ]  # Will also work thanks to spit
 #   some *[ :key1, :key2 ]  # Will work but no need to splat now.
 #
-def self.spit args
+def Array.spit args
 
 	args.kind_of?( self ) && args.length == 1  and  args = args.first
 
@@ -77,5 +81,10 @@ def last= value
 
 end
 
-end
+
+end # refine Array
+
+end # module RefineArray
+end # module CoreExtend
+end # module Susu
 

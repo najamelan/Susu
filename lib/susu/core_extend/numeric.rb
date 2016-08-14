@@ -1,4 +1,8 @@
-class Numeric
+module Susu
+module CoreExtend
+module RefineNumeric
+
+refine Numeric do
 
 	def to_bool
 
@@ -18,5 +22,10 @@ class Numeric
 
 	alias :humanSize :to_human_size
 
-end
+
+end # refine String
+
+end # module RefineNumeric
+end # module CoreExtend
+end # module Susu
 

@@ -1,8 +1,10 @@
 # Contains new methods to extend the native Hash class with extra functionality.
 #
-# @author Naja Melan <najamelan@autistici.org>
-#
-class Hash
+module Susu
+module CoreExtend
+module RefineHash
+
+refine Hash do
 
 # Searches in nested hashes for a certain path.
 #
@@ -78,4 +80,9 @@ def diff( other )
 end
 
 
-end # class Hash
+
+end # refine Hash
+
+end # module RefineHash
+end # module CoreExtend
+end # module Susu

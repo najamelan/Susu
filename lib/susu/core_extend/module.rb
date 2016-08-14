@@ -1,5 +1,8 @@
+module Susu
+module CoreExtend
+module RefineModule
 
-class Module
+refine Module do
 
 def lastname
 
@@ -7,4 +10,9 @@ def lastname
 
 end
 
-end
+
+end # refine Module
+
+end # module RefineModule
+end # module CoreExtend
+end # module Susu
