@@ -1,8 +1,13 @@
 
 require 'active_support/core_ext/hash/deep_merge'
 
-require_relative 'refine/array.rb'
-require_relative 'refine/hash.rb'
-require_relative 'refine/module.rb'
-require_relative 'refine/numeric.rb'
-require_relative 'refine/global.rb'
+module Susu
+module Refine
+
+	autoload :Array  , File.join( __dir__, 'refine/array'   )
+	autoload :Hash   , File.join( __dir__, 'refine/hash'    )
+	autoload :Module , File.join( __dir__, 'refine/module'  )
+	autoload :Numeric, File.join( __dir__, 'refine/numeric' )
+
+end # module Refine
+end # module Susu
