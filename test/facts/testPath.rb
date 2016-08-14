@@ -1,5 +1,7 @@
 require 'etc'
 
+eval Susu::ALL_REFINES, binding
+
 module Susu
 module Facts
 
@@ -147,13 +149,18 @@ end
 
 def test03Own
 
+
 	# Test an existing file
 	#
 	path = @@tmpdir
-	f = Path.new( path: path, own: { uid: options.uid , gid: options.gid  } )
-	g = Path.new( path: path, own: { uid: options.uid2, gid: options.gid2 } )
-
+	f = Path.new( path: path, own: { uid: Process.euid , gid: Process.egid  } )
 	assert_check      f
+
+	# , so don't try to run.
+	#
+	omit_if( Process.euid != 0, 'Cannot test changing ownership unless run as root' )
+
+	g = Path.new( path: path, own: { uid: options.uid2, gid: options.gid2 } )
 	assert_check_fail g
 
 

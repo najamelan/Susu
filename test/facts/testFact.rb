@@ -1,3 +1,5 @@
+eval Susu::ALL_REFINES, binding
+
 module Susu
 module Facts
 

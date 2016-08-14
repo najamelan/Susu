@@ -1,3 +1,5 @@
+eval Susu::ALL_REFINES, binding
+
 module Susu
 module Facts
 
@@ -6,7 +8,7 @@ class Pash < Options::Settings
 
 def set address, value
 
-	location = dig!( *address[0...-1] )
+	location                 = dig!( *address[0...-1] )
 	location[ address.last ] = value
 
 end

@@ -1,7 +1,3 @@
-require_relative 'susu/refine'
-require_relative 'susu/fs'
-require_relative 'susu/options'
-
 module Susu
 
 	ALL_REFINES = <<-REFINES
@@ -16,3 +12,8 @@ module Susu
 	REFINES
 
 end
+
+require_relative 'susu/refine'
+require_relative 'susu/fs'
+require_relative 'susu/options'
+require_relative 'susu/facts'

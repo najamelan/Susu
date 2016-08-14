@@ -9,8 +9,7 @@ defined?( Test::Unit::AutoRunner ) and Test::Unit::AutoRunner.need_auto_run = fa
 require_relative 'refine/run'
 require_relative 'fs/run'
 require_relative 'options/run'
-# require_relative 'facts/run'
-# require_relative 'susu/run'
+require_relative 'facts/run'
 
 
 module Susu
@@ -23,10 +22,10 @@ def self.suite
 
 	suite =  Test::Unit::TestSuite.new( "Susu TestSuite" )
 
-	suite << Susu::Refine::TestSuite .suite
-	suite << Susu::Fs::TestSuite         .suite
-	suite << Susu::Options::TestSuite    .suite
-	# suite << Susu::Facts::TestSuite      .suite
+	suite << Susu::Refine::TestSuite  .suite
+	suite << Susu::Fs::TestSuite      .suite
+	suite << Susu::Options::TestSuite .suite
+	suite << Susu::Facts::TestSuite   .suite
 	# suite << Susu::Sys::TestSuite       .suite
 
 

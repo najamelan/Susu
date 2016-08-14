@@ -1,6 +1,4 @@
-require_relative 'state'
-require_relative 'instance_count'
-require_relative 'condition'
+eval Susu::ALL_REFINES, binding
 
 module Susu
 module Facts
