@@ -16,7 +16,6 @@ Dir.entries( File.dirname( __FILE__ ) ).
 module Susu
 module Fs
 
-
 class TestSuite
 
 
@@ -24,7 +23,8 @@ def self.suite
 
 	suite =  Test::Unit::TestSuite.new( "Fs Unit Tests" )
 
-	suite << TestPath.suite
+	suite << TestRefine .suite
+	suite << TestPath   .suite
 
 
 end

@@ -1,5 +1,8 @@
+module Susu
+module Fs
+module Refine
 
-class String
+refine String do
 
 
 	# Convert to Pathname. Note that #to_path cannot be used because Pathname already uses it and it should return a string.
@@ -31,4 +34,8 @@ class String
 	end
 
 
-end # class String
+end # refine String
+
+end # module Refine
+end # module Fs
+end # module Susu

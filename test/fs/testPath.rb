@@ -1,51 +1,40 @@
 require 'etc'
 
+eval Susu::ALL_REFINES, binding
+
 module Susu
 module Fs
 
 class TestPath < Test::Unit::TestCase
 
-
 def self.startup
 
-	@@user = Etc.getpwuid( Process.euid )
-	@@tmpd = FileUtils.mkpath( "/run/shm/#{ @@user.uid }/tidbits/fs/#{randomString}/" ).first
+	@@tmpdir  = Dir.mktmpdir( [ '', self.lastname ] ).path
 
 end
 
 
 def self.shutdown
 
-	FileUtils.remove_entry_secure @@tmpd
+	@@tmpdir.rm_secure
 
 end
-
-
-
-def self.randomString
-
-	rand( 36**8 ).to_s( 36 )
-
-end
-
 
 
 def setup
 
 	@@pwd = Dir.pwd
-	@@tmp = File.join @@tmpd, method_name
+	@@tmp = @@tmpdir.path.mkdir method_name
 
 end
-
 
 
 def teardown
 
-	@@tmp = File.join @@tmpd, method_name
 	Dir.chdir @@pwd
+	@@tmp.rm_secure
 
 end
-
 
 
 def test00Constructor
@@ -61,7 +50,7 @@ end
 
 def test01fromString
 
-	f = @@tmp.path
+	f = ( @@tmp + '/doesnotexist' ).path
 
 	assert_instance_of( Path, f        )
 	assert            ( ! f.exist?     )
@@ -71,8 +60,6 @@ end
 
 
 def test02Mkdir
-
-	FileUtils.mkpath @@tmp
 
 	tmp = @@tmp.path
 
@@ -84,7 +71,7 @@ def test02Mkdir
 
 	assert_instance_of( Path, d )
 
-	assert_equal( @@tmp + '/some', d.to_path )
+	assert_equal( @@tmp.to_path + '/some', d.to_path )
 	assert      ( d.exist?     )
 	assert      ( d.directory? )
 
@@ -122,8 +109,8 @@ end
 
 def test03Mkpath
 
-	path = @@tmp + '/some'
-	f = path.path.mkpath
+	path = @@tmp + 'some'
+	f = path.mkpath
 
 	assert_instance_of( Path, f      )
 	assert            ( f.exist?     )
@@ -134,9 +121,7 @@ end
 
 def test04MkpathSub
 
-	FileUtils.mkpath @@tmp
-
-	f = @@tmp.path
+	f = @@tmp
 
 	assert_instance_of( Path, f      )
 	assert            ( f.exist?     )
@@ -146,7 +131,7 @@ def test04MkpathSub
 
 	assert_instance_of( Path, d )
 
-	assert_equal( @@tmp + '/some/other', d.to_path )
+	assert_equal( @@tmp.to_path + '/some/other', d.to_path )
 	assert      ( d.exist?     )
 	assert      ( d.directory? )
 
@@ -154,8 +139,6 @@ end
 
 
 def test04Glob
-
-	FileUtils.mkpath @@tmp
 
 	f = @@tmp.path
 
@@ -180,7 +163,7 @@ end
 #
 def test05Children
 
-	p = @@tmp.path.mkpath
+	p = @@tmp
 	sub = p.mkdir 'sub'
 
 	assert_instance_of( Path, p        )
@@ -195,7 +178,7 @@ def test05Children
 	hoho = sub .touch 'hoho'
 	hehe = ssub.touch 'hehe'
 
-	aP    = [ hihi, haha, sub ]
+	aP    = [ haha, hihi, sub ]
 	aSub  = [ hoho, ssub      ]
 	aSsub = [ hehe            ]
 
@@ -203,17 +186,13 @@ def test05Children
 	cSub  = sub .children
 	cSsub = ssub.children
 
-	assert_instance_of( Array, cP )
-	assert_equal(       aP   , cP )
-	assert( cP.all? { |e| e.kind_of? Path } )
+	assert_equal  aP   , cP   .sort
+	assert_equal  aSub , cSub .sort
+	assert_equal  aSsub, cSsub.sort
 
-	assert_instance_of( Array, cSub )
-	assert_equal(       cSub, aSub )
-	assert( cSub.all? { |e| e.kind_of? Path } )
-
-	assert_instance_of( Array, cSsub )
-	assert_equal(       cSsub, aSsub )
-	assert( cSsub.all? { |e| e.kind_of? Path } )
+	assert        cP   .all? { |e| e.kind_of? Path }
+	assert        cSub .all? { |e| e.kind_of? Path }
+	assert        cSsub.all? { |e| e.kind_of? Path }
 
 	# recursive
 
@@ -225,17 +204,14 @@ def test05Children
 	crSub  = sub .children( recursive: true )
 	crSsub = ssub.children( recursive: true )
 
-	assert_instance_of( Array, crP )
-	assert_equal(       arP   , crP )
-	assert( crP.all? { |e| e.kind_of? Path } )
+	assert_equal  arP   , crP   .sort
+	assert_equal  arSub , crSub .sort
+	assert_equal  arSsub, crSsub.sort
 
-	assert_instance_of( Array, crSub )
-	assert_equal(       crSub, arSub )
-	assert( crSub.all? { |e| e.kind_of? Path } )
+	assert        crP   .all? { |e| e.kind_of? Path }
+	assert        crSub .all? { |e| e.kind_of? Path }
+	assert        crSsub.all? { |e| e.kind_of? Path }
 
-	assert_instance_of( Array, crSsub )
-	assert_equal(       crSsub, arSsub )
-	assert( crSsub.all? { |e| e.kind_of? Path } )
 
 end
 

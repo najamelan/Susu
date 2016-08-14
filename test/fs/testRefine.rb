@@ -1,7 +1,9 @@
-module Susu
-module CoreExtend
+eval Susu::ALL_REFINES, binding
 
-class TestString < Test::Unit::TestCase
+module Susu
+module Fs
+
+class TestRefine < Test::Unit::TestCase
 
 
 def test_00Path
@@ -14,7 +16,7 @@ def test_00Path
 end
 
 
-def test_00RPath
+def test_00RelPath
 
 	p = '.'.relpath
 	file = File.basename __FILE__
@@ -25,6 +27,13 @@ def test_00RPath
 	# From string to rpath and back
 	#
 	assert_equal( File.join( __dir__, file ), p.join( file ).to_s )
+
+end
+
+
+def test_02To_path
+
+	assert_equal( __FILE__, __FILE__.to_path )
 
 end
 

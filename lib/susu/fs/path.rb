@@ -1,5 +1,6 @@
 require 'pathname'
 
+eval Susu::ALL_REFINES, binding
 
 module Susu
 module Fs
@@ -109,7 +110,7 @@ def glob( pattern, flags = 0, &block )
 
 	p = ( p + pattern ).to_path
 
-	block_given?  or  return Dir.glob( p, flags ).map!( &:path )
+	block_given?  or  return Dir.glob( p, flags ).map! { |str| str.path }
 
 	Dir.glob( p, flags ) do |found|
 
@@ -413,6 +414,6 @@ def rename newName
 
 end
 
-end # class  Pathname
+end # class  Path
 end # module Fs
 end # module Susu
