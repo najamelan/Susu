@@ -200,9 +200,9 @@ def test05Children
 	arSub  = aSub  + aSsub
 	arP    = aP    + aSub  + aSsub
 
-	crP    = p   .children( recursive: true )
-	crSub  = sub .children( recursive: true )
-	crSsub = ssub.children( recursive: true )
+	crP    = p   .children( recurse: true )
+	crSub  = sub .children( recurse: true )
+	crSsub = ssub.children( recurse: true )
 
 	assert_equal  arP   , crP   .sort
 	assert_equal  arSub , crSub .sort

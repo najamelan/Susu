@@ -319,7 +319,7 @@ end
 #
 # @return [Array] The list of entries below the current path.
 #
-def children( follow: true, recursive: false, withDir: true, &block )
+def children( follow: true, recurse: false, withDir: true, &block )
 
 	toddlers = super( withDir )
 
@@ -335,14 +335,14 @@ def children( follow: true, recursive: false, withDir: true, &block )
 	end.compact!
 
 
-	recursive and toddlers +=
+	recurse and toddlers +=
 
 		toddlers.map do |path|
 
 			!follow && path.link? and next []
 			path.directory?        or next []
 
-			path.children( follow: follow, recursive: recursive, withDir: withDir, &block )
+			path.children( follow: follow, recurse: recurse, withDir: withDir, &block )
 
 		end.flatten
 
