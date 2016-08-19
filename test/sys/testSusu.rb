@@ -1,6 +1,4 @@
-require          'test/unit'
 require          'pp'
-require_relative '../lib/susu'
 require 'active_support/core_ext/hash/except'
 require 'awesome_print'
 

@@ -1,16 +1,6 @@
-require 'test/unit'
-require 'test/unit/ui/console/testrunner'
-
-
-# Turn off test unit's auto runner for those using the gem
-#
-Test::Unit::AutoRunner.need_auto_run = false
-
-
 Dir.entries( File.dirname( __FILE__ ) ).
 
 	grep( /test.*\.rb/ ) { | file | require_relative file }
-
 
 
 module Susu
@@ -35,7 +25,7 @@ end
 
 def self.run
 
-	Test::Unit::UI::Console::TestRunner.run( self )
+	Test::Unit::UI::Console::TestRunner.run( self, output_level: Test::Unit::UI::Console::OutputLevel::VERBOSE )
 
 end
 

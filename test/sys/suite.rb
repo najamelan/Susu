@@ -1,11 +1,3 @@
-require 'test/unit/ui/console/testrunner'
-require_relative '../../refine/lib/refine'
-require 'pp'
-
-
-# Turn off test unit's auto runner for those using the gem
-#
-defined?( Test::Unit::AutoRunner ) and Test::Unit::AutoRunner.need_auto_run = false
 
 
 Dir[ File.join( File.dirname( __FILE__ ), '*.rb' ) ].each do | file |

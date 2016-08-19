@@ -7,18 +7,13 @@ eval Susu::ALL_REFINES, binding
 #
 Test::Unit::AutoRunner.need_auto_run = false
 
-
-
 Susu.configure profile: :testing, runtime: [ 'facts/test.yml'.relpath, 'git/test.yml'.relpath ]
 
+'.'.relpath.children( recursive: true ).map( &:to_path ).grep( /suite\.rb/ ) do |file|
 
+	require_relative file
 
-require_relative 'refine/run'
-require_relative 'fs/run'
-require_relative 'options/run'
-require_relative 'facts/run'
-require_relative 'git/run'
-# require_relative 'sys/run'
+end
 
 
 module Susu

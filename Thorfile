@@ -17,7 +17,7 @@ def test
 	$stdout.sync = true
 	$stderr.sync = true
 
-	require_relative 'test/run'
+	require_relative 'test/suite'
 
 	::Susu::TestSuite.run
 

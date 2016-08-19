@@ -1,13 +1,4 @@
-require 'test/unit'
-require 'test/unit/ui/console/testrunner'
-
 eval Susu::ALL_REFINES, binding
-
-# Turn off test unit's auto runner for those using the gem
-#
-Test::Unit::AutoRunner.need_auto_run = false
-
-
 
 module Susu
 
