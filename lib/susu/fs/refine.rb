@@ -9,7 +9,7 @@ refine String do
 	#
 	def path
 
-		Susu::Fs::Path.new self
+		Fs::Path.new self
 
 	end
 
@@ -22,7 +22,7 @@ refine String do
 	#
 	def relpath( from = caller_locations( 1 ).first.absolute_path )
 
-		Susu::Fs::Path.new File.join( File.dirname( from ), self )
+		Fs::Path.new File.join( File.dirname( from ), self )
 
 	end
 

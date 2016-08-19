@@ -3,6 +3,8 @@ eval Susu::ALL_REFINES, binding
 module Susu
 module Git
 
+Repo
+
 class TestRepo < TestRepoCase
 
 

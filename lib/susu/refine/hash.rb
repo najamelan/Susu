@@ -6,6 +6,9 @@ module Hash
 
 refine ::Hash do
 
+require 'active_support/core_ext/hash/deep_merge'
+
+
 # Searches in nested hashes for a certain path.
 #
 # @param  path [HashKey, ...] A comma separated list of hash keys.

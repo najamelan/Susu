@@ -262,5 +262,8 @@ end
 
 
 end # class  TestFactPath
+
+Susu.config.setup( TestFactPath, :Facts, :TestFactPath )
+
 end # module Facts
 end # module Susu

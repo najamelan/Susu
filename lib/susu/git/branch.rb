@@ -12,6 +12,14 @@ include Options::Configurable
 attr_reader :name, :upstream
 
 
+
+def self.configure( config )
+
+	config.setup( self, :Git, :Branch )
+
+end
+
+
 def initialize( rug, rugRepo, git, **opts )
 
 	setupOptions( opts )

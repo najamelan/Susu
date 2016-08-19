@@ -1,3 +1,5 @@
 testing:
 
-  TestRepo: {}
+  Git:
+
+    TestRepo: {}

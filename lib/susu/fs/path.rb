@@ -93,6 +93,14 @@ end
 
 
 
+def basename
+
+	super.to_path
+
+end
+
+
+
 # Runs Pathname.glob
 #
 # @param  pattern  The pattern will be created by doing self + pattern if

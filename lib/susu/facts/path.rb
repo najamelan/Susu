@@ -3,6 +3,10 @@ eval Susu::ALL_REFINES, binding
 module Susu
 module Facts
 
+# Load classes
+#
+Condition
+
 # Options (* means mandatory)
 #
 # path*      : string
@@ -19,6 +23,13 @@ module Facts
 class Path < Fact
 
 include InstanceCount
+
+
+def self.configure( config )
+
+	config.setup( self, :Facts, :Path, sanitizer: method( :sanitize ) )
+
+end
 
 
 # Yaml can't have symbols as rvalues

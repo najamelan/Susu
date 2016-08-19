@@ -14,6 +14,9 @@ desc 'test', 'Run the unit tests for the Susu library'
 
 def test
 
+	$stdout.sync = true
+	$stderr.sync = true
+
 	require_relative 'test/run'
 
 	::Susu::TestSuite.run

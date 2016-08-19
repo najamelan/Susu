@@ -1,0 +1,49 @@
+default:
+
+  Facts:
+
+    Fact:
+
+      force   : true
+      metas   : [ metas, params, dependOn, force, stateMachine, indexKeys ]
+
+    Path:
+
+      params        : [ path, followSymlinks ]
+      indexKeys     : path
+      exist         : true
+
+      # Whether to work on symbolic links, or their targets.
+      #
+      followSymlinks: true
+
+
+    Condition: {}
+
+  Git:
+
+    Repo  : {}
+    Branch: {}
+    Remote: {}
+
+    Facts:
+
+      Repo:
+
+        params    : [ path, remotes, branches ]
+        indexKeys : path
+        exist     : true
+        remotes   : []
+        branches  : []
+
+      Remote:
+
+        params: [ path, name ]
+        name  : origin
+        exist : true
+
+      Branch:
+
+        params: [ path, name ]
+        name  : master
+        exist : true

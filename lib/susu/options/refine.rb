@@ -9,7 +9,7 @@ refine Hash do
 
   def to_settings
 
-    Susu::Options::Settings.new self
+    Settings.new self
 
   end
 

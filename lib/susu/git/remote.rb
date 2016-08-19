@@ -10,6 +10,16 @@ include Options::Configurable
 
 attr_reader :name, :url
 
+
+
+def self.configure( config )
+
+	config.setup( self, :Git, :Remote )
+
+end
+
+
+
 def initialize( rug, git, **opts )
 
 	setupOptions( opts )

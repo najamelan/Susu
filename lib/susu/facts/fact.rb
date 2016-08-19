@@ -6,7 +6,7 @@ module Facts
 
 class Fact
 
-include Options::Configurable, State, InstanceCount
+include Options::Configurable, Facts::State, Facts::InstanceCount
 
 
 # Yaml can't have symbols as rvalues
@@ -20,6 +20,13 @@ def self.sanitize key, value
 	end
 
 	return key, value
+
+end
+
+
+def self.configure( config )
+
+	config.setup( self, :Facts, :Fact, sanitizer: method( :sanitize ) )
 
 end
 
@@ -278,7 +285,7 @@ def runDepends( operation )
 
 		ret = dep.send( operation )
 
-		ret or warn  "#{self.class.name}: Dependency #{dep.class.name} #{dep.params.ai} failed operation: #{operation}."
+		ret or warn  "#{self.class.name}: Dependency failed operation #{operation}:\n#{dep.class.name} #{dep.params.ai}."
 
 		ret
 
@@ -372,6 +379,7 @@ def == other
 end
 
 
-end # class  Fact
-end # module Facts
-end # module Susu
+end
+Fact.configure( Susu.config ) # class  Fact
+end                          # module Facts
+end                          # module Susu

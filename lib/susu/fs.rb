@@ -1,10 +1,15 @@
-using Susu::Refine::Module
-
 module Susu
 module Fs
 
-	autoload_relative :Refine, 'fs/refine'
-	autoload_relative :Path  , 'fs/path'
+	extend Autoload
+
+	@modules =
+	{
+		Refine: "#{ __dir__ }/fs/refine" ,
+		Path:   "#{ __dir__ }/fs/path"
+	}
+
+	def self.config; Susu.config end
 
 end # module Fs
 end # module Susu

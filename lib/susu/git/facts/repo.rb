@@ -20,6 +20,14 @@ include Susu::Facts::InstanceCount
 attr_reader :repo
 
 
+
+def self.configure( config )
+
+	config.setup( self, :Git, :Facts, :Repo, sanitizer: method( :sanitize ) )
+
+end
+
+
 def initialize( path:, **opts )
 
 	super( **opts, path: path.to_path.path )

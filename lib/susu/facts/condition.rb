@@ -3,14 +3,25 @@ eval Susu::ALL_REFINES, binding
 module Susu
 module Facts
 
+
 class Condition
 
-include Options::Configurable, State, InstanceCount
+include Options::Configurable, Facts::State, Facts::InstanceCount
 
 attr_accessor :fact
 attr_reader   :expect, :found, :state
 
 protected :reset
+
+
+
+def self.configure( config )
+
+	config.setup( self, :Facts, :Condition )
+
+end
+
+
 
 def initialize **opts
 

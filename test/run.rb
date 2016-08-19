@@ -1,10 +1,17 @@
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
+eval Susu::ALL_REFINES, binding
 
 # Turn off test unit's auto runner
 #
-defined?( Test::Unit::AutoRunner ) and Test::Unit::AutoRunner.need_auto_run = false
+Test::Unit::AutoRunner.need_auto_run = false
+
+
+
+Susu.configure profile: :testing, runtime: [ 'facts/test.yml'.relpath, 'git/test.yml'.relpath ]
+
+
 
 require_relative 'refine/run'
 require_relative 'fs/run'

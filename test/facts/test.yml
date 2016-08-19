@@ -1,20 +1,22 @@
 testing:
 
-  TestFactPath:
+  Facts:
 
-    uid: 0
-    gid: 0
+    TestFactPath:
 
-    uid2: 1000
-    gid2: 1000
+      uid: 0
+      gid: 0
 
-  DummyFact:
+      uid2: 1000
+      gid2: 1000
 
-    indexKeys: path
-    params   : path
+    DummyFact:
 
-  MockFact:
+      indexKeys: path
+      params   : path
 
-    indexKeys: path
-    params   : path
+    MockFact:
+
+      indexKeys: path
+      params   : path
 

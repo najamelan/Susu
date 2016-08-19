@@ -87,6 +87,14 @@ attr_reader :repo
 
 
 
+def self.configure( config )
+
+	config.setup( self, :Git, :Facts, :Remote )
+
+end
+
+
+
 def initialize( path:, **opts )
 
 	super( **opts, path: path.path )

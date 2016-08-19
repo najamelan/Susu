@@ -8,16 +8,30 @@ using Susu::Refine::Module
 module Susu
 module Git
 
-	autoload_relative :Branch  , 'git/branch'
-	autoload_relative :Config  , 'git/config'
-	autoload_relative :Remote  , 'git/remote'
-	autoload_relative :Repo    , 'git/repo'
+	extend Autoload
+
+	@modules =
+	{
+		Branch:  "#{ __dir__ }/git/branch" ,
+		Remote:  "#{ __dir__ }/git/remote" ,
+		Repo:    "#{ __dir__ }/git/repo"
+	}
+
+	def self.config; Susu.config end
+
 
 	module Facts
 
-		autoload_relative :Branch , 'git/facts/branch'
-		autoload_relative :Remote , 'git/facts/remote'
-		autoload_relative :Repo   , 'git/facts/repo'
+		extend Autoload
+
+		@modules =
+		{
+			Branch:  "#{ __dir__ }/git/facts/branch" ,
+			Remote:  "#{ __dir__ }/git/facts/remote" ,
+			Repo:    "#{ __dir__ }/git/facts/repo"
+		}
+
+		def self.config; Susu.config end
 
 	end
 
@@ -32,5 +46,3 @@ AwesomePrint.defaults = {
 # 	new_hash_syntax: false,  # Use the JSON like syntax { foo: 'bar' }, when the key is a symbol
 # 	limit:           false,  # Limit large output for arrays and hashes. Set to a boolean or integer.
 }
-
-Susu::Git::Config.new

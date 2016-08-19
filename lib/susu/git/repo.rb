@@ -3,6 +3,11 @@ eval Susu::ALL_REFINES, binding
 module Susu
 module Git
 
+# Preload classes
+#
+Remote
+Branch
+
 class Repo
 
 include Options::Configurable
@@ -22,15 +27,25 @@ attr_reader :remotes
 attr_reader :branches
 
 
+
+def self.configure( config )
+
+	config.setup( self, :Git, :Repo )
+
+end
+
+
+
 def self.clone src, dst, **opts
 
 	src.respond_to?( :to_path ) and src = src.to_path
 	dst.respond_to?( :to_path ) and dst = dst.to_path
 
 	Rugged::Repository.clone_at( src, dst, opts )
-	Module.nesting.first.new( dst )
+	new( dst )
 
 end
+
 
 
 def initialize( path, **opts )

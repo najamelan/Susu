@@ -3,10 +3,24 @@ eval Susu::ALL_REFINES, binding
 module Susu
 module Facts
 
+# Load classes
+#
+Path
+StateMachine
+
 
 class DummyFact < Fact
 
-include InstanceCount, Susu::Options::Configurable
+include InstanceCount, Options::Configurable
+
+
+def self.configure( config )
+
+	config.setup( self, Module.nesting[ 1 ].lastname.to_sym, self.lastname.to_sym, sanitizer: self.method( :sanitize ) )
+
+end
+
+
 
 def initialize( path:, **opts )
 
@@ -25,10 +39,23 @@ class Dummy; end
 
 end # class DummyFact
 
+DummyFact.configure Susu.config
+
+
+
 
 class MockFact < Fact
 
 include InstanceCount, Susu::Options::Configurable
+
+
+def self.configure( config )
+
+	config.setup( self, Module.nesting[ 1 ].lastname.to_sym, self.lastname.to_sym, sanitizer: self.method( :sanitize ) )
+
+end
+
+
 
 def initialize( path:, **opts )
 
@@ -47,6 +74,8 @@ end
 class Mock; end
 
 end # class MockFact
+
+MockFact.configure Susu.config
 
 
 class TestFact < TestFactCase

@@ -3,9 +3,11 @@ eval Susu::ALL_REFINES, binding
 module Susu
 module Options
 
+Settings
+
 class Config
 
-attr_reader :parsedFiles
+attr_reader :parsedFiles, :default, :userset, :runtime, :options
 
 
 def initialize( default: [], userset: [], runtime: [] )

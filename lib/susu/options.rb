@@ -5,11 +5,18 @@ using Susu::Refine::Module
 module Susu
 module Options
 
-	autoload_relative :Refine        , 'options/refine'
-	autoload_relative :Configurable  , 'options/configurable'
-	autoload_relative :Settings      , 'options/settings'
-	autoload_relative :Config        , 'options/config'
-	autoload_relative :ConfigProfile , 'options/configProfile'
+	extend Autoload
+
+	@modules =
+	{
+		Refine:         "#{ __dir__ }/options/refine"        ,
+		Config:         "#{ __dir__ }/options/config"        ,
+		ConfigProfile:  "#{ __dir__ }/options/configProfile" ,
+		Configurable:   "#{ __dir__ }/options/configurable"  ,
+		Settings:       "#{ __dir__ }/options/settings"
+	}
+
+	def self.config; Susu.config end
 
 end # module Options
 end # module Susu

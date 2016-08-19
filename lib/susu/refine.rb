@@ -1,13 +1,17 @@
-
-require 'active_support/core_ext/hash/deep_merge'
-
 module Susu
 module Refine
 
-	autoload :Array  , File.join( __dir__, 'refine/array'   )
-	autoload :Hash   , File.join( __dir__, 'refine/hash'    )
-	autoload :Module , File.join( __dir__, 'refine/module'  )
-	autoload :Numeric, File.join( __dir__, 'refine/numeric' )
+	extend Autoload
+
+	@modules =
+	{
+		Array:         "#{ __dir__ }/refine/array"    ,
+		Hash:          "#{ __dir__ }/refine/hash"     ,
+		Module:        "#{ __dir__ }/refine/module"   ,
+		Numeric:       "#{ __dir__ }/refine/numeric"
+	}
+
+	def self.config; Susu.config end
 
 end # module Refine
 end # module Susu

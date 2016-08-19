@@ -2,18 +2,23 @@ require 'logger'
 require 'awesome_print'
 require 'set'
 
-using Susu::Refine::Module
 
 module Susu
 module Facts
 
-	autoload_relative  :Condition     , 'facts/condition'
-	autoload_relative  :Config        , 'facts/config'
-	autoload_relative  :Fact          , 'facts/fact'
-	autoload_relative  :InstanceCount , 'facts/instance_count'
-	autoload_relative  :Path          , 'facts/path'
-	autoload_relative  :State         , 'facts/state'
-	autoload_relative  :StateMachine  , 'facts/state_machine'
+	extend Autoload
+
+	@modules =
+	{
+		Condition:      "#{ __dir__ }/facts/condition"      ,
+		Fact:           "#{ __dir__ }/facts/fact"           ,
+		InstanceCount:  "#{ __dir__ }/facts/instance_count" ,
+		Path:           "#{ __dir__ }/facts/path"           ,
+		State:          "#{ __dir__ }/facts/state"          ,
+		StateMachine:   "#{ __dir__ }/facts/state_machine"
+	}
+
+	def self.config; Susu.config end
 
 end # module Facts
 end # module Susu
@@ -27,4 +32,4 @@ AwesomePrint.defaults = {
 }
 
 
-Susu::Facts::Config.new
+# Susu::Facts::Config.new
