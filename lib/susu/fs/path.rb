@@ -5,91 +5,104 @@ eval Susu::ALL_REFINES, binding
 module Susu
 module Fs
 
+
 class Path < Pathname
+
 
 @pwds = []
 
-alias :ls :entries
+class << self
 
-# Make a new Fs::Path object.
-#
-# @param path [Object.respond_to?( :to_path )] The path, may be any object that responds to #to_path. Defaults to the current working directory.
-#
-# @return [Susu::Fs::Path] The new instance.
-#
-def self.new path = self.pwd
-
-	super path.to_path
-
-end
-
-
-# Push a new directory on the stack of current working dirs and change pwd to
-# it.
-#
-# @param  path    The directory to become pwd
-# @param  &block  When a block is given, execute it and then pop the working dir.
-#
-# @return Then new working dir as an Fs::Path or if a block is given, the result of the block.
-#
-def self.pushd( path, &block )
-
-	@pwds << pwd
-	cd       path
-
-	block_given? or return path.path
-
-	begin ; yield path.path
-	ensure; popd
-	end
-
-end
-
-
-
-def self.popd
-
-	@pwds.length == 0 and raise "Current working dir stack is empty, please don't call Path.popd more than you called Path.pushd."
-	cd @pwds.pop
-
-end
-
-
-
-def self.pwd
-
-	# When the current working directory gets deleted, things go pear shaped.
-	# Dir.pwd will throw an exception and even `pwd` will choke. In that case
-	# just set the pwd to the users home dir.
+	# Make a new Fs::Path object.
 	#
-	pwd = ''
+	# @param path [Object.respond_to?( :to_path )] The path, may be any object that responds to #to_path. Defaults to the current working directory.
+	#
+	# @return [Susu::Fs::Path] The new instance.
+	#
+	def new path = pwd
 
-	begin
-
-		pwd = Dir.pwd
-
-	rescue Errno::ENOENT
-
-		Dir.chdir
-		pwd = Dir.pwd
+		super path.to_path
 
 	end
 
-	pwd.path
+
+	# Push a new directory on the stack of current working dirs and change pwd to
+	# it.
+	#
+	# @param  path    The directory to become pwd
+	# @param  &block  When a block is given, execute it and then pop the working dir.
+	#
+	# @return Then new working dir as an Fs::Path or if a block is given, the result of the block.
+	#
+	def pushd( path, &block )
+
+		@pwds << pwd
+		cd       path
+
+		block_given? or return path.path
+
+		begin ; yield path.path
+		ensure; popd
+		end
+
+	end
+
+
+
+	def popd
+
+		@pwds.length == 0 and
+
+			raise "Current working dir stack is empty, please don't call Path.popd more than you called Path.pushd."
+
+		cd @pwds.pop
+
+	end
+
+
+
+	def pwd
+
+		# When the current working directory gets deleted, things go pear shaped.
+		# Dir.pwd will throw an exception and even `pwd` will choke. In that case
+		# just set the pwd to the users home dir.
+		#
+		pwd = ''
+
+		begin
+
+			pwd = Dir.pwd
+
+		rescue Errno::ENOENT
+
+			Dir.chdir
+			pwd = Dir.pwd
+
+		end
+
+		pwd.path
+
+	end
+
+
+
+	def cd path
+
+		Dir.chdir path.to_path
+
+		path.kind_of?( self ) or path = new( path )
+
+		path
+
+	end
 
 end
 
 
 
-def self.cd path
+# Instance methods
 
-	Dir.chdir path.to_path
-
-	path.kind_of?( self ) or path = self.new( path )
-
-	path
-
-end
+alias :ls :entries
 
 
 
