@@ -308,7 +308,7 @@ end
 #                  - withDir:   prefix current path to results @see Pathname#children. Note that Pathname#children always
 #                               sets withDir to false if the current path is '.',  default: true
 #                  - follow:    follow symlinks            , default: true
-#                  - recursive: recurse into subdirectories, default: false
+#                  - recurse:   recurse into subdirectories, default: true
 #
 # @param  block    an optional block which will receive each entry as it is found. If the block returns true,
 #                  the entry will end up in the list returned, if block returns a path object, the current entry
@@ -319,7 +319,7 @@ end
 #
 # @return [Array] The list of entries below the current path.
 #
-def children( follow: true, recurse: false, withDir: true, &block )
+def children( follow: true, recurse: true, withDir: true, &block )
 
 	toddlers = super( withDir )
 

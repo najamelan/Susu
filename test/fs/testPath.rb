@@ -182,9 +182,9 @@ def test05Children
 	aSub  = [ hoho, ssub      ]
 	aSsub = [ hehe            ]
 
-	cP    = p   .children
-	cSub  = sub .children
-	cSsub = ssub.children
+	cP    = p   .children( recurse: false )
+	cSub  = sub .children( recurse: false )
+	cSsub = ssub.children( recurse: false )
 
 	assert_equal  aP   , cP   .sort
 	assert_equal  aSub , cSub .sort
@@ -200,9 +200,9 @@ def test05Children
 	arSub  = aSub  + aSsub
 	arP    = aP    + aSub  + aSsub
 
-	crP    = p   .children( recurse: true )
-	crSub  = sub .children( recurse: true )
-	crSsub = ssub.children( recurse: true )
+	crP    = p   .children
+	crSub  = sub .children
+	crSsub = ssub.children
 
 	assert_equal  arP   , crP   .sort
 	assert_equal  arSub , crSub .sort
