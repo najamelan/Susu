@@ -43,6 +43,43 @@ end
 
 
 
+# Powergrep. Adds extra functionnality to grep. When pattern is a Regexp and the element
+# is not a string, but responds to #to_s, the pattern is matched against the outcome of #to_s.
+# NilClass is an exception, because #to_s gives an empty string, which might match patterns
+# while this is usually not intended.
+#
+# @param  pattern [Object that respond_to :===]
+# @block  &block  [Block] If a block is given, each matching element is passed to the block
+#                         And the return value of the block replaces the element in the array returned
+#                         from pgrep.
+#
+# @return [Array] The list of matching elements. Compact is called on the result, so a block can return nil
+#                 for elements that shouldn't appear in the outcome.
+#
+def pgrep pattern, &block
+
+	pattern.kind_of?( Regexp ) or return grep( pattern, &block )
+
+	map do |obj|
+
+		work = !obj.kind_of?( String ) && !obj.kind_of?( NilClass ) && obj.respond_to?( :to_s ) ?
+
+			  obj.to_s
+			: obj
+
+		pattern === work or next
+
+		block_given? ?
+
+			  yield( obj )
+			: obj
+
+	end.compact
+
+end
+
+
+
 def respond_to? name, include_all = false
 
 	super and return true
@@ -52,7 +89,8 @@ def respond_to? name, include_all = false
 		:nest_concat   ,
 		:nest_concat!  ,
 		:first=        ,
-		:last=
+		:last=         ,
+		:pgrep
 
 	].include? name.to_sym
 

@@ -165,6 +165,24 @@ def test04last=
 end
 
 
+def test05pgrep
+
+	paths = [ Pathname( '/var' ), Pathname( '/etc' ) ]
+
+	assert_equal paths.map( &:to_s ).grep( /ddd/ ), paths.pgrep( /ddd/ ).map( &:to_s )
+	assert_equal paths.map( &:to_s ).grep( /var/ ), paths.pgrep( /var/ ).map( &:to_s )
+
+	# Should call normal grep when not receiving a Regexp
+	#
+	objects = [ [], {}, 3 ]
+
+	assert_equal objects.grep( Hash ), objects.pgrep( Hash )
+
+
+	assert [].respond_to?( :pgrep )
+
+end
+
 end # class  TestArray
 end # module Refine
 end # module Susu

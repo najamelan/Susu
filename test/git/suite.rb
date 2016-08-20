@@ -2,7 +2,6 @@ eval Susu::ALL_REFINES, binding
 
 module Susu
 
-
 Git # Autoload before reopen
 
 module Git
@@ -10,9 +9,7 @@ module Git
 
 require_relative 'TestRepoCase'
 
-Dir.entries( File.dirname( __FILE__ ) ).sort.
-
-	grep( /test.*\.rb/ ) { | file | require_relative file }
+__dir__.path.children.pgrep( /test.*\.rb/ ) { |file| require file }
 
 
 class TestSuite

@@ -1,8 +1,6 @@
-Dir[ File.join( File.dirname( __FILE__ ), '*.rb' ) ].each do | file |
+eval Susu::ALL_REFINES, binding
 
-	require_relative file
-
-end
+__dir__.path.children.pgrep( /test.*\.rb/ ) { |file| require file }
 
 
 

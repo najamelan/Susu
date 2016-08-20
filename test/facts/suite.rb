@@ -10,9 +10,8 @@ module Facts
 
 require_relative 'TestFactCase'
 
-Dir.entries( File.dirname( __FILE__ ) ).sort.
+__dir__.path.children.sort.pgrep( /test.*\.rb/ ) { |file| require file }
 
-	grep( /test.*\.rb/ ) { | file | require_relative file }
 
 
 class TestSuite
@@ -24,8 +23,6 @@ def self.suite
 
 	suite << TestState    .suite
 	suite << TestFact     .suite
-	suite << TestFactPath .suite
-
 
 end
 

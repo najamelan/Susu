@@ -1,6 +1,6 @@
-Dir.entries( File.dirname( __FILE__ ) ).
+eval Susu::ALL_REFINES, binding
 
-	grep( /test.*\.rb/ ) { | file | require_relative file }
+__dir__.path.children.pgrep( /test.*\.rb/ ) { |file| require file }
 
 
 module Susu
