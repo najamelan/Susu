@@ -13,7 +13,6 @@ module Facts
 		Condition:      "#{ __dir__ }/facts/condition"      ,
 		Fact:           "#{ __dir__ }/facts/fact"           ,
 		InstanceCount:  "#{ __dir__ }/facts/instance_count" ,
-		Path:           "#{ __dir__ }/facts/path"           ,
 		State:          "#{ __dir__ }/facts/state"          ,
 		StateMachine:   "#{ __dir__ }/facts/state_machine"
 	}

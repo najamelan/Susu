@@ -1,11 +1,9 @@
 eval Susu::ALL_REFINES, binding
 
 module Susu
+module Fs
 module Facts
 
-# Load classes
-#
-Condition
 
 # Options (* means mandatory)
 #
@@ -20,14 +18,14 @@ Condition
 # hashAlgo   : :SHA512
 # hash       : string   the hash of the content
 #
-class Path < Fact
+class Path < Susu::Facts::Fact
 
-include InstanceCount
+include Susu::Facts::InstanceCount
 
 
 def self.configure( config )
 
-	config.setup( self, :Facts, :Path, sanitizer: method( :sanitize ) )
+	config.setup( self, :Fs, :Facts, :Path, sanitizer: method( :sanitize ) )
 
 end
 
@@ -59,7 +57,7 @@ end
 
 # Conditions
 #
-class Exist < Condition
+class Exist < Susu::Facts::Condition
 
 
 	def analyze; super { options.path.exist? } end
@@ -101,7 +99,7 @@ end # class Exist < Condition
 
 
 
-class StatCondition < Condition
+class StatCondition < Susu::Facts::Condition
 
 	def analyze
 
@@ -190,4 +188,5 @@ end # class Mode < StatCondition
 
 end # class  Path
 end # module Facts
+end # module Fs
 end # module Susu

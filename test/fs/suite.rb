@@ -14,9 +14,9 @@ def self.suite
 
 	suite =  Test::Unit::TestSuite.new( "Fs TestSuite" )
 
-	suite << TestRefine .suite
-	suite << TestPath   .suite
-
+	suite << TestRefine   .suite
+	suite << TestPath     .suite
+	suite << TestFactPath .suite
 
 end
 

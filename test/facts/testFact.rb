@@ -5,7 +5,6 @@ module Facts
 
 # Load classes
 #
-Path
 StateMachine
 
 
@@ -28,7 +27,7 @@ def initialize( path:, **opts )
 
 	super( path: path )
 
-	dependOn( Path, path: path.parent, **opts )
+	dependOn( Fs::Facts::Path, path: path.parent, **opts )
 
 end
 
@@ -63,8 +62,8 @@ def initialize( path:, **opts )
 
 	super( path: path )
 
-	dependOn( DummyFact, path: path       , **opts )
-	dependOn( Path     , path: path.parent, **opts )
+	dependOn( DummyFact      , path: path       , **opts )
+	dependOn( Fs::Facts::Path, path: path.parent, **opts )
 
 end
 
@@ -88,10 +87,10 @@ def setup
 
 	super
 
-	@@count      = Fact      .count
-	@@pathCount  = Path      .count
-	@@mockCount  = MockFact  .count
-	@@dummyCount = DummyFact .count
+	@@count      = Fact            .count
+	@@pathCount  = Fs::Facts::Path .count
+	@@mockCount  = MockFact        .count
+	@@dummyCount = DummyFact       .count
 
 end
 
@@ -107,13 +106,13 @@ end
 
 def test_00FactCounter
 
-	assert_equal( 0, Fact.count - @@count     )
-	assert_equal( 0, Path.count - @@pathCount )
+	assert_equal( 0, Fact            .count - @@count     )
+	assert_equal( 0, Fs::Facts::Path .count - @@pathCount )
 
-	Path.new( path: '/tmp' )
+	Fs::Facts::Path.new( path: '/tmp' )
 
-	assert_equal( 1, Fact.count - @@count     )
-	assert_equal( 1, Path.count - @@pathCount )
+	assert_equal( 1, Fact            .count - @@count     )
+	assert_equal( 1, Fs::Facts::Path .count - @@pathCount )
 
 end
 
@@ -123,25 +122,25 @@ end
 #
 def test_01NoDoubleDepends
 
-	one   = Path.new( path: '/tmp', type: :directory )
-	assert_equal( 1, Fact.count - @@count     )
-	assert_equal( 1, Path.count - @@pathCount )
+	one   = Fs::Facts::Path.new( path: '/tmp', type: :directory )
+	assert_equal( 1, Fact            .count - @@count     )
+	assert_equal( 1, Fs::Facts::Path .count - @@pathCount )
 
-	two   = Path.new( path: '/tmp', type: :directory, dependOn: one )
+	two   = Fs::Facts::Path.new( path: '/tmp', type: :directory, dependOn: one )
 	assert_equal( 1  , two.depends.count    )
 	assert( one.equal? two.depends.first    )
-	assert_equal( 2  , Fact.count - @@count     )
-	assert_equal( 2  , Path.count - @@pathCount )
+	assert_equal( 2  , Fact            .count - @@count     )
+	assert_equal( 2  , Fs::Facts::Path .count - @@pathCount )
 
-	three = Path.new( path: '/tmp', type: :directory, dependOn: two )
+	three = Fs::Facts::Path.new( path: '/tmp', type: :directory, dependOn: two )
 	assert_equal( 1, three.depends.count  )
-	assert_equal( 3, Fact.count - @@count     )
-	assert_equal( 3, Path.count - @@pathCount )
+	assert_equal( 3, Fact            .count - @@count     )
+	assert_equal( 3, Fs::Facts::Path .count - @@pathCount )
 
-	four = Path.new( path: '/tmp', type: :directory )
+	four = Fs::Facts::Path.new( path: '/tmp', type: :directory )
 	assert_equal( 0, four.depends.count   )
-	assert_equal( 4, Fact.count - @@count     )
-	assert_equal( 4, Path.count - @@pathCount )
+	assert_equal( 4, Fact            .count - @@count     )
+	assert_equal( 4, Fs::Facts::Path .count - @@pathCount )
 
 end
 
@@ -152,21 +151,21 @@ end
 def test_02dependOn
 
 	f = MockFact.new( path: '/tmp' )
-	assert_equal( 3, Fact      .count - @@count      )
-	assert_equal( 1, MockFact  .count - @@mockCount  )
-	assert_equal( 1, DummyFact .count - @@dummyCount )
-	assert_equal( 1, Path      .count - @@pathCount  )
-	assert_equal( [ DummyFact, Path ], f.depends.map { |dep| dep.class } )
+	assert_equal( 3, Fact            .count - @@count      )
+	assert_equal( 1, MockFact        .count - @@mockCount  )
+	assert_equal( 1, DummyFact       .count - @@dummyCount )
+	assert_equal( 1, Fs::Facts::Path .count - @@pathCount  )
+	assert_equal( [ DummyFact, Fs::Facts::Path ], f.depends.map { |dep| dep.class } )
 
 	assert_analyze f
 	assert_check   f
 
 	path = @@tmpdir + 'doesnotexist/o'
 	f = MockFact.new( path: path, exist: true, type: :directory )
-	assert_equal( 6, Fact      .count - @@count      )
-	assert_equal( 2, MockFact  .count - @@mockCount  )
-	assert_equal( 2, DummyFact .count - @@dummyCount )
-	assert_equal( 2, Path      .count - @@pathCount  )
+	assert_equal( 6, Fact            .count - @@count      )
+	assert_equal( 2, MockFact        .count - @@mockCount  )
+	assert_equal( 2, DummyFact       .count - @@dummyCount )
+	assert_equal( 2, Fs::Facts::Path .count - @@pathCount  )
 	assert_equal( 2, f.depends.count                 )
 
 	assert_analyze_fail f

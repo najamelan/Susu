@@ -11,5 +11,19 @@ module Fs
 
 	def self.config; Susu.config end
 
+
+	module Facts
+
+		extend Autoload
+
+		@modules =
+		{
+			Path:  "#{ __dir__ }/fs/facts/path"
+		}
+
+		def self.config; Susu.config end
+
+	end # module Facts
+
 end # module Fs
 end # module Susu

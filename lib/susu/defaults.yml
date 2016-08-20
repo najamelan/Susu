@@ -7,18 +7,22 @@ default:
       force   : true
       metas   : [ metas, params, dependOn, force, stateMachine, indexKeys ]
 
-    Path:
-
-      params        : [ path, followSymlinks ]
-      indexKeys     : path
-      exist         : true
-
-      # Whether to work on symbolic links, or their targets.
-      #
-      followSymlinks: true
-
-
     Condition: {}
+
+
+  Fs:
+
+    Facts:
+
+      Path:
+
+        params        : [ path, followSymlinks ]
+        indexKeys     : path
+        exist         : true
+
+        # Whether to work on symbolic links, or their targets.
+        #
+        followSymlinks: true
 
   Git:
 

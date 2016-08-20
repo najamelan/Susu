@@ -3,16 +3,16 @@ require 'etc'
 eval Susu::ALL_REFINES, binding
 
 module Susu
-module Facts
+module Fs
 
-class TestFactPath < TestFactCase
+class TestFactPath < Susu::Facts::TestFactCase
 
 
 def test00Constructor
 
-	f = Path.new path: @@tmpdir
+	f = Facts::Path.new path: @@tmpdir
 
-	assert_instance_of  Path     , f
+	assert_instance_of  Facts::Path     , f
 	assert_option       @@tmpdir , f, :path
 	assert_param        @@tmpdir , f, :path
 	assert_state        :fresh   , f
@@ -23,7 +23,7 @@ end
 
 def test01Exist
 
-	f = Path.new path: @@tmpdir
+	f = Facts::Path.new path: @@tmpdir
 
 	assert_analyze f
 	assert_check   f
@@ -37,7 +37,7 @@ def test01Exist
 	path = @@tmpdir + 'doesntexist'
 
 	assert ! path.exist?
-	f = Path.new( path: path, type: :file )
+	f = Facts::Path.new( path: path, type: :file )
 
 	assert_analyze_fail f
 	assert_fix          f
@@ -49,7 +49,7 @@ def test01Exist
 	# Test remove file
 	#
 	assert( path.file? )
-	f = Path.new( path: path, exist: false )
+	f = Facts::Path.new( path: path, exist: false )
 
 	assert_analyze    f
 	assert_check_fail f
@@ -62,7 +62,7 @@ def test01Exist
 	# Test create directory
 	#
 	assert( ! path.exist? )
-	f = Path.new( path: path, type: :directory )
+	f = Facts::Path.new( path: path, type: :directory )
 
 	assert_analyze_fail f
 	assert_fix          f
@@ -76,7 +76,7 @@ def test01Exist
 	path.rm_secure
 	assert ! path.exist?
 
-	f = Path.new( path: path, type: :file )
+	f = Facts::Path.new( path: path, type: :file )
 
 	assert_fix  f
 	assert      f.fixed?
@@ -89,7 +89,7 @@ end
 
 def test02Type
 
-	f = Path.new path: @@tmpdir, type: :directory
+	f = Facts::Path.new path: @@tmpdir, type: :directory
 
 	assert_analyze   f
 	assert_check     f
@@ -104,7 +104,7 @@ def test02Type
 
 	assert ! path.exist?
 
-	f = Path.new( path: path, type: :directory )
+	f = Facts::Path.new( path: path, type: :directory )
 	f.fix
 
 	assert  path.directory?
@@ -112,7 +112,7 @@ def test02Type
 
 	# Turn it into a file
 	#
-	f = Path.new( path: path, type: :file )
+	f = Facts::Path.new( path: path, type: :file )
 
 	assert_analyze    f
 	assert_check_fail f
@@ -126,7 +126,7 @@ def test02Type
 	#
 	assert path.file?
 
-	f = Path.new( path: path, type: :directory )
+	f = Facts::Path.new( path: path, type: :directory )
 
 	assert_fix  f
 	assert      f.fixed?
@@ -138,7 +138,7 @@ def test02Type
 	#
 	assert path.directory?
 
-	f = Path.new( path: path, type: :file, force: false )
+	f = Facts::Path.new( path: path, type: :file, force: false )
 
 	assert_fix_fail f
 	assert          path.directory?
@@ -149,55 +149,59 @@ end
 
 def test03Own
 
+	puid = Process.euid
+	pgid = Process.egid
+
+	ouid = Etc.getpwnam( 'nobody' ).uid
+	ogid = Etc.getpwnam( 'nobody' ).gid
 
 	# Test an existing file
 	#
 	path = @@tmpdir
-	f = Path.new( path: path, own: { uid: Process.euid , gid: Process.egid  } )
+	f = Facts::Path.new( path: path, own: { uid: puid , gid: pgid } )
 	assert_check      f
 
-	# , so don't try to run.
-	#
-	omit_if( Process.euid != 0, 'Cannot test changing ownership unless run as root' )
 
-	g = Path.new( path: path, own: { uid: options.uid2, gid: options.gid2 } )
+	omit_if( puid != 0, 'Cannot test changing ownership unless run as root' )
+
+	g = Facts::Path.new( path: path, own: { uid: ouid, gid: ogid } )
 	assert_check_fail g
 
 
 	# Create file with different owner
 	#
 	path = @@tmpdir + 'own'
-	f = Path.new( path: path, type: :file, own: { uid: options.uid2, gid: options.gid2 } )
+	f = Facts::Path.new( path: path, type: :file, own: { uid: ouid, gid: ogid } )
 
 	assert_fix f
 
 	stat = path.stat
 
 	assert path.file?
-	assert_equal stat.uid, options.uid2
-	assert_equal stat.gid, options.gid2
+	assert_equal stat.uid, ouid
+	assert_equal stat.gid, ogid
 
 
 	# Change owner on existing file
 	#
 	path = @@tmpdir + 'fix'
-	f = Path.new( path: path, type: :file )
+	f = Facts::Path.new( path: path, type: :file )
 
 	assert_fix f
 
 	assert       path.file?
-	assert_equal path.stat.uid, options.uid
-	assert_equal path.stat.gid, options.gid
+	assert_equal path.stat.uid, puid
+	assert_equal path.stat.gid, pgid
 
-	f = Path.new( path: path, own: { uid: options.uid2, gid: options.gid2 } )
+	f = Facts::Path.new( path: path, own: { uid: ouid, gid: ogid } )
 
 	assert_fix f
 	assert     path.file?
 
 	stat = path.stat
 
-	assert_equal options.uid2, stat.uid
-	assert_equal options.gid2, stat.gid
+	assert_equal ouid, stat.uid
+	assert_equal ogid, stat.gid
 
 end
 
@@ -208,8 +212,8 @@ def test04Mode
 	# Test an existing file
 	#
 	path = @@tmpdir
-	f = Path.new( path: path, mode: path.stat.mode )
-	g = Path.new( path: path, mode: 040600         )
+	f = Facts::Path.new( path: path, mode: path.stat.mode )
+	g = Facts::Path.new( path: path, mode: 040600         )
 
 	assert_check      f
 	assert_check_fail g
@@ -218,7 +222,7 @@ def test04Mode
 	# Create file with specific mode
 	#
 	path = @@tmpdir + 'mode'
-	f = Path.new( path: path, type: :file, mode: 0100640 )
+	f = Facts::Path.new( path: path, type: :file, mode: 0100640 )
 
 	assert_fix   f
 	assert       path.file?
@@ -228,14 +232,14 @@ def test04Mode
 	# Change owner on existing directory
 	#
 	path = @@tmpdir + 'fixd'
-	f = Path.new( path: path, type: :directory )
+	f = Facts::Path.new( path: path, type: :directory )
 
 	assert_fix f
 
 	assert       path.directory?
 	assert_equal 040755, path.stat.mode
 
-	f = Path.new( path: path, mode: 040600 )
+	f = Facts::Path.new( path: path, mode: 040600 )
 
 	assert_fix   f
 	assert       path.directory?
@@ -245,14 +249,14 @@ def test04Mode
 	# Change owner on existing file
 	#
 	path = @@tmpdir + 'fix'
-	f = Path.new( path: path, type: :file )
+	f = Facts::Path.new( path: path, type: :file )
 
 	assert_fix f
 
 	assert       path.file?
 	assert_equal path.stat.mode, 0100644
 
-	f = Path.new( path: path, mode: 0100600 )
+	f = Facts::Path.new( path: path, mode: 0100600 )
 
 	assert_fix   f
 	assert       path.file?
@@ -262,8 +266,5 @@ end
 
 
 end # class  TestFactPath
-
-Susu.config.setup( TestFactPath, :Facts, :TestFactPath )
-
-end # module Facts
+end # module Fs
 end # module Susu
