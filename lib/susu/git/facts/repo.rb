@@ -97,7 +97,19 @@ def fix
 
 			# TODO: catch exceptions from init or deinit and report
 			#
-			@fact.repo.init( options.bare )
+			begin
+
+				@fact.repo.init( options.bare )
+
+			rescue Rugged::FilesystemError => e
+
+				options.force or raise e
+
+				Fs::Facts::Path.new( path: options.path, exist: false, force: options.force ).fix
+
+				retry
+
+			end
 
 		else
 

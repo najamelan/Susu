@@ -64,6 +64,38 @@ def test01Exist
 	assert h.fix
 	assert h.repo.bare?
 
+	# Create in non empty directory
+	#
+	path = @@tmpdir.mkpath 'doesnotexist/haha'
+	path.touch '.git'
+
+	g = Facts::Repo.new( path: path, bare: false )
+
+	assert_analyze_fail g
+	assert_fix          g
+
+	assert            path[ '.git' ].exist?
+	assert            Repo.new( path ).valid?
+
+
+	# Create in non empty directory, shoouldn't if force is not set
+	#
+	path = @@tmpdir.mkpath 'doesnotexist/hoho'
+	path.touch '.git'
+
+	g = Facts::Repo.new( path: path, bare: false, force: false )
+
+	assert_analyze_fail g
+
+	assert_raise Rugged::FilesystemError do
+
+		g.fix
+
+	end
+
+	assert              path[ '.git' ].exist?
+	assert            ! Repo.new( path ).valid?
+
 end
 
 
