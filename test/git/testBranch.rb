@@ -40,8 +40,7 @@ def test_02Remote
 	branch = 'master'
 	track  = "#{localName}/#{branch}"
 	r      = Git::Repo.new @@repo
-
-	b = r.branches[ branch ]
+	b      = r.branches[ branch ]
 
 	assert_equal( branch, b.name             , out.ai )
 	assert_equal( track , b.upstreamName     , out.ai )
@@ -60,110 +59,101 @@ ensure
 end
 
 
-# def test_03Ahead
 
-# 	@@help.repo( 'test_03Ahead' ) do |path, repoName, out|
+def test_03Diverged
 
-# 		remote, url, rOut = @@help.addRemote path
+	localName, remoteName, url, out = addRemote @@repo
 
-# 		file, cOut = @@help.commitOne path
+	path, clOut  = clone     url, @@tmpdir.mkdir( 'clone' )
 
-# 		branch = 'master'
-# 		track  = "#{remote}/#{branch}"
+	cOut         = commitOne @@repo
+	ccOut        = commitOne path
+	pOut         = push      path
 
-# 		r = Gitomate::Git::Repo.new path
+	out         += clOut + cOut + ccOut + pOut
 
-# 		b = r.branches[ branch ]
+	branch = 'master'
+	track  = "#{localName}/#{branch}"
 
-# 		out += rOut + cOut
+	r = Repo.new @@repo
+	b = r.branches[ branch ]
 
-# 		assert_equal( branch, b.name             , out )
-# 		assert_equal( track , b.upstreamName     , out )
-# 		assert_equal( track , b.upstream.name    , out )
-# 		assert_equal( [1,0] , b.diverged         , out )
-# 		assert_equal( 1     , b.ahead            , out )
-# 		assert_equal( 0     , b.behind           , out )
-# 		assert_equal( false , b.diverged?        , out )
-# 		assert_equal( true  , b.ahead?           , out )
-# 		assert_equal( false , b.behind?          , out )
+	assert_equal( branch, b.name             , out.ai )
+	assert_equal( track , b.upstreamName     , out.ai )
+	assert_equal( track , b.upstream.name    , out.ai )
+	assert_equal( [1,1] , b.diverged         , out.ai )
+	assert_equal( 1     , b.ahead            , out.ai )
+	assert_equal( 1     , b.behind           , out.ai )
+	assert_equal( true  , b.diverged?        , out.ai )
+	assert_equal( true  , b.ahead?           , out.ai )
+	assert_equal( true  , b.behind?          , out.ai )
 
-# 	end
+ensure
 
-# end
+	rmRemote remoteName
 
-
-# def test_04Behind
-
-# 	@@help.repo( 'test_04Behind' ) do |path, repoName, out|
-
-# 		remoteName, url, rOut = @@help.addRemote path
-
-# 		path2, clOut = @@help.clone url
-
-# 		file, cOut = @@help.commitOne path2
-
-# 		pOut = @@help.push path2
-
-# 		branch = 'master'
-# 		track  = "#{remoteName}/#{branch}"
-
-# 		r = Gitomate::Git::Repo.new path
-
-# 		b = r.branches[ branch ]
-
-# 		out += rOut + clOut + cOut + pOut
-
-# 		assert_equal( branch, b.name             , out )
-# 		assert_equal( track , b.upstreamName     , out )
-# 		assert_equal( track , b.upstream.name    , out )
-# 		assert_equal( [0,1] , b.diverged         , out )
-# 		assert_equal( 0     , b.ahead            , out )
-# 		assert_equal( 1     , b.behind           , out )
-# 		assert_equal( false , b.diverged?        , out )
-# 		assert_equal( false , b.ahead?           , out )
-# 		assert_equal( true  , b.behind?          , out )
-
-# 	end
-
-# end
+end
 
 
-# def test_05Diverged
 
-# 	@@help.repo( 'test_05Diverged' ) do |path, repoName, out|
+def test_04Ahead
 
-# 		remoteName, url, rOut = @@help.addRemote path
+	localName, remoteName, url, out = addRemote @@repo
 
-# 		path2, clOut = @@help.clone url
+	out += commitOne @@repo
 
-# 		file, cOut  = @@help.commitOne path2
-# 		file, cOut2 = @@help.commitOne path
+	branch = 'master'
+	track  = "#{localName}/#{branch}"
+	r      = Repo.new @@repo
+	b      = r.branches[ branch ]
 
-# 		pOut = @@help.push path2
+	assert_equal( branch, b.name             , out.ai )
+	assert_equal( track , b.upstreamName     , out.ai )
+	assert_equal( track , b.upstream.name    , out.ai )
+	assert_equal( [1,0] , b.diverged         , out.ai )
+	assert_equal( 1     , b.ahead            , out.ai )
+	assert_equal( 0     , b.behind           , out.ai )
+	assert_equal( false , b.diverged?        , out.ai )
+	assert_equal( true  , b.ahead?           , out.ai )
+	assert_equal( false , b.behind?          , out.ai )
 
-# 		branch = 'master'
-# 		track  = "#{remoteName}/#{branch}"
+ensure
 
-# 		r = Gitomate::Git::Repo.new path
+	rmRemote remoteName
 
-# 		b = r.branches[ branch ]
+end
 
-# 		out += rOut + clOut + cOut + cOut2 + pOut
 
-# 		assert_equal( branch, b.name             , out )
-# 		assert_equal( track , b.upstreamName     , out )
-# 		assert_equal( track , b.upstream.name    , out )
-# 		assert_equal( [1,1] , b.diverged         , out )
-# 		assert_equal( 1     , b.ahead            , out )
-# 		assert_equal( 1     , b.behind           , out )
-# 		assert_equal( true  , b.diverged?        , out )
-# 		assert_equal( true  , b.ahead?           , out )
-# 		assert_equal( true  , b.behind?          , out )
 
-# 	end
+def test_05Behind
 
-# end
+	localName, remoteName, url, out = addRemote @@repo
+
+	path, clOut  = clone     url, @@tmpdir.mkdir( 'clone' )
+	cOut         = commitOne path
+	pOut         = push      path
+	out         += clOut + cOut + pOut
+
+	branch = 'master'
+	track  = "#{localName}/#{branch}"
+
+	r = Repo.new @@repo
+	b = r.branches[ branch ]
+
+	assert_equal( branch, b.name             , out.ai )
+	assert_equal( track , b.upstreamName     , out.ai )
+	assert_equal( track , b.upstream.name    , out.ai )
+	assert_equal( [0,1] , b.diverged         , out.ai )
+	assert_equal( 0     , b.ahead            , out.ai )
+	assert_equal( 1     , b.behind           , out.ai )
+	assert_equal( false , b.diverged?        , out.ai )
+	assert_equal( false , b.ahead?           , out.ai )
+	assert_equal( true  , b.behind?          , out.ai )
+
+end
+
+
 
 end # class TestBranch
 end # module Git
-end # module Gitomate
+end # module Susu

@@ -33,7 +33,7 @@ end
 
 def randomString
 
-	SecureRandom.uuid[0...8]
+	SecureRandom.uuid[ 0...8 ]
 
 end
 
@@ -41,13 +41,10 @@ end
 
 def pollute path
 
-	out = []
+	path.touch( 'polluteWorkingDir' ).write( randomString )
+	path.touch( 'polluteIndex'      ).write( randomString )
 
-	out += cmd "touch   polluteWorkingDir" , path
-	out += cmd "touch   polluteIndex"      , path
-	out += cmd "git add polluteIndex"      , path
-
-	return out
+	cmd "git add polluteIndex", path
 
 end
 
@@ -55,18 +52,14 @@ end
 
 def addRemote( path, name = 'origin', branch = 'master', url = nil )
 
-	Fs::Path.pushd path do
+	remoteName   = options.remotePrefix + randomString
+	url        ||= "#{options.remoteHost}:#{remoteName}"
 
-		remoteName   = options.remotePrefix + randomString
-		url        ||= "#{options.remoteHost}:#{remoteName}"
+	out  = gitoCmd "create #{remoteName}"                      , path
+	out += cmd     "git remote add #{name} #{url}"             , path
+	out += cmd     "git push --set-upstream #{name} #{branch}" , path
 
-		out  = gitoCmd "create #{remoteName}"
-		out += cmd     "git remote add #{name} #{url}"
-		out += cmd     "git push --set-upstream #{name} #{branch}"
-
-		return name, remoteName, url, out
-
-	end
+	return name, remoteName, url, out
 
 end
 
@@ -81,9 +74,13 @@ end
 
 
 
-def gitoCmd( cmd )
+def gitoCmd( cmd, path = Fs::Path.pwd )
 
-	cmd "ssh #{options.remoteHost} #{cmd}"
+	Fs::Path.pushd path do
+
+		cmd "ssh #{options.remoteHost} #{cmd}"
+
+	end
 
 end
 
@@ -91,25 +88,32 @@ end
 
 def commitOne path
 
-	file, out = pollute path
+	out = pollute path
 
-	out += cmd "git commit -am'commit #{file}'", path
+	out += cmd "git commit -am'commit pollute'", path
 
-	return file, out
+	out
 
 end
 
 
 
-def clone path
+def push path, remote = 'origin', branch = 'master'
 
-	tmp  = tmpDir
+	cmd "git push --set-upstream #{remote} #{branch}", path
+
+end
+
+
+
+
+def clone src, dst
+
 	name = randomString
-	out  = []
 
-	out += cmd "git clone #{path} #{name}", tmp
+	out = cmd "git clone #{src} #{name}", dst
 
-	return "#{tmp}/#{name}", out
+	return "#{dst}/#{name}".path, out
 
 end
 

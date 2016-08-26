@@ -29,7 +29,6 @@ def initialize( repo, rug, rugRepo, git, **opts )
 	@rug        = rug
 	@rugRepo    = rugRepo
 	@name       = @rug.name
-	@remoteName = @rug.remote_name
 
 end
 
@@ -37,9 +36,18 @@ end
 
 def upstream
 
-	@rug.upstream or return nil
+	@rug.upstream  or return nil
+	@upstream     and return @upstream
 
-	self.class.new( @repo, @rug.upstream, @rugRepo, @git, runtime )
+	@upstream = self.class.new( @repo, @rug.upstream, @rugRepo, @git, runtime )
+
+end
+
+
+
+def remoteName
+
+	@rug.remote_name
 
 end
 
@@ -57,13 +65,15 @@ end
 
 def diverged
 
-	@name           or return nil
-	@rug.upstream   or return nil
-	@remoteName     or return nil
+	@name      or return nil
+	upstream   or return nil
+	remoteName or return nil
 
-	@repo.cleanupAfterRubyGit { @git.fetch @remoteName  }
+	@repo.cleanupAfterRubyGit { @git.fetch remoteName  }
 
-	@rugRepo.ahead_behind( @name, @rug.upstream.name )
+	result = @rugRepo.ahead_behind( @name, upstream.name )
+
+	result
 
 end
 
@@ -71,7 +81,7 @@ end
 
 def ahead
 
-	diverged.is_a? Array or return nil
+	diverged.nil? and return nil
 
 	diverged.first
 
@@ -81,7 +91,7 @@ end
 
 def behind
 
-	diverged.is_a? Array or return nil
+	diverged.nil? and return nil
 
 	diverged.last
 
