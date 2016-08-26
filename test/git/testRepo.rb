@@ -1,4 +1,4 @@
-eval Susu::ALL_REFINES, binding
+Susu.refine binding
 
 module Susu
 module Git

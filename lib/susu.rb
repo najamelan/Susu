@@ -6,16 +6,34 @@ module Susu
 extend Autoload
 
 
-ALL_REFINES = <<-REFINES
+REFINES =
+{
+	array:   'using Susu::Refine::Array'   ,
+	hash:    'using Susu::Refine::Hash'    ,
+	module:  'using Susu::Refine::Module'  ,
+	numeric: 'using Susu::Refine::Numeric' ,
+	fs:      'using Susu::Fs::Refine'      ,
+	options: 'using Susu::Options::Refine' ,
+}
 
-	using Susu::Refine::Array
-	using Susu::Refine::Hash
-	using Susu::Refine::Module
-	using Susu::Refine::Numeric
-	using Susu::Fs::Refine
-	using Susu::Options::Refine
 
-REFINES
+
+def self.refine context, which = :all
+
+	which.kind_of?( Array ) or which = [ which ]
+
+	which.include?( :all ) and return eval( REFINES.values.join( "\n" ), context )
+
+	strings = REFINES.select do |key, value|
+
+		which.include?( key )
+
+	end.values.join( "\n" )
+
+	eval strings, context
+
+end
+
 
 
 @modules =

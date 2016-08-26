@@ -1,4 +1,4 @@
-using Susu::Refine::Hash
+Susu.refine( binding, :hash )
 
 module Susu
 module Options

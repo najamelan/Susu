@@ -1,4 +1,4 @@
-eval Susu::ALL_REFINES, binding
+Susu.refine binding
 
 __dir__.path.children.pgrep( /test.*\.rb/ ) { |file| require file }
 
