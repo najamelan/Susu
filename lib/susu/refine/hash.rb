@@ -84,9 +84,9 @@ end
 
 
 
-def respond_to? name, include_all = false
+def respond_to_susu? name, include_all = false
 
-  super and return true
+  respond_to_before_susu?( name, include_all ) and return true
 
   [
 
@@ -100,6 +100,8 @@ def respond_to? name, include_all = false
 
 end
 
+alias :respond_to_before_susu? :respond_to?
+alias :respond_to?             :respond_to_susu?
 
 
 end # refine Hash

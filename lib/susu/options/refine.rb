@@ -7,27 +7,49 @@ module Refine
 
 refine Hash do
 
-  def to_settings
+	# Having it on top of the file alone won't do
+	#
+	Susu.refine( binding, :hash )
 
-    Settings.new self
 
-  end
+	def to_settings
+
+		Settings.new self
+
+	end
+
+
+	def respond_to_options? name, include_all = false
+
+		respond_to_susu?( name, include_all ) and return true
+
+		[
+
+			:to_settings
+
+		].include? name.to_sym
+
+	end
+
+	alias :respond_to_before_options? :respond_to?
+	alias :respond_to?                :respond_to_options?
 
 end # refine Hash
 
 
 # TODO: Find a way to do this with a refinement, but calling super in a refinement seems
-# to call the refined class, which is exactly what we don't want...
+# to call the refined class, which is exactly what we don't want... Hash.instance_method
+# does not work either.
 #
 # refine Hashie::Mash do
 #
 class Hashie::Mash
 
-  def dig( *keys )
+	def dig( *keys )
 
-    super( *keys.map { |key| convert_key key } )
+		super( *keys.map { |key| convert_key key } )
 
-  end
+	end
 
 end # refine Hashie::Mash
 
