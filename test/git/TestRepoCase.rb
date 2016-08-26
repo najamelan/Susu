@@ -10,6 +10,14 @@ module Git
 
 class TestRepoCase < Susu::Facts::TestFactCase
 
+include Options::Configurable
+
+
+def self.configure config
+
+	config.setup( self, :Git, :TestRepoCase )
+
+end
 
 
 def setup
@@ -40,6 +48,42 @@ def pollute path
 	out += cmd "git add polluteIndex"      , path
 
 	return out
+
+end
+
+
+
+def addRemote( path, name = 'origin', branch = 'master', url = nil )
+
+	Fs::Path.pushd path do
+
+		remoteName   = options.remotePrefix + randomString
+		url        ||= "#{options.remoteHost}:#{remoteName}"
+
+		out  = gitoCmd "create #{remoteName}"
+		out += cmd     "git remote add #{name} #{url}"
+		out += cmd     "git push --set-upstream #{name} #{branch}"
+
+		return name, remoteName, url, out
+
+	end
+
+end
+
+
+
+def rmRemote repoName
+
+	out  = gitoCmd "D unlock #{repoName}"
+	out += gitoCmd "D rm     #{repoName}"
+
+end
+
+
+
+def gitoCmd( cmd )
+
+	cmd "ssh #{options.remoteHost} #{cmd}"
 
 end
 
@@ -116,30 +160,29 @@ end
 #
 def cmd cmds, cwd = Fs::Path.pwd, **options
 
-	pwd = Fs::Path.pwd
+	Fs::Path.pushd cwd do
 
-	Fs::Path.chdir cwd
+		output = []
+		cmds   = Array.eat cmds
 
-	output = []
-	cmds   = Array.eat cmds
+		cmds.each do |cmd|
 
-	cmds.each do |cmd|
+			stdout, stderr, status = Open3.capture3( cmd, options )
 
-		stdout, stderr, status = Open3.capture3( cmd, options )
+			output << { cmd: cmd, cwd: cwd.to_path, options: options, stdout: stdout, stderr: stderr, status: status }
 
-		output << { cmd: cmd, cwd: cwd.to_path, options: options, stdout: stdout, stderr: stderr, status: status }
+		end
+
+		output
 
 	end
-
-	return output
-
-ensure
-
-	Fs::Path.chdir pwd
 
 end
 
 
 end # class  TestRepoCase
+
+TestRepoCase.configure Susu.config
+
 end # module Git
 end # module Susu

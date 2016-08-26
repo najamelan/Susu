@@ -20,6 +20,7 @@ def self.suite
 	suite =  Test::Unit::TestSuite.new( "Git TestSuite" )
 
 	suite << TestRepo     .suite
+	suite << TestBranch   .suite
 	suite << TestFactRepo .suite
 
 end

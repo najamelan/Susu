@@ -83,7 +83,7 @@ def createBackend
 
 		@rug.branches.each do |branch|
 
-			@branches[ branch.name ] = Branch.new( branch, @rug, @git )
+			@branches[ branch.name ] = Branch.new( self, branch, @rug, @git )
 
 		end
 

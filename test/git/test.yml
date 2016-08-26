@@ -2,4 +2,11 @@ testing:
 
   Git:
 
+    TestRepoCase:
+
+      remoteHost   : susu
+      remotePrefix : susu/test/
+
     TestRepo: {}
+
+

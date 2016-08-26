@@ -20,18 +20,26 @@ def self.configure( config )
 end
 
 
-def initialize( rug, rugRepo, git, **opts )
+def initialize( repo, rug, rugRepo, git, **opts )
 
-	setupOptions( opts )
+	super( opts )
 
-	# @log  = Feedback.get( self.class.name )
-
+	@repo       = repo
 	@git        = git
 	@rug        = rug
 	@rugRepo    = rugRepo
 	@name       = @rug.name
-	@upstream   = @rug.upstream
 	@remoteName = @rug.remote_name
+
+end
+
+
+
+def upstream
+
+	@rug.upstream or return nil
+
+	self.class.new( @repo, @rug.upstream, @rugRepo, @git, runtime )
 
 end
 
@@ -39,9 +47,9 @@ end
 
 def upstreamName
 
-	@upstream or return nil
+	@rug.upstream or return nil
 
-	@upstream.name
+	@rug.upstream.name
 
 end
 
@@ -49,13 +57,13 @@ end
 
 def diverged
 
-	@name       or return nil
-	@upstream   or return nil
-	@remoteName or return nil
+	@name           or return nil
+	@rug.upstream   or return nil
+	@remoteName     or return nil
 
-	@git.fetch( @remoteName )
+	@repo.cleanupAfterRubyGit { @git.fetch @remoteName  }
 
-	@rugRepo.ahead_behind( @name, @upstream.name )
+	@rugRepo.ahead_behind( @name, @rug.upstream.name )
 
 end
 

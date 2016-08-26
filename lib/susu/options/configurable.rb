@@ -12,15 +12,17 @@ def initialize( *args, **opts, &block )
 
 	super( *args, &block )
 
-	setupOptions opts
+	setupOptions opts.to_settings
 
 end
 
 
 def setupOptions runtime
 
-	runtime = self.class.options.deep_merge( runtime )
-	extend runtime.to_module( 'options' )
+	opts = self.class.options.deep_merge( runtime )
+
+	extend runtime.to_module( 'runtime' )
+	extend opts   .to_module( 'options' )
 
 end
 
