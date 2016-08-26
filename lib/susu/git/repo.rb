@@ -50,7 +50,7 @@ end
 
 def initialize( path, **opts )
 
-	setupOptions( opts )
+	super( opts )
 
 	@path     = path.path
 	@remotes  = {}

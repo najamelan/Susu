@@ -22,7 +22,7 @@ end
 
 def initialize( rug, git, **opts )
 
-	setupOptions( opts )
+	super( opts )
 
 	@git  = git
 	@rug  = rug
