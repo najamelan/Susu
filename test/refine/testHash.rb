@@ -98,10 +98,6 @@ def testSuperset
 
 	end
 
-
-	assert( {}.respond_to? :superset? )
-	assert( {}.respond_to? :subset?   )
-
 end
 
 
@@ -160,9 +156,6 @@ def testDiff
 		assert_equal( arr[ 1 ], result2 , "\n\nTEST: " + arr[ 0 ] + " - double diff test\n" )
 
 	end
-
-
-	assert( {}.respond_to? :diff )
 
 end
 
@@ -232,10 +225,6 @@ def testMergeNestedHash
 
 	end
 
-
-	assert( {}.respond_to? :deep_merge  )
-	assert( {}.respond_to? :deep_merge! )
-
 end
 
 
@@ -244,9 +233,6 @@ def testDig
 
 	# TODO
 	#
-
-	assert( {}.respond_to? :dig  )
-	assert( {}.respond_to? :dig! )
 
 end
 

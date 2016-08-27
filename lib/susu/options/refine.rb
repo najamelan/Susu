@@ -1,5 +1,3 @@
-Susu.refine( binding, :hash )
-
 module Susu
 module Options
 module Refine
@@ -7,32 +5,11 @@ module Refine
 
 refine Hash do
 
-	# Having it on top of the file alone won't do
-	#
-	Susu.refine( binding, :hash )
-
-
 	def to_settings
 
 		Settings.new self
 
 	end
-
-
-	def respond_to_options? name, include_all = false
-
-		respond_to_susu?( name, include_all ) and return true
-
-		[
-
-			:to_settings
-
-		].include? name.to_sym
-
-	end
-
-	alias :respond_to_before_options? :respond_to?
-	alias :respond_to?                :respond_to_options?
 
 end # refine Hash
 
@@ -44,6 +21,8 @@ end # refine Hash
 # refine Hashie::Mash do
 #
 class Hashie::Mash
+
+	Susu.refine( binding, :hash )
 
 	def dig( *keys )
 

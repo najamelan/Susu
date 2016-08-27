@@ -38,24 +38,6 @@ def autoload_relative( name, path )
 end
 
 
-
-def respond_to_susu? name, include_all = false
-
-  respond_to_before_susu?( name, include_all ) and return true
-
-  [
-
-    :lastname          ,
-    :autoload_relative
-
-  ].include? name.to_sym
-
-end
-
-alias :respond_to_before_susu? :respond_to?
-alias :respond_to?             :respond_to_susu?
-
-
 end # refine Module
 
 end # module Module

@@ -22,7 +22,7 @@ def self.refine context, which = :all
 
 	which.kind_of?( Array ) or which = [ which ]
 
-	which.include?( :all ) and return eval( REFINES.values.join( "\n" ), context )
+	which.include?( :all ) and return context.eval( REFINES.values.join( "\n" ) )
 
 	strings = REFINES.select do |key, value|
 
@@ -30,7 +30,7 @@ def self.refine context, which = :all
 
 	end.values.join( "\n" )
 
-	eval strings, context
+	context.eval strings
 
 end
 

@@ -1,4 +1,5 @@
 Susu.refine binding
+
 module Susu
 module Options
 

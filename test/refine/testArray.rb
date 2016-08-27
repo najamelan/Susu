@@ -43,8 +43,6 @@ def test01Nest_concat
 	end
 
 
-	assert [].respond_to? :nest_concat
-
 end
 
 
@@ -86,8 +84,6 @@ def test02Nest_concat!
 	end
 
 
-	assert [].respond_to? :nest_concat!
-
 end
 
 
@@ -122,8 +118,6 @@ def test03first=
 
 	end
 
-
-	assert [].respond_to? :first=
 
 end
 
@@ -160,8 +154,6 @@ def test04last=
 	end
 
 
-	assert [].respond_to? :last=
-
 end
 
 
@@ -179,7 +171,10 @@ def test05pgrep
 	assert_equal objects.grep( Hash ), objects.pgrep( Hash )
 
 
-	assert [].respond_to?( :pgrep )
+end
+
+
+def test06ArrayEat
 
 end
 

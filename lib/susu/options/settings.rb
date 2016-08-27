@@ -171,8 +171,6 @@ alias_method :[]=, :custom_writer
 
 
 
-
-
 protected
 
 # Make sure keys are always symbols

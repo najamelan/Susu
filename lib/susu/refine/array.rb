@@ -78,30 +78,13 @@ def pgrep pattern, &block
 
 end
 
-
-
-def respond_to_susu? name, include_all = false
-
-  respond_to_before_susu?( name, include_all ) and return true
-
-	[
-
-		:nest_concat   ,
-		:nest_concat!  ,
-		:first=        ,
-		:last=         ,
-		:pgrep
-
-	].include? name.to_sym
-
-end
-
-alias :respond_to_before_susu? :respond_to?
-alias :respond_to?             :respond_to_susu?
+end # refine Array
 
 
 
-class << ::Array
+
+refine ::Array.singleton_class do
+
 # Coerce an object to be an array. Any object that is not an array will become
 # a single element array with object at index 0.
 #
@@ -144,10 +127,8 @@ def spit args
 end
 
 
-end # class << Array
 
-
-end # refine Array
+end # refine ::Array.singleton_class
 
 end # module Array
 end # module Refine
