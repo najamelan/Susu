@@ -5,156 +5,156 @@ module Refine
 
 class TestArray < Test::Unit::TestCase
 
+data do
 
-def test01Nest_concat
+	{
+		"Empty inputs" =>
 
-	# Format: message, input1, input1 control, input2, input2 control, expect
-	data =
-	[
-			[                                     \
-				  "Empty inputs"                   \
-				, []                               \
-				, []                               \
-				, []                               \
-				, []                               \
-				, []                               \
-			]                                     \
-                                               \
-		,  [                                     \
-				  "Basic usage"                    \
-				, [ [1], [2] ]                     \
-				, [ [1], [2] ]                     \
-				, [ [3], [4] ]                     \
-				, [ [3], [4] ]                     \
-				, [ [1,3], [2,4] ]                 \
-			]                                     \
-	]
+			[
+				[] ,
+				[] ,
+				[] ,
+				[] ,
+				[]
+			],
 
+      "Basic usage"  =>
 
-	data.each do | arr |
-
-		assert_equal( arr[ 5 ], arr[ 1 ].nest_concat( arr[ 3 ] ), "\n\nTEST: " + arr.first + "\n" )
-
-		# Verify the originals haven't changed
-		#
-		assert_equal( arr[ 2 ], arr[ 1 ], "\n\nTEST: " + arr.first + "\n" )
-		assert_equal( arr[ 4 ], arr[ 3 ], "\n\nTEST: " + arr.first + "\n" )
-
-	end
-
+			[
+				[ [1], [2] ]      ,
+				[ [1], [2] ]      ,
+				[ [3], [4] ]      ,
+				[ [3], [4] ]      ,
+				[ [1,3], [2,4] ]
+			]
+	}
 
 end
 
+def test01Nest_concat data
 
-def test02Nest_concat!
+	input1, input1Control, input2, input2Control, expect = data
 
-	# Format: message, input1, input1 control, input2, input2 control, expect
+
+	assert_equal  expect, input1.nest_concat( input2 )
+
+	# Verify the originals haven't changed
 	#
-	data =
-	[
-			[                                     \
-				  "Empty inputs"                   \
-				, []                               \
-				, []                               \
-				, []                               \
-				, []                               \
-				, []                               \
-			]                                     \
-                                               \
-		,  [                                     \
-				  "Basic usage"                    \
-				, [ [1], [2] ]                     \
-				, [ [1,3], [2,4] ]                 \
-				, [ [3], [4] ]                     \
-				, [ [3], [4] ]                     \
-				, [ [1,3], [2,4] ]                 \
-			]                                     \
-	]
-
-
-	data.each do | arr |
-
-		assert_equal( arr[ 5 ], arr[ 1 ].nest_concat!( arr[ 3 ] ), "\n\nTEST: " + arr.first + "\n" )
-
-		# Verify the originals haven't changed
-		#
-		assert_equal( arr[ 2 ], arr[ 1 ], "\n\nTEST: " + arr.first + "\n" )
-		assert_equal( arr[ 4 ], arr[ 3 ], "\n\nTEST: " + arr.first + "\n" )
-
-	end
-
+	assert_equal input1Control, input1
+	assert_equal input2Control, input2
 
 end
 
 
 
-def test03first=
+data do
 
-	# Format: message, original array, value, expect
+	{
+		"Empty inputs" =>
+
+			[
+				[] ,
+				[] ,
+				[] ,
+				[] ,
+				[]
+			],
+
+      "Basic usage"  =>
+
+			[
+				[ [1], [2] ]      ,
+				[ [1,3], [2,4] ]  ,
+				[ [3], [4] ]      ,
+				[ [3], [4] ]      ,
+				[ [1,3], [2,4] ]
+			]
+	}
+
+end
+
+def test02Nest_concat! data
+
+	input1, input1Control, input2, input2Control, expect = data
+
+
+	assert_equal  expect, input1.nest_concat!( input2 )
+
+	# Verify the originals haven't changed
 	#
-	data =
-	[
-			[                                     \
-				  "Empty array"                    \
-				, []                               \
-				, 1                                \
-				, [ 1 ]                            \
-			]                                     \
-                                               \
-		,  [                                     \
-				  "Basic usage"                    \
-				, [ 9, 8 ]                         \
-				, 1                                \
-				, [ 1, 8 ]                         \
-			]                                     \
-	]
-
-
-	data.each do | arr |
-
-		arr[ 1 ].first = arr[ 2 ]
-
-		assert_equal( arr[ 3 ], arr[ 1 ], "\n\nTEST: " + arr.first + "\n" )
-
-	end
-
+	assert_equal input1Control, input1
+	assert_equal input2Control, input2
 
 end
 
 
 
-def test04last=
+data do
 
-	# Format: message, original array, value, expect
-	#
-	data =
-	[
-			[                                     \
-				  "Empty array"                    \
-				, []                               \
-				, 1                                \
-				, [ 1 ]                            \
-			]                                     \
-                                               \
-		,  [                                     \
-				  "Basic usage"                    \
-				, [ 9, 8 ]                         \
-				, 1                                \
-				, [ 9, 1 ]                         \
-			]                                     \
-	]
+	{
+		"Empty array" =>
 
+			[
+				[]    ,
+				1     ,
+				[ 1 ] ,
+			],
 
-	data.each do | arr |
+      "Basic usage"  =>
 
-		arr[ 1 ].last = arr[ 2 ]
-
-		assert_equal( arr[ 3 ], arr[ 1 ], "\n\nTEST: " + arr.first + "\n" )
-
-	end
-
+			[
+				[ 9, 8 ]  ,
+				1         ,
+				[ 1, 8 ]  ,
+			]
+	}
 
 end
+
+def test03first= data
+
+	original, value, expect = data
+
+	original.first = value
+
+	assert_equal expect, original
+
+end
+
+
+
+data do
+
+	{
+		"Empty array" =>
+
+			[
+				[]    ,
+				1     ,
+				[ 1 ] ,
+			],
+
+      "Basic usage"  =>
+
+			[
+				[ 9, 8 ]  ,
+				1         ,
+				[ 9, 1 ]  ,
+			]
+	}
+
+end
+
+def test04last= data
+
+	original, value, expect = data
+
+	original.last = value
+
+	assert_equal expect, original
+
+end
+
 
 
 def test05pgrep
@@ -174,29 +174,51 @@ def test05pgrep
 end
 
 
-def test06ArrayEat
 
+data do
 
-	assert_equal [ :a     ], ::Array.eat(    :a     )
-	assert_equal [        ], ::Array.eat(    nil    )
-	assert_equal [        ], ::Array.eat(  [    ]   )
-	assert_equal [ :a     ], ::Array.eat(  [ :a ]   )
-	assert_equal [ [:a]   ], ::Array.eat( [[ :a ]]  )
-	assert_equal [ {a: 1} ], ::Array.eat(  {a: 1}   )
+	{
+		'Single object'              => [    :a    , [ :a     ] ] ,
+		'Nil'                        => [    nil   , [        ] ] ,
+		'Empty Array'                => [  [    ]  , [        ] ] ,
+		'Array 1 elem'               => [  [ :a ]  , [ :a     ] ] ,
+		'Nested Array'               => [ [[ :a ]] , [ [:a]   ] ] ,
+		'Object that defines #to_a'  => [  {a: 1}  , [ {a: 1} ] ]
+	}
+
+end
+
+def test06ArrayEat data
+
+	input, expect = data
+
+	assert_equal expect, ::Array.eat( input )
 
 end
 
 
-def test07ArraySpit
 
+data do
 
-	assert_equal( 3      , ::Array.spit( 3         ) )
-	assert_equal( nil    , ::Array.spit( [  nil ]  ) )
-	assert_equal( :a     , ::Array.spit( [  :a  ]  ) )
-	assert_equal( [:a]   , ::Array.spit( [[ :a ]]  ) )
-	assert_equal( {a: 1} , ::Array.spit( [{a: 1}]  ) )
+	{
+		'Single object'   => [ 3        , 3      ] ,
+		'Empty Array'     => [ []       , []     ] ,
+		'Array with nil'  => [ [  nil ] , nil    ] ,
+		'Array 1 elem'    => [ [  :a  ] , :a     ] ,
+		'Nested Array'    => [ [[ :a ]] , [:a]   ] ,
+		'Array with Hash' => [ [{a: 1}] , {a: 1} ]
+	}
 
 end
+
+def test07ArraySpit data
+
+	input, expect = data
+
+	assert_equal expect, ::Array.spit( input )
+
+end
+
 
 end # class  TestArray
 end # module Refine
