@@ -176,6 +176,26 @@ end
 
 def test06ArrayEat
 
+
+	assert_equal [ :a     ], ::Array.eat(    :a     )
+	assert_equal [        ], ::Array.eat(    nil    )
+	assert_equal [        ], ::Array.eat(  [    ]   )
+	assert_equal [ :a     ], ::Array.eat(  [ :a ]   )
+	assert_equal [ [:a]   ], ::Array.eat( [[ :a ]]  )
+	assert_equal [ {a: 1} ], ::Array.eat(  {a: 1}   )
+
+end
+
+
+def test07ArraySpit
+
+
+	assert_equal( 3      , ::Array.spit( 3         ) )
+	assert_equal( nil    , ::Array.spit( [  nil ]  ) )
+	assert_equal( :a     , ::Array.spit( [  :a  ]  ) )
+	assert_equal( [:a]   , ::Array.spit( [[ :a ]]  ) )
+	assert_equal( {a: 1} , ::Array.spit( [{a: 1}]  ) )
+
 end
 
 end # class  TestArray

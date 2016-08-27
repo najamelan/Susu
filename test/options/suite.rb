@@ -15,6 +15,7 @@ def self.suite
 
 	suite =  Test::Unit::TestSuite.new( "Options TestSuite" )
 
+	suite << TestRefine        .suite
 	suite << TestTestHelper    .suite
 	suite << TestSettings      .suite
 	suite << TestConfig        .suite
