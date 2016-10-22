@@ -99,7 +99,7 @@ end
 
 
 
-def pathExists?() File.exist? @path end
+def pathExists?() @path.exist? end
 
 
 
@@ -118,7 +118,7 @@ end
 
 def bare?
 
-	!@rug and createBackend
+	@rug  or createBackend
 
 	@rug and return @rug.bare?
 
@@ -153,13 +153,13 @@ def deinit
 		  @path.rm_secure
 		: @path[ '.git' ].rm_secure
 
-	@rug = @git = @remotes = @branches = nil
+	@rug = @git = @remotes = nil
 
 end
 
 
 
-def clean?()
+def clean?
 
 	Fs::Path.pushd( @path ) do
 
@@ -179,6 +179,8 @@ end
 
 def add pathspec
 
+	@rug or createBackend
+
 	cleanupAfterRubyGit { @git.add pathspec }
 
 end
@@ -187,7 +189,7 @@ end
 
 def addAll
 
-	!@rug and createBackend
+	@rug or createBackend
 
 	cleanupAfterRubyGit { @git.add( all: true ) }
 
@@ -197,7 +199,7 @@ end
 
 def commit( message, **opts )
 
-	!@rug and createBackend
+	@rug or createBackend
 
 	# Rugged doesn't seem to have commit
 	#
@@ -209,7 +211,7 @@ end
 
 def pollute
 
-	!@rug and createBackend
+	@rug or createBackend
 
 	@path.touch 'polluteWorkingDir'
 	@path.touch 'polluteIndex'
