@@ -17,14 +17,6 @@ include Options::Configurable
 #
 attr_reader :path
 
-# An array of Susu::Remote objects for the repository.
-#
-attr_reader :remotes
-
-# An array of Susu::Branch objects for the repository.
-#
-attr_reader :branches
-
 
 
 def self.configure( config )
@@ -51,9 +43,19 @@ def initialize( path, **opts )
 
 	super( opts )
 
-	@path     = path.path
-	@remotes  = {}
-	@branches = {}
+	@path = path.path
+
+	reset
+
+end
+
+
+
+def reset
+
+	# It's a bit silly to call this everytime, but it seems the only way to avoid stale data.
+	#
+	@rug = @git = nil
 
 	createBackend
 
@@ -73,27 +75,35 @@ def createBackend
 		                      :  ::Git::Base.open( @path.to_path )
 
 
-		@rug.remotes.each do |remote|
-
-			@remotes[ remote.name ] = Remote.new( remote, @git )
-
-		end
-
-
-		@rug.branches.each do |branch|
-
-			@branches[ branch.name ] = Branch.new( self, branch, @rug, @git )
-
-		end
-
 	# ruby-git throws ArgumentError
 	#
-	rescue Rugged::RepositoryError, Rugged::OSError, ArgumentError => e
+	rescue Rugged::RepositoryError, Rugged::OSError, ArgumentError # => e
 
 		@rug = @git = nil
-		@remotes, @branches = {}, {}
 
 	end
+
+end
+
+
+
+# TODO: optimize. We could cache branche objects after all and reuse them where nothing has changed.
+#
+def branches
+
+	# reset
+
+	@rug.branches.each_with_object( {} ) { |branch, memo| memo[ branch.name ] = Branch.new( self, branch, @rug, @git ) }
+
+end
+
+
+
+def remotes
+
+	# reset
+
+	@rug.remotes.each_with_object( {} ) { |branch, memo| memo[ branch.name ] = Remote.new( remote, @git ) }
 
 end
 
@@ -105,10 +115,7 @@ def pathExists?() @path.exist? end
 
 def valid?
 
-	# It's a bit silly to call this everytime, but it seems the only way to avoid stale data.
-	#
-	@rug = nil
-	createBackend
+	reset
 
 	!!@rug
 
