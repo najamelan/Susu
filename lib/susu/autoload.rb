@@ -27,6 +27,9 @@ module Autoload
 
 			return klass
 
+		# TODO: When refering to a constant within a class, Ruby doesn't call const_missing on the enclosing modules
+		#       which means we have to preload classes manually.
+
 		else
 
 			raise "Class not found: #{ name.to_s }."

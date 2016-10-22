@@ -47,6 +47,8 @@ end
 
 
 
+# TODO: What if several libs or apps configure Susu?
+#
 def self.configure( profile: :default, runtime: [] )
 
 	@profile = profile
