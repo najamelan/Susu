@@ -23,7 +23,7 @@ module Autoload
 			@loaded.add name
 
 			klass = const_get name
-			klass.respond_to?( :configure ) and klass.configure( config )
+			klass.respond_to?( :configure ) && respond_to?( :config ) and klass.configure( config )
 
 			return klass
 
