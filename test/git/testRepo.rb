@@ -37,7 +37,26 @@ def test01clean
 end
 
 
-def test02AddAll
+def test02valid
+
+	r = Repo.new @@repo
+
+	assert r.valid?
+
+
+	r.path[ '.git' ].rm_secure
+
+	assert ! r.valid?
+
+
+	r.path.rm_secure
+
+	assert ! r.valid?
+
+end
+
+
+def test03AddAll
 
 	r = Repo.new @@repo
 
@@ -52,7 +71,7 @@ def test02AddAll
 end
 
 
-def test03Branches
+def test04Branches
 
 	r = Repo.new @@repo
 
