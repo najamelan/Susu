@@ -29,7 +29,7 @@ end
 
 def initialize( path:, **opts )
 
-	super( **opts, path: path.to_path.path )
+	super( **opts, path: path.path )
 	@repo = Susu::Git::Repo.new( @path )
 
 
@@ -61,7 +61,7 @@ def createAddress
 
 		ret = options[ key ]
 
-		key.to_sym == :path and  ret = ret.expand_path.to_path
+		key.to_sym == :path  and  ret = ret.expand_path.to_path
 
 		ret
 

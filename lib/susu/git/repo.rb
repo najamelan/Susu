@@ -1,4 +1,5 @@
 Susu.refine binding
+
 module Susu
 module Git
 
@@ -41,7 +42,7 @@ end
 
 def initialize( path, **opts )
 
-	super( opts )
+	super opts
 
 	@path = path.path
 
@@ -67,11 +68,9 @@ def createBackend
 
 	# Create a backend if the repo path exist and is a repo
 	#
-	begin
+	@rug ||= Rugged::Repository.new( @path.to_path )
 
-		@rug ||= Rugged::Repository.new( @path.to_path )
-
-		@git ||=  @rug.bare?  ?  ::Git::Base.bare( @path.to_path )
+	@git ||=  @rug.bare?  ?  ::Git::Base.bare( @path.to_path )
 		                      :  ::Git::Base.open( @path.to_path )
 
 
@@ -80,8 +79,6 @@ def createBackend
 	rescue Rugged::RepositoryError, Rugged::OSError, ArgumentError # => e
 
 		@rug = @git = nil
-
-	end
 
 end
 
@@ -109,10 +106,6 @@ end
 
 
 
-def pathExists?() @path.exist? end
-
-
-
 def valid?
 
 	reset
@@ -125,9 +118,11 @@ end
 
 def bare?
 
-	@rug  or createBackend
+	@rug  or reset
 
 	@rug and return @rug.bare?
+
+	# TODO: warn for trying to call bare? on non-existing repo
 
 	nil
 
@@ -137,13 +132,22 @@ end
 
 def head
 
-	@rug.head.name.remove( /refs\/heads\// )
+	@rug  or reset
+
+	@rug and return @rug.head.name.remove( /refs\/heads\// )
+
+	# TODO: warn for trying to call head on non-existing repo
+
+	nil
 
 end
 
 
 
 def init( bare = false )
+
+	@rug and reset
+	@rug and raise 'Trying to init existing repository.'
 
 	@rug = Rugged::Repository.init_at( @path.to_path, bare )
 

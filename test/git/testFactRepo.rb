@@ -15,9 +15,11 @@ def test00DependOnPath
 
 	assert !path.exist?
 
-	assert_fix f
-	assert     path          .directory?
-	assert     path[ '.git' ].directory?
+	assert_analyze_fail f
+
+	assert_fix          f
+	assert              path          .directory?
+	assert              path[ '.git' ].directory?
 
 end
 
