@@ -36,11 +36,11 @@ class << self
 	def pushd( path, &block )
 
 		@pwds << pwd
-		cd       path
+		path = cd path
 
-		block_given? or return path.path
+		block_given? or return path
 
-		begin ; yield path.path
+		begin ; yield path
 		ensure; popd
 		end
 
@@ -85,7 +85,9 @@ class << self
 
 
 
-	def cd path
+	def cd path, &block
+
+		block_given? and return pushd( path, &block )
 
 		Dir.chdir path.to_path
 
@@ -105,6 +107,11 @@ alias :ls :entries
 
 
 
+#-------------------------------------------------------------------------------
+# Returns the last component of the path as a string
+#
+# @return [String] The last component of the path, eg. after the last slash
+#
 def basename
 
 	super.to_path
@@ -121,7 +128,7 @@ end
 # @param  flags    The flags as in File::Constants, see Dir.glob
 # @param  block    The block will receive the pathname of each found path as parameter.
 #
-# @return nil
+# @return [array]  An array of Fs::Path objects if no block given, and the result of the last iteration of the block otherwise.
 #
 def glob( pattern, flags = 0, &block )
 
@@ -298,16 +305,7 @@ end
 
 def chdir &block
 
-	old    = self.class.pwd
-	result = Dir.chdir dirname
-
-	block_given? or return result
-
-	result = yield Pathname.pwd
-
-	Dir.chdir old
-
-	result
+	self.class.cd dirname, &block
 
 end
 
