@@ -24,6 +24,7 @@ def test00DependOnPath
 end
 
 
+
 def test01Exist
 
 	assert @@repo[ '.git' ].exist?
@@ -54,6 +55,7 @@ def test01Exist
 
 	assert_fix   h
 	assert       @@repo[ '.git' ].exist?
+	assert       @@repo[ '.git' ].directory?
 	assert     ! h.repo.bare?
 
 	# Test create bare
@@ -76,8 +78,9 @@ def test01Exist
 	assert_analyze_fail g
 	assert_fix          g
 
-	assert            path[ '.git' ].exist?
-	assert            Repo.new( path ).valid?
+	assert              path[ '.git' ].exist?
+	assert              path[ '.git' ].directory?
+	assert              Repo.new( path ).valid?
 
 
 	# Create in non empty directory, shoouldn't if force is not set
@@ -144,6 +147,7 @@ def test03Clean
 	assert_analyze    f
 	assert_check_fail f
 	assert_fix        f
+	assert_check      f
 
 end
 
@@ -151,3 +155,4 @@ end
 end # class  TestFactRepo
 end # module Git
 end # module Susu
+
