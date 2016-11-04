@@ -100,7 +100,7 @@ def remotes
 
 	# reset
 
-	@rug.remotes.each_with_object( {} ) { |branch, memo| memo[ branch.name ] = Remote.new( remote, @git ) }
+	@rug.remotes.each_with_object( {} ) { |remote, memo| memo[ remote.name ] = Remote.new( remote, @git ) }
 
 end
 
