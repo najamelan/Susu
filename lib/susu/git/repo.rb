@@ -190,7 +190,7 @@ end
 
 def add pathspec
 
-	@rug or createBackend
+	valid? or raise 'Trying to add on a non-existing git repo.'
 
 	cleanupAfterRubyGit { @git.add pathspec }
 
@@ -200,7 +200,7 @@ end
 
 def addAll
 
-	@rug or createBackend
+	valid? or raise 'Trying to add on a non-existing git repo.'
 
 	cleanupAfterRubyGit { @git.add( all: true ) }
 
@@ -210,7 +210,7 @@ end
 
 def commit( message, **opts )
 
-	@rug or createBackend
+	valid? or raise 'Trying to commit a non-existing git repo.'
 
 	# Rugged doesn't seem to have commit
 	#
@@ -222,7 +222,7 @@ end
 
 def pollute
 
-	@rug or createBackend
+	valid? or raise 'Trying to pollute a non-existing git repo.'
 
 	@path.touch 'polluteWorkingDir'
 	@path.touch 'polluteIndex'
