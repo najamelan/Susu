@@ -34,6 +34,19 @@ def test01clean
 
 	assert  ! r.clean?
 
+	r.addAll
+	r.commit 'Commit pollution'
+
+	assert  r.clean?
+
+	sub = Repo.new addRepo
+
+	assert_equal 0, r.submodules.count
+
+	r.addSubmodule sub
+
+	assert  ! r.clean?
+
 end
 
 
