@@ -31,6 +31,19 @@ end
 
 
 
+# Add a second repository to the temp dir
+#
+def addRepo
+
+	path = 'data/fixtures/clean'.relpath.copy @@tmpdir/randomString
+	path[ '.gitted' ].rename '.git'
+
+	path
+
+end
+
+
+
 def randomString
 
 	SecureRandom.uuid[ 0...8 ]
