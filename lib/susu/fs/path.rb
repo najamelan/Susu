@@ -384,20 +384,45 @@ end
 #
 def copy( dst, **opts )
 
+	# Shall we return an array at the end of the method?
+	#
 	arr = dst.kind_of?( Array )
-	dst = Array.eat( dst )
-	dst = dst.map( &:to_path )
 
+	# Prepare the destinations to be sent to fileutils
+	#
+	dst = Array.eat( dst )
+
+	# Turn them all to strings
+	#
+	dst = dst.map { |path| path.to_path }
+
+	# Figure out which of the destinations are existing directories, cause content
+	# will be copied inside of them.
+	#
+	dir = dst.map { |path| path.path.directory? }
+
+
+	require 'fileutils'
 	dst.each { |dest| FileUtils.cp_r( @path, dest, opts ) }
 
-	dst = dst.map do |dest|
+
+	# Decide what to return and convert to Fs::Path
+	#
+	dst = dst.map.with_index do |dest, i|
 
 		dest = dest.path
-		dest.directory? and dest = dest/basename
+		dir[ i ]  and  dest = dest/basename
+
+		dest
 
 	end
 
-	!arr and dst = Array.spit( dst )
+
+	# If we didn't receive an array, just return a single element
+	#
+	arr or dst = Array.spit( dst )
+
+	dst
 
 end
 
