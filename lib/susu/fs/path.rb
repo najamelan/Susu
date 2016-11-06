@@ -218,13 +218,17 @@ end
 #
 def rm_secure( force = false )
 
-	exist? or return
+	exist? or return self
 
 	require 'fileutils'
 
 	FileUtils.remove_entry_secure( @path, force )
 
+	self
+
 end
+
+alias :rm :rm_secure
 
 
 # Joins the given paths onto self to create a new Path object. Does not access the filesystem.
