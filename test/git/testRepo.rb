@@ -14,8 +14,8 @@ def test00Constructor
 
 	r = Repo.new @@repo
 
-	assert_instance_of  Repo  , r
-	assert_equal        @@repo, r.path
+	assert_instance_of    Repo  , r
+	assert_equal          @@repo, r.path
 
 	assert                r.valid?
 	assert                r.clean?
@@ -24,64 +24,68 @@ def test00Constructor
 end
 
 
+
 def test01clean
 
 	r = Repo.new @@repo
 
-	assert r.clean?
+		assert r.clean?
+
 
 	r.pollute
 
-	assert  ! r.clean?
+		assert  ! r.clean?
+
 
 	r.addAll
 	r.commit 'Commit pollution'
 
-	assert  r.clean?
+		assert  r.clean?
 
-	sub = Repo.new addRepo
 
-	assert_equal 0, r.submodules.count
+	r.addSubmodule Repo.new( addRepo )
 
-	r.addSubmodule sub
-
-	assert  ! r.clean?
+		assert  ! r.clean?
 
 end
+
 
 
 def test02valid
 
 	r = Repo.new @@repo
 
-	assert r.valid?
+		assert r.valid?
 
 
 	r.path[ '.git' ].rm_secure
 
-	assert ! r.valid?
+		assert ! r.valid?
 
 
 	r.path.rm_secure
 
-	assert ! r.valid?
+		assert ! r.valid?
 
 end
+
 
 
 def test03AddAll
 
 	r = Repo.new @@repo
 
-	assert r.clean?
+		assert r.clean?
+
 
 	r.pollute
 	r.addAll
 	r.commit 'clean working dir'
 
-	assert  r.clean?
+		assert  r.clean?
 
 end
+
 
 
 def test04Branches
@@ -90,9 +94,9 @@ def test04Branches
 
 	branches = r.branches
 
-	assert_equal [ 'dev', 'master' ], branches.keys
+		assert_equal [ 'dev', 'master' ], branches.keys
 
-	branches.values.each { |branch| assert_instance_of Branch, branch }
+		branches.values.each { |branch| assert_instance_of Branch, branch }
 
 
 	# Make sure we don't send stale data
@@ -101,11 +105,12 @@ def test04Branches
 
 	branches = r.branches
 
-	assert_equal [ 'dev', 'master', 'newBranch' ], branches.keys
+		assert_equal [ 'dev', 'master', 'newBranch' ], branches.keys
 
-	branches.values.each { |branch| assert_instance_of Branch, branch }
+		branches.values.each { |branch| assert_instance_of Branch, branch }
 
 end
+
 
 
 def test05AddSubmodule
@@ -113,12 +118,13 @@ def test05AddSubmodule
 	r   = Repo.new @@repo
 	sub = Repo.new addRepo
 
-	assert_equal 0, r.submodules.count
+		assert_equal 0, r.submodules.count
+
 
 	r.addSubmodule sub
 
-	assert_equal 1, r.submodules.count
-	assert       r.path[ '.gitmodules' ].exist?
+		assert_equal 1, r.submodules.count
+		assert       r.path[ '.gitmodules' ].exist?
 
 end
 
