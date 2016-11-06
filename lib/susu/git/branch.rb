@@ -9,7 +9,7 @@ class  Branch
 include Options::Configurable
 
 
-attr_reader :name, :upstream
+attr_reader :name
 
 
 
@@ -36,10 +36,9 @@ end
 
 def upstream
 
-	@rug.upstream  or return nil
-	@upstream     and return @upstream
+	@rug.upstream  or  return nil
 
-	@upstream = self.class.new( @repo, @rug.upstream, @rugRepo, @git, runtime )
+	self.class.new( @repo, @rug.upstream, @rugRepo, @git, runtime )
 
 end
 
