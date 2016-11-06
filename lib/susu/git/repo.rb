@@ -14,12 +14,6 @@ include Options::Configurable
 
 
 
-# The string path for the repo
-#
-attr_reader :path
-
-
-
 def self.configure( config )
 
 	config.setup( self, :Git, :Repo )
@@ -101,6 +95,32 @@ def remotes
 	# reset
 
 	@rug.remotes.each_with_object( {} ) { |remote, memo| memo[ remote.name ] = Remote.new( remote, @git ) }
+
+end
+
+
+
+def submodules
+
+	# reset
+
+	@rug.submodules.each_with_object( {} ) { |sub, memo| memo[ sub.name ] = self.class.new( @path[ sub.path ] ) }
+
+end
+
+
+
+def to_path
+
+	@path.to_path
+
+end
+
+
+
+def path
+
+	@path.path
 
 end
 
@@ -232,7 +252,24 @@ def pollute
 end
 
 
+
+def addSubmodule sub, subpath = nil, **opts
+
+	valid? or raise 'Trying to add a submodule to a non-existing git repo.'
+
+	subpath.nil? and subpath = sub.path.basename
+
+	@rug.submodules.add( sub.to_path, subpath.to_path, opts )
+
+	self.class.new @path[ subpath ]
+
+end
+
+
+
 # Keep ruby-git from messing with the environment variables
+# ruby-git already seems to have code to prevent this, but apparently it doesn't work.
+# Bug not reported.
 #
 def cleanupAfterRubyGit
 

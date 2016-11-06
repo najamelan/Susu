@@ -95,6 +95,21 @@ def test04Branches
 end
 
 
+def test05AddSubmodule
+
+	r   = Repo.new @@repo
+	sub = Repo.new addRepo
+
+	assert_equal 0, r.submodules.count
+
+	r.addSubmodule sub
+
+	assert_equal 1, r.submodules.count
+	assert       r.path[ '.gitmodules' ].exist?
+
+end
+
+
 end # class  TestRepo
 end # module Git
 end # module Susu
