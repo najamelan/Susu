@@ -1,6 +1,7 @@
 require 'pathname'
 
 Susu.refine binding
+
 module Susu
 module Fs
 
@@ -369,7 +370,7 @@ end
 # Copy the file or directory to a new location.
 # Options: preserve noop verbose dereference_root remove_destination.
 #
-# @param  dst  [respond_to(:to_path)|Array(respond_to(:to_path))] The destination(s). If destination
+# @param  dst  [respond_to(:to_path)|Array<respond_to(:to_path)>] The destination(s). If destination
 #              is an existing directory, source shall be copied inside. If destination is an existing
 #              file, it shall be replaced only if remove_destination is set. If parent directories
 #              don't exist, they will be created.

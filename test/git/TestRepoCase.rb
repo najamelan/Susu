@@ -24,7 +24,7 @@ def setup
 
 	super
 
-	@@repo    = 'data/fixtures/clean'.relpath.copy @@tmpdir
+	@@repo = 'data/fixtures/clean'.relpath.copy @@tmpdir
 	@@repo[ '.gitted' ].rename '.git'
 
 end

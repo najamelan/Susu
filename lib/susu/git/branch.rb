@@ -69,7 +69,7 @@ def diverged
 	upstream   or return nil
 	remoteName or return nil
 
-	@repo.cleanupAfterRubyGit { @git.fetch remoteName  }
+	@repo.cleanupAfterRubyGit { @git.fetch remoteName }
 
 	result = @rugRepo.ahead_behind( @name, upstream.name )
 
