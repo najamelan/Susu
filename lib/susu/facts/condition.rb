@@ -143,8 +143,10 @@ def dependOnFact( factClass, **opts )
 	#
 	fClass = Object.const_get( address.first )
 	cClass = fClass.const_get( fClass.options.conditions ).const_get( address.last.to_s.capitalize! )
-	cond  = @sm.conditions.set( address, cClass.new( opts ) )
+	cond   = @sm.conditions.set( address, cClass.new( opts ) )
+
 	@sm.desire.set( address, value )
+
 end
 
 

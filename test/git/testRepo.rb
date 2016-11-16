@@ -25,7 +25,7 @@ end
 
 
 
-def test01clean
+def test01clean?
 
 	r = Repo.new @@repo
 

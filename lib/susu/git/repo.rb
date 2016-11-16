@@ -77,7 +77,7 @@ def createBackend
 	@rug ||= Rugged::Repository.new( @path.to_path )
 
 	@git ||=  @rug.bare?  ?  ::Git::Base.bare( @path.to_path )
-		                      :  ::Git::Base.open( @path.to_path )
+	                      :  ::Git::Base.open( @path.to_path )
 
 
 	# ruby-git throws ArgumentError
@@ -301,7 +301,7 @@ end
 
 # Keep ruby-git from messing with the environment variables
 # ruby-git already seems to have code to prevent this, but apparently it doesn't work.
-# Bug not reported.
+# TODO: Bug not reported.
 #
 def cleanupAfterRubyGit
 
