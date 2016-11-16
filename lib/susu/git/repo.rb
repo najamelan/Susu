@@ -1,3 +1,5 @@
+require 'English'
+
 Susu.refine binding
 
 module Susu
