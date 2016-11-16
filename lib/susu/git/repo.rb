@@ -58,6 +58,8 @@ def reset
 
 	# It's a bit silly to call this everytime, but it seems the only way to avoid stale data.
 	#
+	@rug and @rug.close
+
 	@rug = @git = nil
 
 	createBackend
