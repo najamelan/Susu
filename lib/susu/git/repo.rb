@@ -236,6 +236,24 @@ end
 
 
 
+def graph
+
+	validate
+
+	Fs::Path.pushd( @path ) do
+
+		ap Fs::Path::pwd
+		ret = `git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)<%an>%Creset' --abbrev-commit  --all`
+		$CHILD_STATUS == 0 or raise "Git returned an error [exit:#{ $CHILD_STATUS }], Results are not reliable."
+
+		ret
+
+	end
+
+end
+
+
+
 def pollute
 
 	validate
