@@ -152,6 +152,43 @@ def test03Update
 end
 
 
+def test04Head
+
+	r = Repo.new @@repo
+	f = Facts::Repo.new( path: @@repo, head: 'master' )
+
+		assert_equal   'master', r.head
+		assert_analyze f
+		assert_check   f
+		assert_fix     f
+		assert_equal   'master', r.head
+
+
+	f = Facts::Repo.new( path: @@repo, head: 'dev' )
+
+		assert_equal      'master', r.head
+		assert_analyze    f
+		assert_check_fail f
+		assert_fix        f
+		assert_check      f
+		assert_equal      'dev', r.head
+
+
+	# TODO: This throws an exception, because the reference does not exist. We probably should depend on branches condition
+	# in order to make sure that branches that should be created will be so.
+	#
+	# f = Facts::Repo.new( path: @@repo, head: 'doesnotexist' )
+
+	# 	assert_equal      'dev', r.head
+	# 	assert_analyze    f
+	# 	assert_check_fail f
+	# 	assert_fix        f
+	# 	assert_check      f
+	# 	assert_equal      'doesnotexist', r.head
+
+end
+
+
 end # class  TestFactRepo
 end # module Git
 end # module Susu
