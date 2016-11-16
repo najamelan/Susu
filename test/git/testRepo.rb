@@ -146,6 +146,21 @@ def test06Head
 
 		assert_equal 'dev', r.head
 end
+
+
+
+def test07AddBranch
+
+	r = Repo.new @@repo
+
+	r.addBranch 'ola'
+
+		assert_instance_of Branch, r.branches[ 'ola' ]
+		assert_equal       3     , r.branches.count
+
+end
+
+
 end # class  TestRepo
 end # module Git
 end # module Susu

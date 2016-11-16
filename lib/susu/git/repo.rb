@@ -299,6 +299,18 @@ end
 
 
 
+def addBranch name, target = 'HEAD'
+
+	validate
+
+	rugBranch = @rug.create_branch( name, target )
+
+	Branch.new self, rugBranch, @rug, @git
+
+end
+
+
+
 # Keep ruby-git from messing with the environment variables
 # ruby-git already seems to have code to prevent this, but apparently it doesn't work.
 # TODO: Bug not reported.
