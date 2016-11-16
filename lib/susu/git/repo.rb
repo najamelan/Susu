@@ -214,6 +214,16 @@ end
 
 
 
+def checkout target, **opts
+
+	validate
+
+	@rug.checkout target, opts
+
+end
+
+
+
 def addAll
 
 	validate
