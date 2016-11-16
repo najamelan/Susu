@@ -13,6 +13,8 @@ class Repo
 include Options::Configurable
 
 
+attr_reader :rug, :git
+
 
 def self.configure( config )
 
