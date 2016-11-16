@@ -115,8 +115,9 @@ end
 
 def test05AddSubmodule
 
-	r   = Repo.new @@repo
-	sub = Repo.new addRepo
+	r    = Repo.new @@repo
+	sub  = Repo.new addRepo
+	sub2 = Repo.new addRepo
 
 		assert_equal 0, r.submodules.count
 
@@ -125,6 +126,11 @@ def test05AddSubmodule
 
 		assert_equal 1, r.submodules.count
 		assert       r.path[ '.gitmodules' ].exist?
+
+
+	r.addSubmodule sub2
+
+		assert_equal 2, r.submodules.count
 
 end
 
