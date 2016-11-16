@@ -150,9 +150,9 @@ end
 
 def head
 
-	@rug and return @rug.head.name.remove( /refs\/heads\// )
 	validate
 
+	@rug and return @rug.head.name.gsub!( /refs\/heads\//, '' )
 
 end
 
