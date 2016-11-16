@@ -155,9 +155,39 @@ end
 end # class Bare < Susu::Facts::Condition
 
 
-# Verify whether the working directory is clean
+
+# Define the ref head should point to. Could be a commit hash or a branch.
 #
-class Clean < Susu::Facts::Condition
+class Head < Susu::Facts::Condition
+
+
+def analyze
+
+	dependOn( :exist, true ) or return analyzeFailed
+
+	super { @fact.repo.head }
+
+end
+
+
+def fix
+
+	super do
+
+		@fact.repo.checkout options.head
+
+	end
+
+end
+
+end # class Head < Susu::Facts::Condition
+
+
+
+# Verify whether the working directory is clean and commit everything if it isn't, so the
+# git repository corresponds to the file system and the index is empty.
+#
+class Update < Susu::Facts::Condition
 
 
 def analyze
@@ -169,11 +199,14 @@ def analyze
 end
 
 
-def fix( msg = "Commit added by #{self.class.name} in order to have clean working dir" )
+
+def fix( msg = "Commit added by #{ self.class.name } to have a clean working dir" )
 
 	super() do
 
 		if @expect
+
+			options.head and dependOn( :head )
 
 			@fact.repo.addAll
 			@fact.repo.commit msg
@@ -188,7 +221,8 @@ def fix( msg = "Commit added by #{self.class.name} in order to have clean workin
 
 end
 
-end # class Clean < Susu::Facts::Condition
+end # class Update < Susu::Facts::Condition
+
 
 end # class  Repo
 end # module Facts

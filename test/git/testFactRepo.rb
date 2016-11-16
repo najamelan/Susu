@@ -131,15 +131,15 @@ def test02Bare
 end
 
 
-def test03Clean
+def test03Update
 
-	f = Facts::Repo.new( path: @@repo, clean: true )
+	f = Facts::Repo.new( path: @@repo, update: true )
 
 	assert_analyze f
 	assert_check   f
 
 
-	f = Facts::Repo.new( path: @@repo, clean: true )
+	f = Facts::Repo.new( path: @@repo, update: true )
 
 	f.repo.pollute
 	assert ! f.repo.clean?
