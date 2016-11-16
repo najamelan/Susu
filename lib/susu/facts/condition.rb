@@ -105,8 +105,8 @@ end
 
 
 # Let's a condition depend on another condition from the same fact. If it doesn't exist, it will be added to the fact.
-# This method will test check on the corresponding condition at this and if it hasn't already run and we are fixing it
-# will attempt to fix the condition. If the method returns false, you should abort your operation.
+# This method will test check on the corresponding condition and if it hasn't already run and we are fixing it
+# will attempt to fix the condition. If this method returns false, you should abort your operation.
 #
 # @param  name   [Symbol]  Which condition to depend on (lower case)
 # @param  value  [Object]  The value the property needs to hold for the dependency to

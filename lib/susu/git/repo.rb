@@ -248,8 +248,6 @@ def commit( message, **opts )
 
 	validate
 
-	# Rugged doesn't seem to have commit
-	#
 	cleanupAfterRubyGit { @git.commit( message, opts ) }
 
 end

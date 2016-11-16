@@ -6,11 +6,11 @@ module Facts
 
 # Options (* means mandatory)
 #
-# path*  : Path to the repository directory (workingDir with .git)
-# head   : String      (the ref name head should point to, eg. a branch name)
-# clean  : Boolean     (whether the working dir is clean)
-# remotes: Array<Hash> A list of settings for Fact::Git::Remote to depend on.
-# remotes: Array<Hash> A list of settings for Fact::Git::Branch to depend on.
+# path*   : respond_to?(:path)  Path to the repository directory (workingDir with .git)
+# head    : String              (the ref name head should point to, eg. a branch name)
+# update  : Boolean             (whether the working dir is clean, fix commits so the repo is in sync with filesystem)
+# remotes : Array<Hash>         A list of settings for Fact::Git::Remote to depend on.
+# branches: Array<Hash>         A list of settings for Fact::Git::Branch to depend on.
 #
 class Repo < Susu::Facts::Fact
 
@@ -73,6 +73,8 @@ end
 
 
 # Conditions
+# Exist: Whether the path should point to a valid repository. When false, a .git file or directory inside path will be removed,
+#        for a bare repository, the whole path will be removed. When true a git repository will be initialized.
 #
 class Exist < Susu::Facts::Condition
 
@@ -121,6 +123,7 @@ def fix
 end
 
 end # class Exist < Susu::Facts::Condition
+
 
 
 class Bare < Susu::Facts::Condition

@@ -149,7 +149,7 @@ end
 # @param  value  [Object] The value that is desired, if the condition exists, this must be the same as the already
 #                         wanted value.
 # @param  opts   [Susu::Options::Settings] Potential overrides for the fact options to send to the condition
-#                                             When creating
+#
 #
 # @return { description_of_the_return_value }
 #
