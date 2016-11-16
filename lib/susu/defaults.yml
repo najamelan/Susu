@@ -27,7 +27,10 @@ default:
 
   Git:
 
-    Repo  : {}
+    Repo  :
+
+      validate: true
+
     Branch: {}
     Remote: {}
 

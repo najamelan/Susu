@@ -82,7 +82,7 @@ end
 #
 def branches
 
-	# reset
+	validate
 
 	@rug.branches.each_with_object( {} ) { |branch, memo| memo[ branch.name ] = Branch.new( self, branch, @rug, @git ) }
 
@@ -92,7 +92,7 @@ end
 
 def remotes
 
-	# reset
+	validate
 
 	@rug.remotes.each_with_object( {} ) { |remote, memo| memo[ remote.name ] = Remote.new( remote, @git ) }
 
@@ -102,7 +102,7 @@ end
 
 def submodules
 
-	# reset
+	validate
 
 	@rug.submodules.each_with_object( {} ) { |sub, memo| memo[ sub.name ] = self.class.new( @path[ sub.path ] ) }
 
@@ -138,13 +138,9 @@ end
 
 def bare?
 
-	@rug  or reset
+	validate
 
-	@rug and return @rug.bare?
-
-	# TODO: warn for trying to call bare? on non-existing repo
-
-	nil
+	@rug.bare?
 
 end
 
@@ -152,13 +148,9 @@ end
 
 def head
 
-	@rug  or reset
-
 	@rug and return @rug.head.name.remove( /refs\/heads\// )
+	validate
 
-	# TODO: warn for trying to call head on non-existing repo
-
-	nil
 
 end
 
@@ -167,7 +159,7 @@ end
 def init( bare = false )
 
 	@rug and reset
-	@rug and raise 'Trying to init existing repository.'
+	@rug and raise 'Trying to init an already existing repository.'
 
 	@rug = Rugged::Repository.init_at( @path.to_path, bare )
 
@@ -192,6 +184,8 @@ end
 
 def clean?
 
+	validate
+
 	Fs::Path.pushd( @path ) do
 
 		ret = `git status -s`.lines.count == 0
@@ -210,7 +204,7 @@ end
 
 def add pathspec
 
-	valid? or raise 'Trying to add on a non-existing git repo.'
+	validate
 
 	cleanupAfterRubyGit { @git.add pathspec }
 
@@ -220,7 +214,7 @@ end
 
 def addAll
 
-	valid? or raise 'Trying to add on a non-existing git repo.'
+	validate
 
 	cleanupAfterRubyGit { @git.add( all: true ) }
 
@@ -230,7 +224,7 @@ end
 
 def commit( message, **opts )
 
-	valid? or raise 'Trying to commit a non-existing git repo.'
+	validate
 
 	# Rugged doesn't seem to have commit
 	#
@@ -242,7 +236,7 @@ end
 
 def pollute
 
-	valid? or raise 'Trying to pollute a non-existing git repo.'
+	validate
 
 	@path.touch 'polluteWorkingDir'
 	@path.touch 'polluteIndex'
@@ -255,7 +249,7 @@ end
 
 def addSubmodule sub, subpath = nil, **opts
 
-	valid? or raise 'Trying to add a submodule to a non-existing git repo.'
+	validate
 
 	subpath.nil? and subpath = sub.path.basename
 
@@ -280,6 +274,17 @@ def cleanupAfterRubyGit
 ensure
 
 	ENV.replace env
+
+end
+
+
+private
+
+def validate
+
+	options.validate or return
+
+	valid? or raise "#{ caller[0] } requires an initialized repository."
 
 end
 
