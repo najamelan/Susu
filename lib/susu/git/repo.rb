@@ -24,12 +24,18 @@ end
 
 
 
+#-------------------------------------------------------------------------------
+# Clone a git repository.
+#
+# @param  src    [respond_to :to_path] The source repo
+# @param  dst    [respond_to :to_path] The destination path
+# @param  **opts [Hash               ] Options to be passed to Rugged::Repository.clone_at
+#
+# @return The new repository
+#
 def self.clone src, dst, **opts
 
-	src.respond_to?( :to_path ) and src = src.to_path
-	dst.respond_to?( :to_path ) and dst = dst.to_path
-
-	Rugged::Repository.clone_at( src, dst, opts )
+	Rugged::Repository.clone_at( src.to_path, dst.to_path, opts )
 	new( dst )
 
 end
