@@ -115,10 +115,13 @@ end
 #
 # @return true on success, false on failure.
 #
-def dependOn( name, value, opts = {} )
+def dependOn( name, value = nil, **opts )
 
-	cond = @fact.condition( name, value, opts )
+	value.nil? and value = options[ name ]
+
+	cond      = @fact.condition( name, value, opts )
 	cond.fact = fact
+
 
 	case @fact.operation
 
@@ -126,6 +129,7 @@ def dependOn( name, value, opts = {} )
 		else          cond.check
 
 	end
+
 
 end
 
