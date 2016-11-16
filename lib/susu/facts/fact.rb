@@ -171,8 +171,8 @@ def condition( name, value = nil, opts = {} )
 
 	value.nil? and raise ArgumentError.new "Cannot create condition #{name} with nil value."
 
-	opts[ name ] = value
 	opts         = options.deep_merge opts
+	opts[ name ] = value
 
 	klass = Object.const_get( self.class.name ).const_get( name.to_s.capitalize! )
 	@sm.conditions.set( address, klass.new( **opts.dup, address: address, stateMachine: @sm ) )
