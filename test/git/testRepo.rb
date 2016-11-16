@@ -135,6 +135,17 @@ def test05AddSubmodule
 end
 
 
+
+def test06Head
+
+	r = Repo.new @@repo
+
+		assert_equal 'master', r.head
+
+	r.checkout 'dev'
+
+		assert_equal 'dev', r.head
+end
 end # class  TestRepo
 end # module Git
 end # module Susu
