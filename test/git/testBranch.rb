@@ -52,10 +52,6 @@ def test_02Remote
 	assert_equal( false , b.ahead?           , out.ai )
 	assert_equal( false , b.behind?          , out.ai )
 
-ensure
-
-	rmRemote remoteName
-
 end
 
 
@@ -88,10 +84,6 @@ def test_03Diverged
 	assert_equal( true  , b.ahead?           , out.ai )
 	assert_equal( true  , b.behind?          , out.ai )
 
-ensure
-
-	rmRemote remoteName
-
 end
 
 
@@ -116,10 +108,6 @@ def test_04Ahead
 	assert_equal( false , b.diverged?        , out.ai )
 	assert_equal( true  , b.ahead?           , out.ai )
 	assert_equal( false , b.behind?          , out.ai )
-
-ensure
-
-	rmRemote remoteName
 
 end
 

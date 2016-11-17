@@ -66,6 +66,23 @@ end
 def addRemote( path, name = 'origin', branch = 'master', url = nil )
 
 	remoteName   = options.remotePrefix + randomString
+	url        ||= @@tmpdir + remoteName
+
+	r = Repo.new url
+	r.init( :bare )
+
+	out  = cmd  "git remote add \"#{name}\" \"#{url}\""             , path
+	out += cmd  "git push --set-upstream \"#{name}\" \"#{branch}\"" , path
+
+	return name, remoteName, url, out
+
+end
+
+
+
+def addRemoteSsh( path, name = 'origin', branch = 'master', url = nil )
+
+	remoteName   = options.remotePrefix + randomString
 	url        ||= "#{options.remoteHost}:#{remoteName}"
 
 	out  = gitoCmd "create #{remoteName}"                      , path
@@ -78,7 +95,7 @@ end
 
 
 
-def rmRemote repoName
+def rmRemoteSsh repoName
 
 	out  = gitoCmd "D unlock #{repoName}"
 	out += gitoCmd "D rm     #{repoName}"

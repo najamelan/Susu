@@ -5,7 +5,7 @@ testing:
     TestRepoCase:
 
       remoteHost   : susu
-      remotePrefix : susu/test/
+      remotePrefix : susu/testRemotes/
 
     TestRepo: {}
 
