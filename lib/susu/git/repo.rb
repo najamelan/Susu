@@ -7,8 +7,9 @@ module Git
 
 # Preload classes
 #
-Remote
 Branch
+Remote
+Submodule
 
 class Repo
 
@@ -116,7 +117,7 @@ def submodules
 
 	validate
 
-	@rug.submodules.each_with_object( {} ) { |sub, memo| memo[ sub.name ] = self.class.new( @path[ sub.path ] ) }
+	@rug.submodules.each_with_object( {} ) { |sub, memo| memo[ sub.name ] = Submodule.new( self, sub ) }
 
 end
 

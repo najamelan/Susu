@@ -27,12 +27,14 @@ default:
 
   Git:
 
-    Repo  :
+    Repo:
 
       validate: true
 
-    Branch: {}
-    Remote: {}
+    Branch   : {}
+    Remote   : {}
+    Submodule: {}
+
 
     Facts:
 
