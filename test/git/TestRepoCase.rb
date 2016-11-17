@@ -71,8 +71,8 @@ def addRemote( path, name = 'origin', branch = 'master', url = nil )
 	r = Repo.new url
 	r.init( :bare )
 
-	out  = cmd  "git remote add \"#{name}\" \"#{url}\""             , path
-	out += cmd  "git push --set-upstream \"#{name}\" \"#{branch}\"" , path
+	out  = cmd  "git remote add #{ name.shellescape } #{ url.shellescape }"             , path
+	out += cmd  "git push --set-upstream #{ name.shellescape } #{ branch.shellescape }" , path
 
 	return name, remoteName, url, out
 
@@ -86,8 +86,8 @@ def addRemoteSsh( path, name = 'origin', branch = 'master', url = nil )
 	url        ||= "#{options.remoteHost}:#{remoteName}"
 
 	out  = gitoCmd "create #{remoteName}"                      , path
-	out += cmd     "git remote add #{name} #{url}"             , path
-	out += cmd     "git push --set-upstream #{name} #{branch}" , path
+	out += cmd     "git remote add #{ name.shellescape } #{ url.shellescape }"             , path
+	out += cmd     "git push --set-upstream #{ name.shellescape } #{ branch.shellescape }" , path
 
 	return name, remoteName, url, out
 
@@ -108,7 +108,7 @@ def gitoCmd( cmd, path = Fs::Path.pwd )
 
 	Fs::Path.pushd path do
 
-		cmd "ssh #{options.remoteHost} #{cmd}"
+		cmd "ssh #{ options.remoteHost.shellescape } #{ cmd.shellescape }"
 
 	end
 
@@ -130,7 +130,7 @@ end
 
 def push path, remote = 'origin', branch = 'master'
 
-	cmd "git push --set-upstream #{remote} #{branch}", path
+	cmd "git push --set-upstream #{ remote.shellescape } #{ branch.shellescape }", path
 
 end
 
@@ -141,7 +141,7 @@ def clone src, dst
 
 	name = randomString
 
-	out = cmd "git clone #{src} #{name}", dst
+	out = cmd "git clone #{ src.shellescape } #{ name.shellescape }", dst
 
 	return "#{dst}/#{name}".path, out
 
