@@ -285,15 +285,26 @@ end
 
 
 
-def addSubmodule sub, subpath = nil, **opts
+#-------------------------------------------------------------------------------
+# Adds a submodule.
+#
+# @param  url     [respond to #to_path/#path] The url to the submodule origin
+# @param  subpath [respond to #to_path/#path] The path within the repo workdir
+# @param  **opts  [Hash                     ] Options to pass to Rugged::SubmoduleCollection#add
+#
+# @return [Git::Submodule] The Submodule object for the new submodule
+#
+# TODO: basename might not work on all urls, like ssh remotes
+#
+def addSubmodule url, subpath = nil, **opts
 
 	validate
 
-	subpath.nil? and subpath = sub.path.basename
+	subpath.nil?  and  subpath = url.path.basename
 
-	@rug.submodules.add( sub.to_path, subpath.to_path, opts )
+	sub = @rug.submodules.add( url.to_path, subpath.to_path, opts )
 
-	self.class.new @path[ subpath ]
+	Submodule.new self, sub
 
 end
 

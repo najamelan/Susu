@@ -125,7 +125,8 @@ def test05AddSubmodule
 	r.addSubmodule sub
 
 		assert_equal 1, r.submodules.count
-		assert       r.path[ '.gitmodules' ].exist?
+		assert       r.path[ '.gitmodules'     ]          .exist?
+		assert       r.path[ sub.path.basename ][ '.git' ].file?
 
 
 	r.addSubmodule sub2
