@@ -55,7 +55,6 @@ def test01Exist
 	h = Facts::Repo.new( path: @@repo, bare: false )
 
 		assert_fix   h
-		assert       @@repo[ '.git' ].exist?
 		assert       @@repo[ '.git' ].directory?
 		assert     ! h.repo.bare?
 
@@ -83,7 +82,6 @@ def test01Exist
 		assert_analyze_fail g
 		assert_fix          g
 
-		assert              path[ '.git' ]  .exist?
 		assert              path[ '.git' ]  .directory?
 		assert              Repo.new( path ).valid?
 
@@ -95,16 +93,20 @@ def test01Exist
 
 	g = Facts::Repo.new( path: path, bare: false, force: false )
 
-		assert_analyze_fail g
+		assert_analyze_fail   g
+		assert_raise(         Rugged::FilesystemError ) { g.fix }
+		assert                path[ '.git' ]  .file?
+		assert              ! Repo.new( path ).valid?
 
-		assert_raise Rugged::FilesystemError do
 
-		g.fix
+	# Create if parent directory does not exist.
+	#
+	path = @@tmpdir/'a/b'
+	h    = Facts::Repo.new( path: path, bare: false )
 
-	end
-
-		assert    path[ '.git' ]  .exist?
-		assert  ! Repo.new( path ).valid?
+		assert_analyze_fail h
+		assert_fix          h
+		assert              h.repo.valid?
 
 end
 
