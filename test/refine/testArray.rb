@@ -220,6 +220,136 @@ def test07ArraySpit data
 end
 
 
+#-------------------------------------------------------------------------------
+
+
+data do
+
+	{
+		'Empty Array'           => [ [         ] , nil    ] ,
+		'Array 1 elem'          => [ [ :a      ] , nil    ] ,
+		'Array with nil'        => [ [ nil     ] , []     ] ,
+		'Array 1 elem and nil'  => [ [ :a, nil ] , [ :a ] ]
+	}
+
+end
+
+def test08Compact_orig! data
+
+	input, expect = data
+
+	assert_equal expect, input.compact_orig!
+
+end
+
+
+
+data do
+
+	{
+		'Empty Array'           => [ [         ] , []     ] ,
+		'Array 1 elem'          => [ [ :a      ] , [ :a ] ] ,
+		'Array with nil'        => [ [ nil     ] , []     ] ,
+		'Array 1 elem and nil'  => [ [ :a, nil ] , [ :a ] ]
+	}
+
+end
+
+def test09Compact! data
+
+	input, expect = data
+
+	assert_equal expect, input.compact!
+
+end
+
+
+#-------------------------------------------------------------------------------
+
+
+data do
+
+	{
+		'Empty Array'             => [ [            ] , nil        ] ,
+		'Array 1 elem'            => [ [ :a, :b     ] , nil        ] ,
+		'Nested Array'            => [ [ [ :a ]     ] , [ :a     ] ] ,
+		'Array 1 elem and array'  => [ [ :a, [ :b ] ] , [ :a, :b ] ]
+	}
+
+end
+
+def test10Flatten_orig! data
+
+	input, expect = data
+
+	assert_equal expect, input.flatten_orig!
+
+end
+
+
+
+data do
+
+	{
+		'Empty Array'             => [ [            ] , []         ] ,
+		'Array 1 elem'            => [ [ :a, :b     ] , [ :a, :b ] ] ,
+		'Nested Array'            => [ [ [ :a ]     ] , [ :a     ] ] ,
+		'Array 1 elem and array'  => [ [ :a, [ :b ] ] , [ :a, :b ] ]
+	}
+
+end
+
+def test11Flatten! data
+
+	input, expect = data
+
+	assert_equal expect, input.flatten!
+
+end
+
+
+#-------------------------------------------------------------------------------
+
+
+data do
+
+	{
+		'Empty Array'             => [ [        ] , nil    ] ,
+		'2 different elements'    => [ [ :a, :b ] , nil    ] ,
+		'2 times same element'    => [ [ :a, :a ] , [ :a ] ]
+	}
+
+end
+
+def test12Uniq_orig! data
+
+	input, expect = data
+
+	assert_equal expect, input.uniq_orig!
+
+end
+
+
+
+data do
+
+	{
+		'Empty Array'             => [ [        ] , [        ] ] ,
+		'2 different elements'    => [ [ :a, :b ] , [ :a, :b ] ] ,
+		'2 times same element'    => [ [ :a, :a ] , [ :a     ] ]
+	}
+
+end
+
+def test13Uniq! data
+
+	input, expect = data
+
+	assert_equal expect, input.uniq!
+
+end
+
+
 end # class  TestArray
 end # module Refine
 end # module Susu

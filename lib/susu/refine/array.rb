@@ -78,6 +78,44 @@ def pgrep pattern, &block
 
 end
 
+
+
+alias :compact_orig! :compact!
+
+def compact!
+
+	compact_orig!
+
+	self
+
+end
+
+
+
+alias :flatten_orig! :flatten!
+
+def flatten!
+
+	flatten_orig!
+
+	self
+
+end
+
+
+
+alias :uniq_orig! :uniq!
+
+def uniq!
+
+	uniq_orig!
+
+	self
+
+end
+
+
+
 end # refine Array
 
 
