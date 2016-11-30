@@ -171,7 +171,9 @@ def test05Children
 	assert            ( p  .directory? )
 	assert            ( sub.directory? )
 
-	haha = p.touch 'haha'
+	# Include a hidden entry
+	#
+	haha = p.touch '.haha'
 	hihi = p.touch 'hihi'
 
 	ssub = sub .mkdir 'ssub'

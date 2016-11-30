@@ -315,8 +315,15 @@ end
 
 
 # Returns an array of children of the Path. Extends Pathname#children with recursive functionality, the possibility
-# to filter entries with a block, to follow symlinks or not. The order of the output is undefined, eg. files might
-# not be returned in alphabetical order. Call `path.children.sort` if you need alphabetical output.
+# to filter entries with a block, to follow symlinks or not.
+#
+# The order of the output is undefined, eg. files might not be returned in alphabetical order. Call `path.children.sort`
+# if you need alphabetical output. If called on a file, the call will be forwarded to the parent directory.
+#
+# Returns hidden entries.
+#
+# Will raise Errno::ENOENT if the entry does not exist.
+#
 #
 # @param  options  The options accepted are :
 #                  - withDir:   prefix current path to results @see Pathname#children. Note that Pathname#children always
