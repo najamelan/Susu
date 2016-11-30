@@ -379,7 +379,7 @@ end
 # @param  options  The options accepted are :
 #                  - withDir:   prefix current path to results @see Pathname#children. Note that Pathname#children always
 #                               sets withDir to false if the current path is '.',  default: true
-#                  - follow:    follow symlinks            , default: true
+#                  - follow:    follow symlinks            , default: false
 #                  - recurse:   recurse into subdirectories, default: true
 #
 # @param  block    an optional block which will receive each entry as it is found. If the block returns trueish,
@@ -391,7 +391,9 @@ end
 #
 # @return [Array] The list of entries below the current path.
 #
-def children( follow: true, recurse: true, withDir: true, &block )
+# TODO: test follow
+#
+def children( follow: false, recurse: true, withDir: true, &block )
 
 	file? and return parent.children( follow: follow, recurse: recurse, withDir: withDir, &block )
 
@@ -414,8 +416,8 @@ def children( follow: true, recurse: true, withDir: true, &block )
 
 		toddlers.map do |path|
 
-			!follow && path.link? and next []
-			path.directory?        or next []
+			!follow && path.symlink? and next []
+			path.directory?           or next []
 
 			path.children( follow: follow, recurse: recurse, withDir: withDir, &block )
 
