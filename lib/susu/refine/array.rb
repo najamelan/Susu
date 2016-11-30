@@ -36,7 +36,7 @@ def last= value
 
 	empty? ?
 
-		  self.first = value
+		  self[ 0  ] = value
 		: self[ -1 ] = value
 
 end
