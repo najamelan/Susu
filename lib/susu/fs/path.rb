@@ -105,9 +105,25 @@ end
 
 # Instance methods
 
-alias :ls :entries
+
+# This will give you a full path, which will not depend on the cwd to operate on the files,
+# and will not include the '.' and '..' entries.
+#
+def ls
+
+	children( recurse: false ) { |e| ! e.hidden? }
+
+end
 
 
+# This will give you a full path, which will not depend on the cwd to operate on the files,
+# and will not include the '.' and '..' entries.
+#
+def la
+
+	children recurse: false
+
+end
 
 #-------------------------------------------------------------------------------
 # Returns the last component of the path as a string

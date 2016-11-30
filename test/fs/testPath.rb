@@ -214,7 +214,6 @@ def test05Children
 	assert        crSub .all? { |e| e.kind_of? Path }
 	assert        crSsub.all? { |e| e.kind_of? Path }
 
-
 end
 
 
@@ -300,6 +299,52 @@ def test09Hidden?
 	assert_equal  false, hihi.hidden?
 	assert_equal  true , hehe.hidden?
 	assert_equal  true , haha.hidden?
+
+end
+
+
+
+def test10Ls
+
+	p = @@tmp
+	sub = p.mkdir 'sub'
+
+	assert_instance_of( Path, p        )
+	assert_instance_of( Path, sub      )
+	assert            ( p  .directory? )
+	assert            ( sub.directory? )
+
+	# Include a hidden entry
+	#
+	hihi = p  .touch 'hihi'
+
+	p  .touch '.haha'
+	sub.touch 'hoho'
+
+	assert_equal  [ hihi, sub ], p.ls.sort
+
+end
+
+
+
+def test11La
+
+	p = @@tmp
+	sub = p.mkdir 'sub'
+
+	assert_instance_of( Path, p        )
+	assert_instance_of( Path, sub      )
+	assert            ( p  .directory? )
+	assert            ( sub.directory? )
+
+	# Include a hidden entry
+	#
+	haha = p  .touch '.haha'
+	hihi = p  .touch 'hihi'
+
+	sub.touch 'hoho'
+
+	assert_equal  [ haha, hihi, sub ], p.la.sort
 
 end
 
