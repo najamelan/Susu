@@ -1,4 +1,5 @@
 require 'pathname'
+require 'fileutils'
 
 Susu.refine binding
 
@@ -171,8 +172,6 @@ end
 # @return A Path object to the new directory.
 #
 def mkpath( subPath = '', options = {} )
-
-	require 'fileutils'
 
 	file? and return dirname.mkpath( subPath, mode )
 
@@ -402,7 +401,6 @@ def copy( dst, **opts )
 	dir = dst.map { |path| path.path.directory? }
 
 
-	require 'fileutils'
 	dst.each { |dest| FileUtils.cp_r( @path, dest, opts ) }
 
 
