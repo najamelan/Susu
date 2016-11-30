@@ -382,7 +382,7 @@ end
 #                  - follow:    follow symlinks            , default: true
 #                  - recurse:   recurse into subdirectories, default: true
 #
-# @param  block    an optional block which will receive each entry as it is found. If the block returns true,
+# @param  block    an optional block which will receive each entry as it is found. If the block returns trueish,
 #                  the entry will end up in the list returned, if block returns a path object, the current entry
 #                  will be replaced by this path object, and else the entry will be omitted.
 #
@@ -393,14 +393,17 @@ end
 #
 def children( follow: true, recurse: true, withDir: true, &block )
 
+	file? and return parent.children( follow: follow, recurse: recurse, withDir: withDir, &block )
+
+
 	toddlers = super( withDir )
 
 	block_given? and toddlers.map! do |entry|
 
 		result = yield entry
 
-		result == true                and next entry
 		result.kind_of?( self.class ) and next result
+		result                        and next entry
 
 		nil
 
