@@ -469,6 +469,18 @@ end
 
 
 
+# Is an entry hidden on the filesystem?
+#
+# TODO: OS/FS independance
+#
+# @return boolean
+#
+def hidden?
+
+	basename.start_with? '.'
+
+end
+
 
 def shellescape
 

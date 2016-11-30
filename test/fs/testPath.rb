@@ -287,6 +287,24 @@ end
 
 
 
+def test09Hidden?
+
+	p = @@tmp
+
+	hoho = p.mkdir 'hoho'
+	hehe = p.mkdir '.hehe'
+	hihi = p.touch 'hihi'
+	haha = p.touch '.haha'
+
+	assert_equal  false, hoho.hidden?
+	assert_equal  false, hihi.hidden?
+	assert_equal  true , hehe.hidden?
+	assert_equal  true , haha.hidden?
+
+end
+
+
+
 
 end # class  TestPath
 end # module Fs
