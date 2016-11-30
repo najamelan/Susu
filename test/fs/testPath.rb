@@ -427,6 +427,28 @@ end
 
 
 
+data do
+
+	{
+		'empty paths' => [ ''        , ''    , '.'   ],
+		'dots'        => [ '.'       , '.'   , '.'   ],
+		'relative'    => [ 'a/b'     , 'a'   , 'b'   ],
+		'absolute'    => [ '/tmp/a/b', '/tmp', 'a/b' ]
+	}
+
+end
+
+def test16Subpath(( path, base, expect ))
+
+	out = path.path.subpath base
+
+		assert_instance_of Path       , out
+		assert_equal       expect.path, out
+
+end
+
+
+
 
 end # class  TestPath
 end # module Fs

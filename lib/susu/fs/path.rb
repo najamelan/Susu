@@ -180,6 +180,17 @@ def relpath( from = caller_locations( 1 ).first.absolute_path )
 end
 
 
+
+# Like Pathname#relative_path_from
+#
+def subpath( base )
+
+	self.class.new relative_path_from( base.path )
+
+end
+
+
+
 # Will make a path, creating intermediate directories as needed.
 #
 # @param  subPath  The sub path to create relative to the path of self.
