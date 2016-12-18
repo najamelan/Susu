@@ -462,6 +462,14 @@ def rename newName
 
 end
 
+
+
+
+def shellescape
+
+	@path.shellescape
+
+end
 end # class  Path
 end # module Fs
 end # module Susu
