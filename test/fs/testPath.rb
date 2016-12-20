@@ -350,6 +350,19 @@ end
 
 
 
+def test12Io
+
+	p    = @@tmp
+	haha = p.touch( 'haha' ).io
+
+		assert_instance_of File, haha
+
+		assert_raise( Errno::EISDIR ) { p.io }
+
+end
+
+
+
 
 end # class  TestPath
 end # module Fs

@@ -503,6 +503,28 @@ def shellescape
 	@path.shellescape
 
 end
+
+
+
+# Conversions
+#
+
+# Returns a File object which can be used as a IO stream.
+#
+# @raises Errno::EISDIR
+#
+# @return File stream
+#
+def io
+
+	directory? and raise Errno::EISDIR.new( "Cannot make an io stream on a directory" )
+
+	File.new @path
+
+end
+
+
+
 end # class  Path
 end # module Fs
 end # module Susu
