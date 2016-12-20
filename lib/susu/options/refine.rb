@@ -22,7 +22,7 @@ end # refine Hash
 #
 class Hashie::Mash
 
-	Susu.refine( binding, :hash )
+	Susu.refine( binding, :Hash )
 
 	def dig( *keys )
 

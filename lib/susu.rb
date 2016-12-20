@@ -8,12 +8,13 @@ extend Autoload
 
 REFINES =
 {
-	array:   'using Susu::Refine::Array'   ,
-	hash:    'using Susu::Refine::Hash'    ,
-	module:  'using Susu::Refine::Module'  ,
-	numeric: 'using Susu::Refine::Numeric' ,
-	fs:      'using Susu::Fs::Refine'      ,
-	options: 'using Susu::Options::Refine' ,
+	Array:   'using Susu::Refine::Array'   ,
+	Hash:    'using Susu::Refine::Hash'    ,
+	Module:  'using Susu::Refine::Module'  ,
+	Numeric: 'using Susu::Refine::Numeric' ,
+
+	Fs:      'using Susu::Fs::Refine'      ,
+	Options: 'using Susu::Options::Refine' ,
 }
 
 
