@@ -363,6 +363,54 @@ end
 
 
 
+def test13Empty?
+
+	p    = @@tmp
+	haha = p.touch( 'haha' )
+	hoho = p.touch( 'hoho' )
+	hoho.write "hehe"
+
+		assert haha.empty?
+
+		assert_false p.empty?
+		assert_false hoho.empty?
+
+
+	haha.rm
+	hoho.rm
+
+		assert p.empty?
+
+
+		assert_nil 'doesnotexist'.path.empty?
+
+end
+
+
+
+def test14Empty
+
+	p    = @@tmp
+	hoho = p.touch( 'hoho' )
+	hoho.write "hehe"
+
+		assert_false p.empty?
+		assert_false hoho.empty?
+
+
+	hoho.empty
+
+		assert hoho.empty?
+
+
+	p.empty
+
+		assert p.empty?
+
+end
+
+
+
 
 end # class  TestPath
 end # module Fs

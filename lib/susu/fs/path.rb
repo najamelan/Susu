@@ -506,6 +506,43 @@ end
 
 
 
+# Indicates whether a file or directory is empty
+#
+# Also counts hidden files for directories.
+#
+# TODO: Deal with permissions and raise Errno::EACCESS if we can't produce reliable results.
+#
+# @return [nil|boolean] Nil if the entry does not exist or we have no permissions to read it, true if entry is a directory and contains subentries,
+#                       true if entry is a file and contains content. False otherwise.
+#
+def empty?
+
+	exist? or return nil
+
+	directory? and return la.count == 0
+	file?      and return ! size?
+
+end
+
+
+
+# Empties a directory or a file. Will also remove hidden entries. Noop on files/dirs we have no permissions to access.
+#
+# TODO: Deal with permissions and raise Errno::EACCESS if we can't produce reliable results.
+#
+def empty
+
+	exist? or return self
+
+	directory? and la.each { |e| e.rm_secure }
+	file?      and truncate( 0 )
+
+	self
+
+end
+
+
+
 # Conversions
 #
 
