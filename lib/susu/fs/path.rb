@@ -543,6 +543,22 @@ end
 
 
 
+# Returns the contents of a file as a string, or a list of entries for a directory (does not return hidden files/folders).
+#
+# @return [Array<Susu::Fs::Path>|String] String if entry is a file, Array of Paths if entry is a directory.
+#
+def content
+
+	exist? or return nil
+
+	directory? and return ls
+
+	read
+
+end
+
+
+
 # Conversions
 #
 

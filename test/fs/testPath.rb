@@ -411,6 +411,22 @@ end
 
 
 
+def test15Content
+
+	p    = @@tmp
+	haha = p.touch( 'haha' )
+	hoho = p.touch( 'hoho' )
+	hoho.write "hehe"
+
+		assert_equal [ haha, hoho ], p.content
+		assert_equal ""            , haha.content
+		assert_equal "hehe"        , hoho.content
+		assert_nil   'doesnotexist'.path.empty?
+
+end
+
+
+
 
 end # class  TestPath
 end # module Fs
