@@ -306,13 +306,15 @@ end
 
 def test10Ls
 
-	p = @@tmp
+	p   = @@tmp
 	sub = p.mkdir 'sub'
 
-	assert_instance_of( Path, p        )
-	assert_instance_of( Path, sub      )
-	assert            ( p  .directory? )
-	assert            ( sub.directory? )
+		assert_instance_of  Path, p
+		assert_instance_of  Path, sub
+
+		assert              p  .directory?
+		assert              sub.directory?
+
 
 	# Include a hidden entry
 	#
@@ -321,7 +323,17 @@ def test10Ls
 	p  .touch '.haha'
 	sub.touch 'hoho'
 
-	assert_equal  [ hihi, sub ], p.ls.sort
+		assert_equal  [ hihi, sub ], p.ls.sort
+
+
+	# Test block
+	#
+	out = []
+
+	p.ls { |e| out << e }
+
+		assert_equal  [ hihi, sub ], out.sort
+
 
 end
 
@@ -329,13 +341,15 @@ end
 
 def test11La
 
-	p = @@tmp
+	p   = @@tmp
 	sub = p.mkdir 'sub'
 
-	assert_instance_of( Path, p        )
-	assert_instance_of( Path, sub      )
-	assert            ( p  .directory? )
-	assert            ( sub.directory? )
+		assert_instance_of  Path, p
+		assert_instance_of  Path, sub
+
+		assert              p  .directory?
+		assert              sub.directory?
+
 
 	# Include a hidden entry
 	#
@@ -344,7 +358,16 @@ def test11La
 
 	sub.touch 'hoho'
 
-	assert_equal  [ haha, hihi, sub ], p.la.sort
+		assert_equal  [ haha, hihi, sub ], p.la.sort
+
+
+	# Test block
+	#
+	out = []
+
+	p.la { |e| out << e }
+
+		assert_equal  [ haha, hihi, sub ], out.sort
 
 end
 

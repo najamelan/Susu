@@ -111,7 +111,15 @@ end
 #
 def ls
 
-	children( recurse: false ) { |e| ! e.hidden? }
+	result = children( recurse: false ) { |e| ! e.hidden? }
+
+	if block_given?
+
+		result.each { |e| yield e }
+
+	end
+
+	result
 
 end
 
@@ -121,7 +129,15 @@ end
 #
 def la
 
-	children recurse: false
+	result = children recurse: false
+
+	if block_given?
+
+		result.each { |e| yield e }
+
+	end
+
+	result
 
 end
 
