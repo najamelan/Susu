@@ -18,6 +18,7 @@ def self.suite
 	suite << TestHash    .suite
 	suite << TestModule  .suite
 	suite << TestNumeric .suite
+	suite << TestString  .suite
 
 end
 

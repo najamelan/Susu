@@ -5,10 +5,11 @@ module Refine
 
 	@modules =
 	{
-		Array:         "#{ __dir__ }/refine/array"    ,
-		Hash:          "#{ __dir__ }/refine/hash"     ,
-		Module:        "#{ __dir__ }/refine/module"   ,
-		Numeric:       "#{ __dir__ }/refine/numeric"
+		Array:    "#{ __dir__ }/refine/array"    ,
+		Hash:     "#{ __dir__ }/refine/hash"     ,
+		Module:   "#{ __dir__ }/refine/module"   ,
+		Numeric:  "#{ __dir__ }/refine/numeric"  ,
+		String:   "#{ __dir__ }/refine/string"   ,
 	}
 
 	def self.config; Susu.config end
