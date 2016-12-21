@@ -9,10 +9,12 @@ extend Autoload
 REFINES =
 {
 	Array:   'using Susu::Refine::Array'   ,
+	Date:    'using Susu::Refine::Date'    ,
 	Hash:    'using Susu::Refine::Hash'    ,
 	Module:  'using Susu::Refine::Module'  ,
 	Numeric: 'using Susu::Refine::Numeric' ,
 	String:  'using Susu::Refine::String'  ,
+	Time:    'using Susu::Refine::Time'    ,
 
 	Fs:      'using Susu::Fs::Refine'      ,
 	Options: 'using Susu::Options::Refine' ,
