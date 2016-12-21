@@ -175,6 +175,12 @@ def filename2array file, from
 
 			file = file.relpath( from )
 
+		# This correctly interpretes the ~ for the home directory
+		#
+		elsif file.expand_path.exist?
+
+			file = file.expand_path
+
 		else
 
 			raise ArgumentError.new "Could not find configuration file: #{file.to_path} included from #{from.to_path}."
