@@ -128,14 +128,22 @@ end
 #-------------------------------------------------------------------------------
 # Returns the last component of the path as a string
 #
+# Returns the last component of the filename given in file_name, which can be formed using both File::SEPARATOR and File::ALT_SEPARATOR
+# as the separator when File::ALT_SEPARATOR is not nil.
+#
+# @param suffix [String] If suffix is given and present at the end of the file name, it is removed.
+#
 # @return [String] The last component of the path, eg. after the last slash
 #
-def basename
+def basename( suffix = nil )
 
-	super.to_path
+	suffix and return super.to_s
+
+	super().to_s
 
 end
 
+alias :name :basename
 
 
 # Runs Pathname.glob

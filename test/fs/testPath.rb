@@ -449,6 +449,32 @@ end
 
 
 
+data do
+
+	{
+		'empty paths' => [ ''           , nil  , ''     ],
+		'dots'        => [ '.'          , nil  , '.'    ],
+		'relative'    => [ 'a/b'        , nil  , 'b'    ],
+		'absolute'    => [ '/tmp/a/b'   , nil  , 'b'    ],
+		'extension'   => [ '/tmp/a/b.rb', nil  , 'b.rb' ],
+		'suffix'      => [ '/tmp/a/b.rb', '.rb', 'b'    ]
+	}
+
+end
+
+def test17Name(( path, suffix, expect ))
+
+	out  = path.path.basename suffix
+	out2 = path.path.name     suffix
+
+		assert_instance_of String, out
+		assert_equal       expect, out
+		assert_equal       expect, out2
+
+end
+
+
+
 
 end # class  TestPath
 end # module Fs
