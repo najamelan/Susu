@@ -4,6 +4,7 @@ module Susu
 module Options
 
 Settings
+Configurable
 
 class Config
 
@@ -74,12 +75,19 @@ def setup( klass, *path, inclModule: true, inherit: true, sanitizer: nil, valida
 	opts             = @options.dig( *path ) || Settings.new
 
 
-	sup = klass.superclass
+	# TODO: - unit test, shouldn't inherit on modules
+	#       - commit
+	#
+	if inherit && klass.respond_to?( :superclass )
 
-	if inherit && sup.respond_to?( :settings ) && sup.settings.respond_to?( :cfgObj )
+		sup = klass.superclass
 
-		 settings =  sup.settings.deep_merge settings
-		 opts     =  sup.options .deep_merge opts
+		if sup.respond_to?( :settings ) && sup.settings.respond_to?( :cfgObj )
+
+			 settings =  sup.settings.deep_merge settings
+			 opts     =  sup.options .deep_merge opts
+
+		end
 
 	end
 
