@@ -450,7 +450,8 @@ end
 #              file, it shall be replaced only if remove_destination is set. If parent directories
 #              don't exist, they will be created.
 #
-# @param  opts         [hash] options to pass to FileUtils.cp_r
+# @param  opts [hash] options to pass to FileUtils.cp_r
+#                     preserve noop verbose dereference_root remove_destination
 #
 # @return [Fs::Path|Array(Fs::Path)] The destination(s) as Fs::Path or an array of such. If you have passed
 #                                    in an array with one element, you will be returned an array.
@@ -467,24 +468,27 @@ def copy( dst, **opts )
 	#
 	dst = Array.eat( dst )
 
-	# Turn them all to strings
+	# accept strings
 	#
-	dst = dst.map { |path| path.to_path }
+	dst.map! { |d| d.path }
 
 	# Figure out which of the destinations are existing directories, cause content
 	# will be copied inside of them.
 	#
-	dir = dst.map { |path| path.path.directory? }
+	dir = dst.map { |d| d.directory? }
 
+	dst.each do |dest|
 
-	dst.each { |dest| FileUtils.cp_r( @path, dest, opts ) }
+		dest.parent.directory? or dest.parent.mkpath
+		FileUtils.cp_r( @path, dest.to_path, opts )
+
+	end
 
 
 	# Decide what to return and convert to Fs::Path
 	#
 	dst = dst.map.with_index do |dest, i|
 
-		dest = dest.path
 		dir[ i ]  and  dest = dest/basename
 
 		dest
@@ -506,9 +510,9 @@ alias :cp :copy
 # Move the file or directory to a new location. Wrapper around FileUtils.mv
 # Options: force noop verbose.
 #
-# @param  dst   [respond_to(:to_path)] The destination.
+# @param  dst   [respond_to(:path)] The destination.
 #
-# @param  opts  [hash]                 Options to pass to FileUtils.mv
+# @param  opts  [hash]              Options to pass to FileUtils.mv
 #
 # @return [Fs::Path] The destination as Fs::Path.
 #
@@ -516,7 +520,7 @@ alias :cp :copy
 #
 def move( dst, **opts )
 
-	FileUtils.mv( self.to_path, dst.to_path, opts )
+	FileUtils.mv( self.expand_path, dst.path.expand_path, opts )
 
 	dst.path
 
@@ -629,6 +633,21 @@ def io
 
 end
 
+
+
+
+# def === other
+
+# 	case other.class
+
+# 	# when Path
+# 	when Regexp; return other =~ @path
+
+# 	else; return super
+
+# 	end
+
+# end
 
 
 end # class  Path
