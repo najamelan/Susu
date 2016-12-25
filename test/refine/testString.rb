@@ -164,6 +164,7 @@ def test08Rstrip!
 end
 
 
+
 def test09First
 
 	assert_equal nil, ''   .first
@@ -172,10 +173,101 @@ def test09First
 end
 
 
+
 def test10Last
 
 	assert_equal nil, ''   .last
 	assert_equal 'g', 'aeg'.last
+
+end
+
+
+
+data do
+
+	{
+		'Empty string'                  => [ ""            , ""          ] ,
+		'Simple usecase'                => [ "as \nlkj "   , "as\nlkj"   ] ,
+		'Simple usecase with tab'       => [ "as \t\nlkj"  , "as\nlkj"   ] ,
+		'End with newline'              => [ "as \nlkj\n"  , "as\nlkj\n" ] ,
+		'Line with only trailing space' => [ "as \n  \n"   , "as\n\n"    ] ,
+	}
+
+end
+
+def test11RtrimLines(( input, expect ))
+
+	assert_equal expect, input.rtrimLines
+
+end
+
+
+
+data do
+
+	{
+		'Empty string'                  => [ ""            , ""          ] ,
+		'Simple usecase'                => [ " as\n lkj"   , "as\nlkj"   ] ,
+		'Simple usecase with tab'       => [ " \tas\nlkj"  , "as\nlkj"   ] ,
+		'End with newline'              => [ " as\nlkj\n"  , "as\nlkj\n" ] ,
+		'Line with only trailing space' => [ " as\n  \n"   , "as\n\n"    ] ,
+	}
+
+end
+
+def test12LtrimLines(( input, expect ))
+
+	assert_equal expect, input.ltrimLines
+
+end
+
+
+
+data do
+
+	{
+		'Empty string'                  => [ ""             , ""          ] ,
+		'Simple usecase'                => [ " as \n lkj"   , "as\nlkj"   ] ,
+		'Simple usecase with tab'       => [ " \tas \nlkj"  , "as\nlkj"   ] ,
+		'End with newline'              => [ " as \nlkj \n" , "as\nlkj\n" ] ,
+		'Line with only trailing space' => [ " as \n  \n"   , "as\n\n"    ] ,
+	}
+
+end
+
+def test13TrimLines(( input, expect ))
+
+	assert_equal expect, input.trimLines
+
+end
+
+
+
+def test13RtrimLines!
+
+	text = " as \n lkj"
+
+	assert_same text, text.rtrimLines!
+
+end
+
+
+
+def test13LtrimLines!
+
+	text = " as \n lkj"
+
+	assert_same text, text.ltrimLines!
+
+end
+
+
+
+def test13TrimLines!
+
+	text = " as \n lkj"
+
+	assert_same text, text.trimLines!
 
 end
 

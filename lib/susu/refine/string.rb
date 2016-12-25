@@ -5,37 +5,80 @@ module String
 refine ::String do
 
 
-alias :strip_or_nil! :strip!
-
-def strip!
-
-	strip_or_nil!
-
-	self
-
-end
-
-
+alias :strip_or_nil!  :strip!
 alias :rstrip_or_nil! :rstrip!
-
-def rstrip!
-
-	rstrip_or_nil!
-
-	self
-
-end
-
-
 alias :lstrip_or_nil! :lstrip!
+alias :gsub_or_nil!   :gsub!
 
-def lstrip!
+def strip! ; strip_or_nil! ; self end
+def rstrip!; rstrip_or_nil!; self end
+def lstrip!; lstrip_or_nil!; self end
 
-	lstrip_or_nil!
+def gsub!( *args, &block ) gsub_or_nil!( *args, &block ); self end
 
-	self
+
+
+# Regex used by the trimLines methods for leading whitespace.
+#
+LTRIM_PATTERN = /^[ \t]++/
+
+
+# Regex used by the trimLines methods for trailing whitespace.
+#
+RTRIM_PATTERN = /[ \t]++$/
+
+
+
+# Removes leading and trailing whitespace from each line in place.
+#
+# @return [String] self
+#
+def trimLines!
+
+	gsub!( LTRIM_PATTERN, '' )
+	gsub!( RTRIM_PATTERN, '' )
 
 end
+
+
+
+# Removes leading whitespace from each line in place.
+#
+# @return [String] self
+#
+def ltrimLines!; gsub!( LTRIM_PATTERN, '' ) end
+
+
+
+# Removes trailing whitespace from each line in place.
+#
+# @return [String] self
+#
+def rtrimLines!; gsub!( RTRIM_PATTERN, '' ) end
+
+
+
+# Returns a copy without leading and trailing whitespace.
+#
+# @return [String] A new string
+#
+def  trimLines; dup. trimLines! end
+
+
+
+# Returns a copy without leading whitespace.
+#
+# @return [String] A new string
+#
+def ltrimLines; dup.ltrimLines! end
+
+
+
+# Returns a copy without trailing whitespace.
+#
+# @return [String] A new string
+#
+def rtrimLines; dup.rtrimLines! end
 
 
 
@@ -53,11 +96,7 @@ def last ; self[ -1 ] end
 
 # Wrap text to a certain width
 #
-def wrap( width )
-
-	dup.wrap! width
-
-end
+def wrap( width ) dup.wrap! width end
 
 
 
