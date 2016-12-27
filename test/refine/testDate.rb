@@ -6,6 +6,7 @@ module Refine
 class TestDate < Test::Unit::TestCase
 
 
+
 data do
 
 	{
@@ -23,6 +24,7 @@ def test01Spaceship(( a, b, expect ))
 	assert_equal expect, a <=> b
 
 end
+
 
 
 data do
@@ -44,6 +46,7 @@ def test02Smaller(( a, b, expect ))
 end
 
 
+
 data do
 
 	{
@@ -61,6 +64,7 @@ def test03Bigger(( a, b, expect ))
 	assert_equal expect, a > b
 
 end
+
 
 
 data do
@@ -82,6 +86,7 @@ def test04Equals(( a, b, expect ))
 end
 
 
+
 data do
 
 	{
@@ -97,6 +102,24 @@ end
 def test05Between?(( a, min, max, expect ))
 
 	assert_equal expect, a.between?( min, max )
+
+end
+
+
+
+data do
+
+	{
+
+		"Year 1"     => [ '0001-01-01' ] ,
+		"Year 2016"  => [ '2016-12-31' ] ,
+	}
+
+end
+
+def test06iso8601(( string ))
+
+	assert_equal ::Date.iso8601_orig( string ), ::Date.iso8601( string )
 
 end
 
