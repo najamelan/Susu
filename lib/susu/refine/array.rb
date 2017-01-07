@@ -106,9 +106,9 @@ end
 
 alias :uniq_orig! :uniq!
 
-def uniq!
+def uniq! &block
 
-	uniq_orig!
+	uniq_orig!( &block )
 
 	self
 
@@ -116,7 +116,7 @@ end
 
 
 
-end # refine Array
+end # refine ::Array
 
 
 

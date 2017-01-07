@@ -350,6 +350,46 @@ def test13Uniq! data
 end
 
 
+
+data do
+
+	block = lambda { |s| s.first }
+
+	{
+		'take block'              => [ [ 'ron', 'sam', 'sonny' ], [ 'ron', 'sam' ], block ],
+		'take block no change'    => [ [ 'ron', 'sam'          ], nil             , block ],
+		'take block, empty array' => [ [                       ], nil             , block ]
+	}
+
+end
+
+def test14Uniq_origBlock!(( input, expect, block ))
+
+	assert_equal expect, input.uniq_orig!( &block )
+
+end
+
+
+
+data do
+
+	block = lambda { |s| s.first }
+
+	{
+		'take block'              => [ [ 'ron', 'sam', 'sonny' ], [ 'ron', 'sam' ], block ],
+		'take block no change'    => [ [ 'ron', 'sam'          ], [ 'ron', 'sam' ], block ],
+		'take block, empty array' => [ [                       ], [              ], block ]
+	}
+
+end
+
+def test15UniqBlock!(( input, expect, block ))
+
+	assert_equal expect, input.uniq!( &block )
+
+end
+
+
 end # class  TestArray
 end # module Refine
 end # module Susu
