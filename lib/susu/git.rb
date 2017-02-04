@@ -1,5 +1,4 @@
-require 'logger'
-require 'awesome_print'
+
 require 'rugged'
 require 'git'
 

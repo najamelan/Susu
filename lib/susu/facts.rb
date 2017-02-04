@@ -1,8 +1,3 @@
-require 'logger'
-require 'awesome_print'
-require 'set'
-
-
 module Susu
 module Facts
 
