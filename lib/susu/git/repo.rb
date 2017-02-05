@@ -85,7 +85,7 @@ end
 
 
 
-# TODO: optimize. We could cache branche objects after all and reuse them where nothing has changed.
+# TODO: optimize. We could cache branch/submodule/remote objects after all and reuse them where nothing has changed.
 #
 def branches
 
@@ -312,6 +312,28 @@ def addSubmodule url, subpath = nil, **opts
 	sub = @rug.submodules.add( url.to_path, subpath.to_path, opts )
 
 	Submodule.new self, sub
+
+end
+
+
+
+#-------------------------------------------------------------------------------
+# Adds a remote.
+#
+# @param  url    [string                   ] The url to the submodule origin
+# @param  name   [respond to #to_path/#path] The path within the repo workdir
+#
+# @return [Git::Remote] The Remote object for the new remote
+#
+# TODO: Test, validate input
+#
+def addRemote name, url
+
+	validate
+
+	remote = @rug.remotes.create( name, url )
+
+	Remote.new remote, @git
 
 end
 
