@@ -5,7 +5,7 @@ module Facts
 
 class Condition
 
-include Options::Configurable, Facts::State, Facts::InstanceCount
+include Options::Configurable, State, InstanceCount
 
 attr_accessor :fact
 attr_reader   :expect, :found, :state

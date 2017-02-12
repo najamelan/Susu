@@ -21,7 +21,7 @@ def initialize( path:, **opts )
 
 	dependOn( RepoExist, { path: @path } )
 
-	@repo    = Susu::Git::Repo.new( @path )
+	@repo    = Git::Repo.new( @path )
 	@remotes = @repo.remotes
 
 end
@@ -101,7 +101,7 @@ def initialize( path:, **opts )
 
 	dependOn( RemoteExist, { path: @path, name: name } )
 
-	@repo   = Susu::Git::Repo.new( @path )
+	@repo   = Git::Repo.new( @path )
 	@remote = @repo.remotes[ name ]
 
 end

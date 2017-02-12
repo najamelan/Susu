@@ -5,12 +5,6 @@ using Susu.refines
 module Susu
 module Git
 
-# Preload classes
-#
-Branch
-Remote
-Submodule
-
 class Repo
 
 include Options::Configurable

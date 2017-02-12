@@ -3,9 +3,6 @@ using Susu.refines
 module Susu
 module Options
 
-Settings
-Configurable
-
 class Config
 
 attr_reader :parsedFiles, :default, :userset, :runtime, :options

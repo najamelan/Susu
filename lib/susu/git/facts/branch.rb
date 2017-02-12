@@ -21,7 +21,7 @@ def initialize( path:, **opts )
 
 	dependOn( RepoExist, { path: @path } )
 
-	@repo     = Susu::Git::Repo.new( @path )
+	@repo     = Git::Repo.new( @path )
 	@branches = @repo.branches
 
 
@@ -106,7 +106,7 @@ def initialize( path:, **opts )
 
 	options.track and dependOn( BranchExist, { path: @path, name: options.track } )
 
-	@repo   = Susu::Git::Repo.new( @path )
+	@repo   = Git::Repo.new( @path )
 	@branch = @repo.branches[ name ]
 
 end

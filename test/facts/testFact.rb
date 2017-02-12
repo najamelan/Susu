@@ -3,10 +3,6 @@ using Susu.refines
 module Susu
 module Facts
 
-# Load classes
-#
-StateMachine
-
 
 class DummyFact < Fact
 

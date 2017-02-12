@@ -3,9 +3,6 @@ using Susu.refines
 module Susu
 module Git
 
-Branch
-Repo
-
 
 class TestRepo < TestRepoCase
 

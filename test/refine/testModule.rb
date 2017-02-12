@@ -8,7 +8,7 @@ class TestModule < Test::Unit::TestCase
 
 def test01lastname
 
-	assert_equal 'Array', Susu::Refine::Array.lastname
+	assert_equal 'TestModule', self.class.lastname
 
 end
 

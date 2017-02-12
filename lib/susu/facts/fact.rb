@@ -6,7 +6,7 @@ module Facts
 
 class Fact
 
-include Options::Configurable, Facts::State, Facts::InstanceCount
+include Options::Configurable, State, InstanceCount
 
 
 # Yaml can't have symbols as rvalues

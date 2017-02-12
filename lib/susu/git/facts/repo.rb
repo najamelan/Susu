@@ -30,7 +30,7 @@ end
 def initialize( path:, **opts )
 
 	super( **opts, path: path.path )
-	@repo = Susu::Git::Repo.new( @path )
+	@repo = Git::Repo.new( @path )
 
 
 	# if options.exist
