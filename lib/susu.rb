@@ -25,6 +25,7 @@ VERSION = '0.1.0'
 {
 	Array:   [ :Refine , :Array   ],
 	Date:    [ :Refine , :Date    ],
+	Fixnum:  [ :Refine , :Fixnum  ],
 	Hash:    [ :Refine , :Hash    ],
 	Module:  [ :Refine , :Module  ],
 	Numeric: [ :Refine , :Numeric ],
