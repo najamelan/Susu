@@ -22,7 +22,7 @@ end
 
 def self.run
 
-	Test::Unit::UI::Console::TestRunner.run( self )
+	Test::Unit::UI::Console::TestRunner.run self
 
 end
 

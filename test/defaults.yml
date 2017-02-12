@@ -1,0 +1,9 @@
+testing:
+
+  Susu:
+
+    TestSuite:
+
+      # The verbosity of Test::Unit. Can be: SILENT, PROGRESS_ONLY, NORMAL, VERBOSE
+      #
+      outputLevel: VERBOSE

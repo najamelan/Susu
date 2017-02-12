@@ -7,7 +7,7 @@ using Susu.refines
 #
 Test::Unit::AutoRunner.need_auto_run = false
 
-Susu.configure profile: :testing, runtime: [ 'facts/test.yml'.relpath, 'git/test.yml'.relpath ]
+Susu.configure profile: :testing, runtime: [ 'facts/test.yml'.relpath, 'git/test.yml'.relpath, 'defaults.yml'.relpath ]
 
 
 __dir__.path.children.sort.pgrep( /suite\.rb/ ) { |file| require file }
@@ -17,6 +17,12 @@ module Susu
 
 
 class TestSuite
+
+include Options::Configurable
+
+
+def self.configure( config ); config.setup( self, *name.split( '::' ) ) end
+configure Susu.config
 
 
 def self.suite
@@ -37,7 +43,7 @@ end
 
 def self.run
 
-	Test::Unit::UI::Console::TestRunner.run( self, output_level: Test::Unit::UI::Console::OutputLevel::VERBOSE )
+	Test::Unit::UI::Console::TestRunner.run( self, output_level: Test::Unit::UI::Console::OutputLevel::const_get( options.outputLevel ) )
 
 end
 
