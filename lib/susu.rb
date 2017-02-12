@@ -11,9 +11,6 @@ extend Autoload
 VERSION = '0.1.0'
 
 
-@refineCounter = 0
-
-
 @modules =
 {
 	Refine:  "#{ __dir__ }/susu/refine"  ,
@@ -22,6 +19,7 @@ VERSION = '0.1.0'
 	Facts:   "#{ __dir__ }/susu/facts"   ,
 	Git:     "#{ __dir__ }/susu/git"
 }
+
 
 @refines =
 {
@@ -39,24 +37,65 @@ VERSION = '0.1.0'
 
 
 
-def self.refines( *args )
+# Dynamically creates a module with the wanted refines.
+# Note that some of the refines shipped by Susu alter the behavior of standard ruby methods. See the documentation for Susu::Refine for details.
+# Susu caches the created modules for re-use, so you shouldn't tamper with them so you don't affect the modules other code get
+# from calling this method.
+#
+# @param which [multiple] which can be either a something that can be converted to a symbol and that corresponds to any of the
+#                         refines shipped by Susu: :Array, :Date, :Hash, :Module, :Numeric, :String, :Time, :Fs or :Options. See the
+#                         documentation of Susu::Refine for more information.
+#                         It can also be anything that will return a module from Object.const_get. This module will be included in the
+#                         module that will be returned from this method and can have refines defined in it.
+#                         You can also pass in several of the above as different parameters.
+#                         It can also be an array of any combination of the above, and it is optional if you want all the refines shipped
+#                         with Susu.
+#
+# @return [module] A module that you can pass to `using`, which will hold all the refines requested.
+#
+# @example
+#
+#   # Get all Susu refines:
+#   #
+#   using Susu.refines
+#
+#   # Get a specific set of refines:
+#   #
+#   using Susu.refines   :Array, :Hash      # or:
+#   using Susu.refines [ :Array, :Hash ]
+#
+#   # To get a single refine, it is recommended to use the existing module directly, which avoids creating a new one:
+#   #
+#   using Susu::Refine::Hash
+#
+def self.refines( *which )
 
-
-	args.empty? and args = @refines.keys
+	which.empty? and which = @refines.keys
 
 	# If the user send us an array already, unwrap
 	#
-	args.length  == 1           &&
-	Array       === args.first and  args = args.first
+	which.length  == 1            &&
+	Array        === which.first and  which = which.first
 
-	@refineCounter += 1
-	rm = Susu.const_set( 'Refines' + @refineCounter.to_s, Module.new )
+	moduleName = 'Refines_' + which.hash.abs.to_s
 
-	for mod in args
+
+	begin
+
+		return Susu.const_get moduleName
+
+	rescue NameError
+
+		rm = Susu.const_set( moduleName, Module.new )
+
+	end
+
+
+	for mod in which
 
 		if !mod.kind_of?( Module )
 
-			@refines.has_key?( mod )  ?
+			@refines.has_key?( mod.to_sym )  ?
 
 				  mod = Susu  .const_get( @refines[ mod ], false )
 				: mod = Object.const_get( mod            , false  )
