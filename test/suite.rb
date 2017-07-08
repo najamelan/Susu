@@ -29,11 +29,12 @@ def self.suite
 
 	suite =  Test::Unit::TestSuite.new( "Susu TestSuite" )
 
-	suite << Susu::Refine::TestSuite  .suite
-	suite << Susu::Fs::TestSuite      .suite
-	suite << Susu::Options::TestSuite .suite
-	suite << Susu::Facts::TestSuite   .suite
-	suite << Susu::Git::TestSuite     .suite
+	suite << Susu::Facts::TestSuite       .suite
+	suite << Susu::DataStruct::TestSuite  .suite
+	suite << Susu::Refine::TestSuite      .suite
+	suite << Susu::Fs::TestSuite          .suite
+	suite << Susu::Options::TestSuite     .suite
+	suite << Susu::Git::TestSuite         .suite
 	# suite << Susu::Sys::TestSuite       .suite
 
 

@@ -13,11 +13,13 @@ VERSION = '0.1.0'
 
 @modules =
 {
-	Refine:  "#{ __dir__ }/susu/refine"  ,
-	Fs:      "#{ __dir__ }/susu/fs"      ,
-	Options: "#{ __dir__ }/susu/options" ,
-	Facts:   "#{ __dir__ }/susu/facts"   ,
-	Git:     "#{ __dir__ }/susu/git"
+	DataStruct: "#{ __dir__ }/susu/datastruct" ,
+	Facts:      "#{ __dir__ }/susu/facts"      ,
+	Fs:         "#{ __dir__ }/susu/fs"         ,
+	Git:        "#{ __dir__ }/susu/git"        ,
+	Options:    "#{ __dir__ }/susu/options"    ,
+	Refine:     "#{ __dir__ }/susu/refine"     ,
+	Sys:        "#{ __dir__ }/susu/sys"        ,
 }
 
 
