@@ -271,6 +271,16 @@ def test13TrimLines!
 
 end
 
+
+
+def test14_width
+
+	text = " as \n lkj\noneidgw ked \n3ei"
+
+		assert_equal 12, text.width
+
+end
+
 end # class  TestString
 end # module Refine
 end # module Susu

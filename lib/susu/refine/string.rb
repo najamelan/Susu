@@ -140,6 +140,16 @@ end
 
 
 
+# Returns the width in characters of the longest line of the string.
+#
+def width
+
+	split( "\n" ).map( &:length ).max
+
+end
+
+
+
 end # refine String
 
 
