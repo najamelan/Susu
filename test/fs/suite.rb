@@ -1,5 +1,6 @@
 using Susu.refines
 
+require_relative '../facts/suite.rb'
 __dir__.path.children.pgrep( /test.*\.rb/ ) { |file| require file }
 
 

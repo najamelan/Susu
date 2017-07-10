@@ -3,6 +3,11 @@ require 'etc'
 using Susu.refines
 
 module Susu
+
+	# Autoload before reopen
+	#
+	Facts
+
 module Facts
 
 class TestFactCase < Test::Unit::TestCase
