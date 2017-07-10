@@ -148,6 +148,16 @@ end
 
 
 
+# TODO: pass arguments and block
+#
+def sum
+
+	compact.reduce( 0 ) { |memo, elem| memo += elem }
+
+end
+
+
+
 end # refine ::Array
 
 

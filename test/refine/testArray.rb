@@ -453,6 +453,40 @@ def test18duplicates(( arr, expect ))
 end
 
 
+
+data do
+
+	{
+		'Empty Array'      => [ [        ], 0 ],
+		'1 double'         => [ [ 0      ], 0 ],
+		'Triple + double'  => [ [ 1, 5   ], 6 ],
+	}
+
+end
+
+def test19sum(( arr, expect ))
+
+	assert_equal expect, arr.sum
+
+end
+
+
+
+data do
+
+	{
+		'Unique elements'  => [ [ :a, :b ], TypeError ],
+	}
+
+end
+
+def test20sum(( arr, expect ))
+
+	assert_raise { arr.sum }
+
+end
+
+
 end # class  TestArray
 end # module Refine
 end # module Susu
