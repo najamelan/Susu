@@ -9,6 +9,18 @@ class Settings < Hashie::Mash
 attr_reader :_validator_, :_sanitizer_
 
 
+def initialize( * )
+
+	super
+
+	# Avoid warnings when run with ruby -w
+	#
+	@_sanitizer_ = nil
+	@_validator_ = nil
+
+end
+
+
 # Support loading from a string or a Pathname
 #
 def self.load path, options = { reload: false }

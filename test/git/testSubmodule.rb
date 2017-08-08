@@ -82,6 +82,23 @@ end
 
 
 
+def test_06Deinit
+
+	r   = Repo.new @@repo
+	url = addRepo
+
+	sub = r.addSubmodule url
+	r.commit 'Adding submodule'
+
+	sub.deinit
+
+		assert sub.path.exist?
+		assert sub.path.empty?, r.path[ sub.lpath ].la.ai
+
+end
+
+
+
 
 
 end # class TestSubmodule

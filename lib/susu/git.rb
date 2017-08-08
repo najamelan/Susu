@@ -26,9 +26,10 @@ module Git
 
 		@modules =
 		{
-			Branch:  "#{ __dir__ }/git/facts/branch" ,
-			Remote:  "#{ __dir__ }/git/facts/remote" ,
-			Repo:    "#{ __dir__ }/git/facts/repo"
+			Branch:    "#{ __dir__ }/git/facts/branch"    ,
+			Repo:      "#{ __dir__ }/git/facts/repo"      ,
+			Remote:    "#{ __dir__ }/git/facts/remote"    ,
+			Submodule: "#{ __dir__ }/git/facts/submodule"
 		}
 
 		def self.config; Susu.config end

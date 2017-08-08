@@ -1,4 +1,5 @@
 using Susu.refines
+
 module Susu
 module Git
 module Facts
@@ -6,14 +7,11 @@ module Facts
 
 # Options (* means mandatory)
 #
-# path*     : respond_to?(:path)  Path to the repository directory (workingDir with .git)
+# repo*     : respond_to?(:path)  Path to the repository directory (workingDir with .git)
 # head      : String              (the ref name head should point to, eg. a branch name)
 # update    : Boolean             (whether the working dir is clean, fix commits so the repo is in sync with filesystem)
-# remotes   : Array<Hash>         A list of settings for Fact::Git::Remote to depend on.
-# branches  : Array<Hash>         A list of settings for Fact::Git::Branch to depend on.
-# submodules: Array<Hash>         A list of settings for Fact::Git::Branch to depend on.
 #
-class Repo < Susu::Facts::Fact
+class Submodule < Susu::Facts::Fact
 
 include Susu::Facts::InstanceCount
 
@@ -23,36 +21,16 @@ attr_reader :repo
 
 def self.configure( config )
 
-	config.setup( self, :Git, :Facts, :Repo, sanitizer: method( :sanitize ) )
+	config.setup( self, :Git, :Facts, :Submodule, sanitizer: method( :sanitize ) )
 
 end
 
 
-def initialize( path:, **opts )
+def initialize( repo:, name:, **opts )
 
-	super( **opts, path: path.path )
-	@repo = Git::Repo.new( @path )
-
-end
-
-
-
-# Make sure path is always a string for the address
-#
-def createAddress
-
-	@indexKeys.map do |key|
-
-		ret = options[ key ]
-
-		key.to_sym == :path  and  ret = ret.expand_path.to_path
-
-		ret
-
-	end.unshift self.class.name
+	super
 
 end
-
 
 
 
@@ -188,11 +166,19 @@ def fix( msg = "Commit added by #{ self.class.name } to have a clean working dir
 
 	super() do
 
-		options.head       and dependOn( :head       )
-		options.submodules and dependOn( :submodules )
+		if @expect
 
-		@fact.repo.addAll
-		@fact.repo.commit msg
+			options.head       and dependOn( :head       )
+			options.submodules and dependOn( :submodules )
+
+			@fact.repo.addAll
+			@fact.repo.commit msg
+
+		else
+
+			@fact.repo.pollute
+
+		end
 
 	end
 
@@ -202,7 +188,7 @@ end # class Update < Susu::Facts::Condition
 
 
 
-# option: submodules: [ { name: 'sansa', path: 'ext/sansa', url: 'github.com/najamelan/sansa' } ]
+# option: submodules: [ { name: 'sansa', path: 'ext/sansa', url: 'github.com/najamelan/sansa', ref: 'master' } ]
 #
 class Submodules < Susu::Facts::Condition
 
@@ -211,25 +197,11 @@ def initialize **opts
 
 	super
 
-	@expect  = Array.eat( @expect )
-
+	@expect = Array.eat( @expect )
 
 	@modules = @expect.map do |opt|
 
-		Facts::Submodule.new( repo: @fact.repo, **opt )
-
-	end
-
-
-	# Remove unwanted submodules
-	#
-	@fact.repo.submodules.each do |name, submodule|
-
-		if @modules.none? { |mod| mod[ 'name' ] == name }
-
-			@modules << Facts::Submodule.new( repo: @fact.repo, name: name, exist: false )
-
-		end
+		Facts::Submodule.new( @fact.repo, opt )
 
 	end
 
@@ -265,7 +237,7 @@ end
 
 end # class Submodules < Susu::Facts::Condition
 
-end # class  Repo
+end # class  Submodule
 end # module Facts
 end # module Git
 end # module Susu

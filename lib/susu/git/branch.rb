@@ -9,7 +9,7 @@ class  Branch
 include Options::Configurable
 
 
-attr_reader :name
+attr_reader :name, :repo
 
 
 
@@ -20,14 +20,13 @@ def self.configure( config )
 end
 
 
-def initialize( repo, rug, rugRepo, git, **opts )
 
-	super( opts )
+def initialize( repo, rug, **opts )
+
+	super opts
 
 	@repo       = repo
-	@git        = git
 	@rug        = rug
-	@rugRepo    = rugRepo
 	@name       = @rug.name
 
 end
@@ -38,7 +37,7 @@ def upstream
 
 	@rug.upstream  or  return nil
 
-	self.class.new( @repo, @rug.upstream, @rugRepo, @git, runtime )
+	self.class.new( @repo, @rug.upstream, runtime )
 
 end
 
@@ -64,13 +63,11 @@ end
 
 def diverged
 
-	@name      or return nil
-	upstream   or return nil
-	remoteName or return nil
+	@name && upstream && remoteName  or  return nil
 
-	@repo.cleanupAfterRubyGit { @git.fetch remoteName }
+	@repo.cleanupAfterRubyGit { repo.git.fetch remoteName }
 
-	result = @rugRepo.ahead_behind( @name, upstream.name )
+	result = @repo.rug.ahead_behind( @name, upstream.name )
 
 	result
 
@@ -98,8 +95,8 @@ end
 
 
 
-def ahead?    ; ahead or return nil; ahead   > 0 end
-def behind?   ; ahead or return nil; behind  > 0 end
+def ahead?    ; ahead  or return nil; ahead   > 0 end
+def behind?   ; behind or return nil; behind  > 0 end
 
 
 def diverged?
@@ -111,6 +108,6 @@ def diverged?
 end
 
 
-end # class  Repo
+end # class  Branch
 end # module Git
 end # module Susu

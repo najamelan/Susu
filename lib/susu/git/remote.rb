@@ -32,6 +32,6 @@ def initialize( rug, git, **opts )
 
 end
 
-end # class  Repo
+end # class  Remote
 end # module Git
 end # module Susu

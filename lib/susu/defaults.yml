@@ -40,20 +40,27 @@ default:
 
       Repo:
 
-        params    : [ path, remotes, branches ]
+        params    : [ path ]
         indexKeys : path
         exist     : true
-        remotes   : []
-        branches  : []
 
       Remote:
 
-        params: [ path, name ]
-        name  : origin
-        exist : true
+        params   : [ repo, name ]
+        indexKeys: [ repo, name ]
+        name     : origin
+        exist    : true
 
       Branch:
 
-        params: [ path, name ]
-        name  : master
-        exist : true
+        params   : [ repo, name ]
+        indexKeys: [ repo, name ]
+        name     : master
+        exist    : true
+
+      Submodule:
+
+        params            : [ repo, name, removeUnconfigured ]
+        indexKeys         : [ repo, name ]
+        exist             : true
+        removeUnconfigured: true

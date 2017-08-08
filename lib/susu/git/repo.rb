@@ -91,7 +91,7 @@ def branches
 
 	validate
 
-	@rug.branches.each_with_object( {} ) { |branch, memo| memo[ branch.name ] = Branch.new( self, branch, @rug, @git ) }
+	@rug.branches.each_with_object( {} ) { |branch, memo| memo[ branch.name ] = Branch.new( self, branch ) }
 
 end
 
@@ -235,6 +235,8 @@ def addAll
 
 	cleanupAfterRubyGit { @git.add( all: true ) }
 
+	self
+
 end
 
 
@@ -243,7 +245,17 @@ def commit( message, **opts )
 
 	validate
 
-	cleanupAfterRubyGit { @git.commit( message, opts ) }
+	# cleanupAfterRubyGit { @git.commit( message, opts ) }
+	#
+
+	opts[ :message    ]   = message
+	opts[ :parents    ] ||= @rug.empty? ? [] : [ @rug.head.target ].compact
+	opts[ :update_ref ] ||= 'HEAD' #@rug.head.name
+	opts[ :tree       ] ||= @rug.index.write_tree( @rug )
+
+	Rugged::Commit.create @rug, opts
+
+	self
 
 end
 
@@ -311,7 +323,7 @@ def addBranch name, target = 'HEAD'
 
 	rugBranch = @rug.create_branch( name, target )
 
-	Branch.new self, rugBranch, @rug, @git
+	Branch.new self, rugBranch
 
 end
 
