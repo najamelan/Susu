@@ -163,7 +163,7 @@ end
 #
 def test05Children
 
-	p = @@tmp
+	p   = @@tmp
 	sub = p.mkdir 'sub'
 
 	assert_instance_of( Path, p        )
@@ -213,6 +213,38 @@ def test05Children
 	assert        crP   .all? { |e| e.kind_of? Path }
 	assert        crSub .all? { |e| e.kind_of? Path }
 	assert        crSsub.all? { |e| e.kind_of? Path }
+
+
+	# Follow
+	#
+	target = p.mkdir 'target'
+	search = p.mkdir 'search'
+
+	search.touch 'afile'
+	target.touch 'bfile'
+
+	File.symlink( target.to_path, search.join( "totarget" ).to_path )
+
+
+	# Default shouldn't follow
+	#
+	nofollow = [ 'afile', 'totarget' ].map! { |f| f.path }
+
+		assert_equal nofollow, search.children( recurse: true, withDir: false ).sort
+
+
+	# Follow symlink
+	#
+	follow    = [ 'afile', 'bfile', 'totarget' ].map! { |f| f.path }
+
+		assert_equal   follow, search.children( recurse: true, withDir: false, follow: true ).sort
+
+
+	# Follow symlink withDir
+	#
+	followDir = [ 'afile', 'totarget', 'totarget/bfile' ].map! { |f| f.path }
+
+		assert_equal   followDir.map! { |f| search/f }, search.children( recurse: true, withDir: true, follow: true ).sort
 
 end
 

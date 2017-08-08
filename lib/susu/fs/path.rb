@@ -380,6 +380,7 @@ end
 #                  - withDir:   prefix current path to results @see Pathname#children. Note that Pathname#children always
 #                               sets withDir to false if the current path is '.',  default: true
 #                  - follow:    follow symlinks            , default: false
+#                               when used with withDir, the path will not be canonical
 #                  - recurse:   recurse into subdirectories, default: true
 #
 # @param  block    an optional block which will receive each entry as it is found. If the block returns trueish,
@@ -390,8 +391,6 @@ end
 #                  doesn't return a directory, it will not be recursed into. You can use this to recurse selectively.
 #
 # @return [Array] The list of entries below the current path.
-#
-# TODO: test follow
 #
 def children( follow: false, recurse: true, withDir: true, &block )
 
@@ -415,6 +414,8 @@ def children( follow: false, recurse: true, withDir: true, &block )
 	recurse and toddlers +=
 
 		toddlers.map do |path|
+
+			path = self/path
 
 			!follow && path.symlink? and next []
 			path.directory?           or next []
