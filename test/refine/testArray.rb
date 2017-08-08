@@ -390,6 +390,31 @@ def test15UniqBlock!(( input, expect, block ))
 end
 
 
+
+data do
+
+	{
+		'Empty Array'                             => [ [        ], [        ], true  ] ,
+		'Empty Array should be subset'            => [ [        ], [ :a, :b ], true  ] ,
+		'identical arrays'                        => [ [ :a, :b ], [ :a, :b ], true  ] ,
+		'normal subset'                           => [ [ :a     ], [ :a, :b ], true  ] ,
+		'2 times same element'                    => [ [ :a     ], [ :a, :a ], true  ] ,
+		'a, b should be subset of b, a'           => [ [ :a, :b ], [ :b, :a ], true  ] ,
+		'a, a should be subset of a'              => [ [ :a, :a ], [ :a     ], true  ] ,
+		'b shouldn\'t be subset of a'             => [ [ :b     ], [ :a     ], false ] ,
+		'b shouldn\'t be subset of double a'      => [ [ :b     ], [ :a, :a ], false ] ,
+		'b shouldn\'t be subset of empty array'   => [ [ :b     ], [        ], false ] ,
+	}
+
+end
+
+def test16Subset(( sub, sup, expect ))
+
+	assert_equal expect, sub.subset?( sup )
+
+end
+
+
 end # class  TestArray
 end # module Refine
 end # module Susu

@@ -116,6 +116,15 @@ end
 
 
 
+# What with duplicate entries
+# Are all elements in self present in other
+#
+def subset?   other; ( self - other ).count == 0 end
+def superset? other;  other.subset? self         end
+
+
+
+
 end # refine ::Array
 
 
