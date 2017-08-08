@@ -91,9 +91,12 @@ data do
 
 	{
 
-		"Identical time"  => [ ::Date.new( 2015, 1, 1 ), ::Time.new( 2015,  1,  1             ), ::Time.new( 2015,  1,  1             ), true  ] ,
-		"Earlier   time"  => [ ::Date.new( 2015, 1, 1 ), ::Time.new( 2014, 12, 31, 23, 59, 59 ), ::Time.new( 2015, 12, 31, 23, 59, 59 ), true  ] ,
-		"Later     time"  => [ ::Date.new( 2015, 1, 1 ), ::Time.new( 2015,  1,  1,  0,  0,  1 ), ::Time.new( 2015,  1,  1,  0,  0,  2 ), false ] ,
+		"Before"          => [ ::Date.new( 2015, 1, 1 ), ::Time.new( 2015,  1,  1,  0,  0,  1 ), ::Time.new( 2015,  1,  1,  0,  0,  2 ), false ] ,
+		"Identical"       => [ ::Date.new( 2015, 1, 1 ), ::Time.new( 2015,  1,  1             ), ::Time.new( 2015,  1,  1             ), true  ] ,
+		"Include min"     => [ ::Date.new( 2015, 1, 1 ), ::Time.new( 2015,  1,  1             ), ::Time.new( 2015,  1,  2             ), true  ] ,
+		"Include max"     => [ ::Date.new( 2015, 1, 1 ), ::Time.new( 2014,  1,  1             ), ::Time.new( 2015,  1,  1             ), true  ] ,
+		"Between"         => [ ::Date.new( 2015, 1, 1 ), ::Time.new( 2014, 12, 31, 23, 59, 59 ), ::Time.new( 2015, 12, 31, 23, 59, 59 ), true  ] ,
+		"After"           => [ ::Date.new( 2015, 1, 1 ), ::Time.new( 2014, 12, 31, 23, 59, 58 ), ::Time.new( 2014, 12, 31, 23, 59, 59 ), false ] ,
 
 	}
 
