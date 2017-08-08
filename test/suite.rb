@@ -9,7 +9,7 @@ Test::Unit::AutoRunner.need_auto_run = false
 
 Susu.configure profile: :testing, runtime: [ 'facts/test.yml'.relpath, 'git/test.yml'.relpath ]
 
-'.'.relpath.children( recursive: true ).map( &:to_path ).grep( /suite\.rb/ ) do |file|
+'.'.relpath.children( recursive: true ).map( &:to_path ).sort.grep( /suite\.rb/ ) do |file|
 
 	require_relative file
 
