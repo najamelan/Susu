@@ -1,6 +1,6 @@
 require_relative 'TestHelper'
 
-Susu.refine binding
+using Susu.refines
 
 module Susu
 module Options

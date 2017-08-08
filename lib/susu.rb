@@ -10,38 +10,8 @@ extend Autoload
 
 VERSION = '0.1.0'
 
-REFINES =
-{
-	Array:   'using Susu::Refine::Array'   ,
-	Date:    'using Susu::Refine::Date'    ,
-	Hash:    'using Susu::Refine::Hash'    ,
-	Module:  'using Susu::Refine::Module'  ,
-	Numeric: 'using Susu::Refine::Numeric' ,
-	String:  'using Susu::Refine::String'  ,
-	Time:    'using Susu::Refine::Time'    ,
 
-	Fs:      'using Susu::Fs::Refine'      ,
-	Options: 'using Susu::Options::Refine' ,
-}
-
-
-
-def self.refine context, which = :all
-
-	which.kind_of?( Array ) or which = [ which ]
-
-	which.include?( :all ) and return context.eval( REFINES.values.join( "\n" ) )
-
-	strings = REFINES.select do |key, value|
-
-		which.include?( key )
-
-	end.values.join( "\n" )
-
-	context.eval strings
-
-end
-
+@refineCounter = 0
 
 
 @modules =
@@ -52,6 +22,54 @@ end
 	Facts:   "#{ __dir__ }/susu/facts"   ,
 	Git:     "#{ __dir__ }/susu/git"
 }
+
+@refines =
+{
+	Array:   [ :Refine , :Array   ],
+	Date:    [ :Refine , :Date    ],
+	Hash:    [ :Refine , :Hash    ],
+	Module:  [ :Refine , :Module  ],
+	Numeric: [ :Refine , :Numeric ],
+	String:  [ :Refine , :String  ],
+	Time:    [ :Refine , :Time    ],
+
+	Fs:      [ :Fs     , :Refine  ],
+	Options: [ :Options, :Refine  ],
+}
+
+
+
+def self.refines( *args )
+
+
+	args.empty? and args = @refines.keys
+
+	# If the user send us an array already, unwrap
+	#
+	args.length  == 1           &&
+	Array       === args.first and  args = args.first
+
+	@refineCounter += 1
+	rm = Susu.const_set( 'Refines' + @refineCounter.to_s, Module.new )
+
+	for mod in args
+
+		if !mod.kind_of?( Module )
+
+			@refines.has_key?( mod )  ?
+
+				  mod = Susu  .const_get( @refines[ mod ], false )
+				: mod = Object.const_get( mod            , false  )
+
+		end
+
+		rm.include mod
+
+	end
+
+	rm
+
+end
 
 
 

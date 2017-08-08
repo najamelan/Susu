@@ -13,7 +13,7 @@ module Refine
 		Module:   "#{ __dir__ }/refine/module"   ,
 		Numeric:  "#{ __dir__ }/refine/numeric"  ,
 		String:   "#{ __dir__ }/refine/string"   ,
-		Time:     "#{ __dir__ }/refine/time"
+		Time:     "#{ __dir__ }/refine/time"     ,
 	}
 
 	def self.config; Susu.config end

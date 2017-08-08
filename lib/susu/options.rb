@@ -1,7 +1,5 @@
 require 'hashie'
 
-Susu.refine( binding, :module )
-
 module Susu
 module Options
 

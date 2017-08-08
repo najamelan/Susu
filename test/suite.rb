@@ -1,7 +1,7 @@
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 
-Susu.refine binding
+using Susu.refines
 
 # Turn off test unit's auto runner
 #

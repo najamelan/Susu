@@ -1,6 +1,6 @@
 require 'English'
 
-Susu.refine binding
+using Susu.refines
 
 module Susu
 module Git

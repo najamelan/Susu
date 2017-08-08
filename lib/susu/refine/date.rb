@@ -7,7 +7,7 @@ module Date
 
 refine ::Date do
 
-	Susu.refine binding, :Time
+	using Susu::Refine::Time
 
 # Allow comparing time and date objects
 #

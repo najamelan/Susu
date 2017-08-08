@@ -15,6 +15,20 @@ module Autoload
 
 
 
+	def const_get name, inherit = false
+
+		if Array === name
+
+			return name.reduce( self ) { |parent, wanted| parent.const_get( wanted ) }
+
+		end
+
+		super
+
+	end
+
+
+
 	def const_missing name
 
 		if @modules.has_key? name
@@ -32,7 +46,7 @@ module Autoload
 
 		else
 
-			raise "Class not found: #{ name.to_s }."
+			super
 
 		end
 

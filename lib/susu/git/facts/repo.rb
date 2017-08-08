@@ -1,4 +1,4 @@
-Susu.refine binding
+using Susu.refines
 module Susu
 module Git
 module Facts

@@ -3,7 +3,7 @@ require 'open3'
 
 require_relative '../facts/TestFactCase'
 
-Susu.refine binding
+using Susu.refines
 
 module Susu
 module Git

@@ -1,4 +1,5 @@
-Susu.refine binding
+using Susu.refines
+
 module Susu
 module Fs
 module Facts

@@ -1,6 +1,6 @@
 require 'etc'
 
-Susu.refine binding
+using Susu.refines
 
 module Susu
 module Facts
