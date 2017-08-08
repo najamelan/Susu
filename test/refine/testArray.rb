@@ -415,6 +415,25 @@ def test16Subset(( sub, sup, expect ))
 end
 
 
+
+data do
+
+	{
+		'Empty Array' => [ [        ]  ] ,
+		'2 Elements'  => [ [ :a, :b ]  ] ,
+	}
+
+end
+
+def test17each!(( arr ))
+
+	arr.each! { |_| }
+
+	assert_equal 0, arr.count
+
+end
+
+
 end # class  TestArray
 end # module Refine
 end # module Susu

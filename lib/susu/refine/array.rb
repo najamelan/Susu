@@ -125,6 +125,21 @@ def superset? other;  other.subset? self         end
 
 
 
+# Liberate objects from the array on each iteration. This allows the garbage collector to get rid of them faster.
+# Not taking a &block parameter avoids creation of anonymous Proc objects.
+#
+def each!
+
+	while count > 0
+
+		yield( shift )
+
+	end
+
+end
+
+
+
 end # refine ::Array
 
 
