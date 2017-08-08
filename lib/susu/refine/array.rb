@@ -82,37 +82,25 @@ end
 
 alias :compact_orig! :compact!
 
-def compact!
-
-	compact_orig!
-
-	self
-
-end
+def compact!; compact_orig!; self end
 
 
 
 alias :flatten_orig! :flatten!
 
-def flatten!
+def flatten!; flatten_orig!; self end
 
-	flatten_orig!
 
-	self
 
-end
+alias :select_orig! :select!
+
+def select! &block; select_orig!( &block ); self end
 
 
 
 alias :uniq_orig! :uniq!
 
-def uniq! &block
-
-	uniq_orig!( &block )
-
-	self
-
-end
+def uniq! &block; uniq_orig!( &block ); self end
 
 
 
