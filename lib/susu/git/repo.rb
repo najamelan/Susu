@@ -368,6 +368,15 @@ ensure
 end
 
 
+
+def tag name, target
+
+	@rug.tags.create( name, target )
+
+end
+
+
+
 private
 
 def validate
