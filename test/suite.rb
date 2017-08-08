@@ -10,7 +10,7 @@ Test::Unit::AutoRunner.need_auto_run = false
 Susu.configure profile: :testing, runtime: [ 'facts/test.yml'.relpath, 'git/test.yml'.relpath ]
 
 
-__dir__.path.children.pgrep( /suite\.rb/ ) { |file| require file }
+__dir__.path.children.sort.pgrep( /suite\.rb/ ) { |file| require file }
 
 
 module Susu
