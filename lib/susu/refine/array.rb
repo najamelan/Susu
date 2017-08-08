@@ -128,6 +128,26 @@ end
 
 
 
+# Returns all duplicate elements in an array. If elements occur more than twice, the result of this function might contain duplicates as well.
+# It is the inverse of #uniq.
+#
+def duplicates
+
+	uni  = uniq
+	copy = clone
+
+	uni.each do |elem|
+
+		copy.delete_at( copy.index elem )
+
+	end
+
+	copy
+
+end
+
+
+
 end # refine ::Array
 
 

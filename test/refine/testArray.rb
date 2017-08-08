@@ -434,6 +434,25 @@ def test17each!(( arr ))
 end
 
 
+
+data do
+
+	{
+		'Empty Array'      => [ [                            ], [            ] ] ,
+		'Unique elements'  => [ [ :a, :b                     ], [            ] ] ,
+		'1 double'         => [ [ :a, :a                     ], [ :a         ] ] ,
+		'Triple + double'  => [ [ :a, :b, :c, :a, :b, :a, :d ], [ :a, :b, :a ] ] ,
+	}
+
+end
+
+def test18duplicates(( arr, expect ))
+
+	assert_equal expect, arr.duplicates
+
+end
+
+
 end # class  TestArray
 end # module Refine
 end # module Susu
