@@ -25,8 +25,8 @@ extend Autoload
 {
 	    Array: [ :Refine , :Array     ],
 	     Date: [ :Refine , :Date      ],
-	   Fixnum: [ :Refine , :Fixnum    ],
 	     Hash: [ :Refine , :Hash      ],
+	  Integer: [ :Refine , :Integer   ],
 	   Module: [ :Refine , :Module    ],
 	  Numeric: [ :Refine , :Numeric   ],
 	   String: [ :Refine , :String    ],

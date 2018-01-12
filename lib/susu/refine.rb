@@ -9,8 +9,8 @@ module Refine
 	{
 		    Array: "#{ __dir__ }/refine/array"       ,
 		     Date: "#{ __dir__ }/refine/date"        ,
-		   Fixnum: "#{ __dir__ }/refine/fixnum"      ,
 		     Hash: "#{ __dir__ }/refine/hash"        ,
+		  Integer: "#{ __dir__ }/refine/integer"     ,
 		   Module: "#{ __dir__ }/refine/module"      ,
 		  Numeric: "#{ __dir__ }/refine/numeric"     ,
 		   String: "#{ __dir__ }/refine/string"      ,

@@ -1,8 +1,8 @@
 module Susu
 module Refine
-module Fixnum
+module Integer
 
-refine ::Fixnum do
+refine ::Integer do
 
 
 	# Allow convient access to multi-dimensional array by accessing a specific column.
@@ -43,9 +43,9 @@ refine ::Fixnum do
 	end
 
 
-end # refine ::Fixnum
+end # refine ::Integer
 
-end # module Fixnum
+end # module Integer
 end # module Refine
 end # module Susu
 
