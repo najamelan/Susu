@@ -473,7 +473,7 @@ def test15Content
 	hoho = p.touch( 'hoho' )
 	hoho.write "hehe"
 
-		assert_equal [ haha, hoho ], p.content
+		assert_equal [ haha, hoho ], p.content.sort
 		assert_equal ""            , haha.content
 		assert_equal "hehe"        , hoho.content
 		assert_nil   'doesnotexist'.path.empty?

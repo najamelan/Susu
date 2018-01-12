@@ -108,6 +108,12 @@ end
 
 # This will give you a full path, which will not depend on the cwd to operate on the files,
 # and will not include the '.' and '..' entries.
+# 
+# @see #children Order of the output is undefined
+# 
+# @return [array|yield] The children of the directory in undefined order. Yields if a block was given.
+#
+# TODO: better documentation, eg. what is the difference between ls and la.
 #
 def ls
 
@@ -126,6 +132,12 @@ end
 
 # This will give you a full path, which will not depend on the cwd to operate on the files,
 # and will not include the '.' and '..' entries.
+# 
+# @see #children Order of the output is undefined
+# 
+# @return [array|yield] The children of the directory in undefined order. Yields if a block was given.
+#
+# TODO: better documentation, eg. what is the difference between ls and la.
 #
 def la
 
