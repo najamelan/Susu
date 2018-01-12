@@ -27,7 +27,17 @@ def self.load path, options = { reload: false }
 
 	options[ :reload ] && @_mashes and @_mashes.delete( path.to_path )
 
-	super( path.to_path, options ).dup
+
+	begin
+	
+		super( path.to_path, options ).dup
+
+	rescue Psych::SyntaxError => e
+
+		puts "\nError parsing yaml for: #{ path }. Psych error: #{ e }\n"
+		raise e
+
+	end
 
 end
 
