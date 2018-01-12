@@ -2,6 +2,19 @@ module Susu
 module Refine
 module String
 
+
+# Regex used by the trimLines methods for leading whitespace.
+#
+LTRIM_PATTERN = /^[ \t]++/
+
+
+# Regex used by the trimLines methods for trailing whitespace.
+#
+RTRIM_PATTERN = /[ \t]++$/
+
+
+
+
 refine ::String do
 
 
@@ -16,16 +29,6 @@ def lstrip!; lstrip_or_nil!; self end
 
 def gsub!( *args, &block ) gsub_or_nil!( *args, &block ); self end
 
-
-
-# Regex used by the trimLines methods for leading whitespace.
-#
-LTRIM_PATTERN = /^[ \t]++/
-
-
-# Regex used by the trimLines methods for trailing whitespace.
-#
-RTRIM_PATTERN = /[ \t]++$/
 
 
 
