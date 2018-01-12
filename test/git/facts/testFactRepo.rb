@@ -148,6 +148,12 @@ def test03Update
 
 	f = Facts::Repo.new( path: @@repo, update: true )
 
+	# TODO: Rugged bugs out if we don't set this. We should catch this in the repo class.
+	# 
+	f.repo.rug.config[ 'user.name'  ] = true
+	f.repo.rug.config[ 'user.email' ] = true
+
+
 		f.repo.pollute
 		assert ! f.repo.clean?
 

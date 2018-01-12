@@ -7,6 +7,14 @@ module Git
 class TestRepo < TestRepoCase
 
 
+def self.startup
+
+	super
+
+end
+
+
+
 def test00Constructor
 
 	r = Repo.new @@repo
@@ -32,6 +40,12 @@ def test01clean?
 	r.pollute
 
 		assert  ! r.clean?
+
+
+	# TODO: Rugged bugs out if we don't set this. We should catch this in the repo class.
+	# 
+	r.rug.config[ 'user.name'  ] = true
+	r.rug.config[ 'user.email' ] = true
 
 
 	r.addAll
@@ -74,6 +88,11 @@ def test03AddAll
 
 		assert r.clean?
 
+
+	# TODO: Rugged bugs out if we don't set this. We should catch this in the repo class.
+	# 
+	r.rug.config[ 'user.name'  ] = true
+	r.rug.config[ 'user.email' ] = true
 
 	r.pollute
 	r.addAll

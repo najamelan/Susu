@@ -87,6 +87,13 @@ def test_06Deinit
 	r   = Repo.new @@repo
 	url = addRepo
 
+
+	# TODO: Rugged bugs out if we don't set this. We should catch this in the repo class.
+	# 
+	r.rug.config[ 'user.name'  ] = true
+	r.rug.config[ 'user.email' ] = true
+
+
 	sub = r.addSubmodule url
 	r.commit 'Adding submodule'
 

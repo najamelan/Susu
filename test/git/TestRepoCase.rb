@@ -20,6 +20,19 @@ def self.configure config
 end
 
 
+
+def self.startup
+
+	super
+
+	# To prevent rugged ConfigErrors
+	# 
+	@@author = { name: 'test_unit' }
+
+end
+
+
+
 def setup
 
 	super
