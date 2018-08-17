@@ -4,11 +4,9 @@ require          'awesome_print'
 
 require_relative 'susu/autoload'
 
+
 module Susu
-
 extend Autoload
-
-VERSION = '0.1.0'
 
 
 @modules =
@@ -137,6 +135,7 @@ end
 def self.config; @config end
 
 configure
+
 
 end # module Susu
 

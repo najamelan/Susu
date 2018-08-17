@@ -2,24 +2,43 @@
 
 require_relative 'lib/susu/version'
 
-Gem::Specification.new do |gem|
+Gem::Specification.new do |s|
 
-  gem.name          = "susu"
-  gem.version       = Susu::VERSION
-  gem.summary       = %q{TODO: Summary}
-  gem.description   = %q{TODO: Description}
-  gem.license       = "UNILICENCE"
-  gem.authors       = [ "Naja Melan" ]
-  gem.email         = "najamelan@autistici.org"
-  gem.homepage      = "https://rubygems.org/gems/susu"
-  gem.homepage      = "https://github.com/najamelan/susu"
+	s.name         = "susu"
+	s.version      = Susu::VERSION
+	s.date         = '2018-08-17'
+	s.author       = 'Naja Melan'
+	s.email        = 'najamelan@autistici.org'
+	s.homepage     = 'https://github.com/najamelan/susu'
+	s.summary      = "Application framework for ruby"
+	s.description  = "Application framework for ruby - description"
+	s.license      = 'Unlicense'
 
-  gem.files         = `git ls-files`.split( $/ )
-  gem.executables   = gem.files.grep( %r{^bin/}).map{ |f| File.basename(f) }
-  gem.test_files    = gem.files.grep( %r{^(test|spec|features)/})
-  gem.require_paths = [ 'lib' ]
 
-  gem.add_development_dependency 'rubygems-tasks', '~> 0.2'
-  gem.add_development_dependency 'yard', '~> 0.8'
+	# If you have other dependencies, add them here
+	#
+	s.add_runtime_dependency 'hashie'         , "~> 3"
+	s.add_runtime_dependency 'rugged'         , "~> 0"
+	s.add_runtime_dependency 'git'            , "~> 1"
+	s.add_runtime_dependency 'activesupport'  , "~> 5"
+	s.add_runtime_dependency 'thor'           , "~> 0"
+
+	s.add_runtime_dependency 'awesome_print'  , "~> 1"
+	s.add_runtime_dependency 'byebug'         , "~> 10"
+	s.add_runtime_dependency 'pry'            , "~> 0"
+	s.add_runtime_dependency 'test-unit'      , "~> 3"
+
+	# Development
+	#
+	s.add_development_dependency 'yard', '~> 0'
+
+
+	# If you need to check in files that aren't .rb files, add them here
+	#
+	s.files = Dir[ "lib/**/*", "test/**/*", "test/git/data/fixtures/clean/.gitted/**/*", "*.md", "Thorfile" ]
+
+	# If you need an executable, add it here
+	#
+	# s.executables << ''
 
 end
