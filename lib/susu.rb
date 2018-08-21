@@ -12,28 +12,29 @@ extend Autoload
 @modules =
 {
 	DataStruct: "#{ __dir__ }/susu/datastruct" ,
-	Facts:      "#{ __dir__ }/susu/facts"      ,
-	Fs:         "#{ __dir__ }/susu/fs"         ,
-	Git:        "#{ __dir__ }/susu/git"        ,
-	Options:    "#{ __dir__ }/susu/options"    ,
-	Refine:     "#{ __dir__ }/susu/refine"     ,
-	Sys:        "#{ __dir__ }/susu/sys"        ,
+	     Facts: "#{ __dir__ }/susu/facts"      ,
+	        Fs: "#{ __dir__ }/susu/fs"         ,
+	       Git: "#{ __dir__ }/susu/git"        ,
+	   Options: "#{ __dir__ }/susu/options"    ,
+	    Refine: "#{ __dir__ }/susu/refine"     ,
+	       Sys: "#{ __dir__ }/susu/sys"        ,
 }
 
 
 @refines =
 {
-	Array:   [ :Refine , :Array   ],
-	Date:    [ :Refine , :Date    ],
-	Fixnum:  [ :Refine , :Fixnum  ],
-	Hash:    [ :Refine , :Hash    ],
-	Module:  [ :Refine , :Module  ],
-	Numeric: [ :Refine , :Numeric ],
-	String:  [ :Refine , :String  ],
-	Time:    [ :Refine , :Time    ],
+	    Array: [ :Refine , :Array     ],
+	     Date: [ :Refine , :Date      ],
+	   Fixnum: [ :Refine , :Fixnum    ],
+	     Hash: [ :Refine , :Hash      ],
+	   Module: [ :Refine , :Module    ],
+	  Numeric: [ :Refine , :Numeric   ],
+	   String: [ :Refine , :String    ],
+	TarReader: [ :Refine , :TarReader ],
+	     Time: [ :Refine , :Time      ],
 
-	Fs:      [ :Fs     , :Refine  ],
-	Options: [ :Options, :Refine  ],
+	       Fs: [ :Fs     , :Refine    ],
+	  Options: [ :Options, :Refine    ],
 }
 
 

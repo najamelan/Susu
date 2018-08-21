@@ -14,13 +14,14 @@ def self.suite
 
 	suite =  Test::Unit::TestSuite.new( "Refine TestSuite" )
 
-	suite << TestArray   .suite
-	suite << TestDate    .suite
-	suite << TestHash    .suite
-	suite << TestModule  .suite
-	suite << TestNumeric .suite
-	suite << TestString  .suite
-	suite << TestTime    .suite
+	suite << TestArray     .suite
+	suite << TestDate      .suite
+	suite << TestHash      .suite
+	suite << TestModule    .suite
+	suite << TestNumeric   .suite
+	suite << TestString    .suite
+	suite << TestTarReader .suite
+	suite << TestTime      .suite
 
 end
 

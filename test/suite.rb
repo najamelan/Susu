@@ -35,7 +35,7 @@ def self.suite
 	suite << Susu::Fs::TestSuite          .suite
 	suite << Susu::Options::TestSuite     .suite
 	suite << Susu::Git::TestSuite         .suite
-	# suite << Susu::Sys::TestSuite       .suite
+	# suite << Susu::Sys::TestSuite         .suite
 
 
 end
