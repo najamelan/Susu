@@ -1,7 +1,10 @@
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
+require 'coveralls'
 
 using Susu.refines
+
+Coveralls.wear!
 
 # Turn off test unit's auto runner
 #
