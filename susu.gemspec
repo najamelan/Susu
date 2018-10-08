@@ -17,7 +17,12 @@ Gem::Specification.new do |s|
 
 	# If you have other dependencies, add them here
 	#
-	s.add_runtime_dependency 'hashie'         , "~> 3"
+	# Hashie now calls YAML.safe_load which breaks on unquoted date strings. This is a problem for Options.
+	# We need to figure out how to deal with this. For now it would mean that anytime a user puts
+	# an unquoted date string in a yaml file, we get an exception and in any case we have to parse dates
+	# ourselves and figure out how to do it safely...
+	#
+	s.add_runtime_dependency 'hashie'         , [ ">= 3.5.7", "< 3.6" ]
 	s.add_runtime_dependency 'rugged'         , "~> 0"
 	s.add_runtime_dependency 'git'            , "~> 1"
 	s.add_runtime_dependency 'activesupport'  , "~> 5"

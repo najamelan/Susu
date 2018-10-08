@@ -1,5 +1,5 @@
 module Susu
 
-	VERSION = '0.180817.0'
+	VERSION = '18.08.28'
 
 end
