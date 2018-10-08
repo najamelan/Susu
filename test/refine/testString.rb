@@ -281,6 +281,85 @@ def test14_width
 
 end
 
+
+
+data do
+
+	{
+		'Empty string'       => [ ""      , ""     , nil     ] ,
+		'lower case string'  => [ "lower" , "lower", nil     ] ,
+		'Mixed case string'  => [ "Mixed" , "mixed", "mixed" ] ,
+		'Upper case string'  => [ "UPPER" , "upper", "upper" ] ,
+	}
+
+end
+
+def test15_downcase_or_nil!(( input, expect, ret_value ))
+
+	assert_equal ret_value, input.downcase_or_nil!
+	assert_equal expect   , input
+
+end
+
+
+
+data do
+
+	{
+		'Empty string'       => [ ""      , ""      ] ,
+		'lower case string'  => [ "lower" , "lower" ] ,
+		'Mixed case string'  => [ "Mixed" , "mixed" ] ,
+		'Upper case string'  => [ "UPPER" , "upper" ] ,
+	}
+
+end
+
+def test16_downcase!(( input, expect ))
+
+	assert_equal expect, input.downcase!
+
+end
+
+
+
+data do
+
+	{
+		'Empty string'       => [ ""      , ""     , nil     ] ,
+		'lower case string'  => [ "lower" , "LOWER", "LOWER" ] ,
+		'Mixed case string'  => [ "Mixed" , "MIXED", "MIXED" ] ,
+		'Upper case string'  => [ "UPPER" , "UPPER", nil     ] ,
+	}
+
+end
+
+def test17_upcase_or_nil!(( input, expect, ret_value ))
+
+	assert_equal ret_value, input.upcase_or_nil!
+	assert_equal expect   , input
+
+end
+
+
+
+data do
+
+	{
+		'Empty string'       => [ ""      , ""      ] ,
+		'lower case string'  => [ "lower" , "LOWER" ] ,
+		'Mixed case string'  => [ "Mixed" , "MIXED" ] ,
+		'Upper case string'  => [ "UPPER" , "UPPER" ] ,
+	}
+
+end
+
+def test18_upcase!(( input, expect ))
+
+	assert_equal expect, input.upcase!
+
+end
+
+
 end # class  TestString
 end # module Refine
 end # module Susu

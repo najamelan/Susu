@@ -18,14 +18,20 @@ RTRIM_PATTERN = /[ \t]++$/
 refine ::String do
 
 
-alias :strip_or_nil!  :strip!
-alias :rstrip_or_nil! :rstrip!
-alias :lstrip_or_nil! :lstrip!
-alias :gsub_or_nil!   :gsub!
+# Store the original methods in more reasonable names:
+#
+alias :strip_or_nil!    :strip!
+alias :rstrip_or_nil!   :rstrip!
+alias :lstrip_or_nil!   :lstrip!
+alias :gsub_or_nil!     :gsub!
+alias :downcase_or_nil! :downcase!
+alias :upcase_or_nil!   :upcase!
 
-def strip! ; strip_or_nil! ; self end
-def rstrip!; rstrip_or_nil!; self end
-def lstrip!; lstrip_or_nil!; self end
+def strip!   ; strip_or_nil!   ; self end
+def rstrip!  ; rstrip_or_nil!  ; self end
+def lstrip!  ; lstrip_or_nil!  ; self end
+def downcase!; downcase_or_nil!; self end
+def upcase!  ; upcase_or_nil!  ; self end
 
 def gsub!( *args, &block ) gsub_or_nil!( *args, &block ); self end
 
