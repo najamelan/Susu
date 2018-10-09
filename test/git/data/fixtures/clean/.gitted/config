@@ -3,3 +3,8 @@
 	filemode = false
 	bare = false
 	logallrefupdates = true
+
+[user]
+
+	name  = Susu
+	email = susu@tests.com

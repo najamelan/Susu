@@ -140,10 +140,22 @@ end
 def clone src, dst
 
 	name = randomString
+	path = "#{dst}/#{name}".path
 
 	out = cmd "git clone #{ src.shellescape } #{ name.shellescape }", dst
 
-	return "#{dst}/#{name}".path, out
+
+	# Keep git commit from breaking
+	#
+	Susu::Fs::Path.pushd path do
+
+		out += cmd "git config --local user.name  Susu"
+		out += cmd "git config --local user.email susu@tests.com"
+
+	end
+
+
+	return path, out
 
 end
 

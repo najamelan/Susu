@@ -58,13 +58,15 @@ end
 
 def test_03Diverged
 
+	# Add a bare remote to the fixture repo
+	#
 	localName, remoteName, url, out = addRemote @@repo
 
-	path, clOut  = clone     url, @@tmpdir.mkdir( 'clone' )
+	cl_path, clOut  = clone url, @@tmpdir.mkdir( 'clone' )
 
 	cOut         = commitOne @@repo
-	ccOut        = commitOne path
-	pOut         = push      path
+	ccOut        = commitOne cl_path
+	pOut         = push      cl_path
 
 	out         += clOut + cOut + ccOut + pOut
 
