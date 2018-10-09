@@ -120,7 +120,7 @@ def commitOne path
 
 	out = pollute path
 
-	out += cmd "git commit -am'commit pollute'", path
+	out += cmd "git commit -m'commit pollute'", path
 
 	out
 
