@@ -290,6 +290,20 @@ def test12_map
 end
 
 
+def test13_to_s
+
+	g = Grid.new
+
+	sample = <<EOF
+["a", "b", "c"]
+["d", "e", "f"]
+EOF
+
+		assert_equal "[]", g.to_s
+		assert_equal sample.strip!, @@sample.to_s
+
+end
+
 
 end # class TestGrid < Test::Unit::TestCase
 end # module DataStruct
