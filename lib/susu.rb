@@ -82,6 +82,9 @@ def self.refines( *which )
 	moduleName = 'Refines_' + which.hash.abs.to_s
 
 
+	# If we have already created the module with the exact refines asked,
+	# return that instead of making a new one.
+	#
 	begin
 
 		return Susu.const_get moduleName

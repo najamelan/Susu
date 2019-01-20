@@ -248,6 +248,102 @@ end
 
 
 
+def test08a_reject_nested
+
+
+	sample_big = Grid.new
+
+	(0..50).each do |x|
+
+		(0..50).each do |y|
+
+			sample_big[ x, y ] = x+y
+
+		end
+
+	end
+
+
+	grid = Grid.new
+
+	(0..50).each do |x|
+
+		(0..50).each do |y|
+
+			num = x+y
+
+			grid[ x, y ] = x+y unless num % 3 == 0 || num % 2 == 0
+
+		end
+
+	end
+
+	expect = grid.each.to_a.flatten!.compact!
+
+
+	assert_equal expect,
+
+	sample_big.reject { |num| num % 3 == 0 }.reject{ |num| num % 2 == 0 }
+
+end
+
+
+
+def test08b_reject_proc
+
+
+	sample_big = Grid.new
+
+	(0..50).each do |x|
+
+		(0..50).each do |y|
+
+			sample_big[ x, y ] = x+y
+
+		end
+
+	end
+
+
+	grid = Grid.new
+
+	(0..50).each do |x|
+
+		(0..50).each do |y|
+
+			num = x+y
+
+			num.odd? and grid[ x, y ] = x+y
+
+		end
+
+	end
+
+	expect = grid.each.to_a.flatten!.compact!
+
+
+	assert_equal expect,	sample_big.reject( &:even? )
+
+end
+
+
+# This caught a segfault in ruby: https://bugs.ruby-lang.org/issues/15489
+#
+def test08c_reject_proc_on_nil
+
+	g = Grid.new
+
+	g[ 0, 0 ] = 1
+	g[ 2, 0 ] = 2
+
+	expect = [ 1 ]
+
+	assert_equal expect,	g.reject( &:even? )
+
+end
+
+
+
 def test09_rows
 
 	assert_equal [], Grid.new.rows.map( &:to_a )
