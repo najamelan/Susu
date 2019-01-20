@@ -1,10 +1,14 @@
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
-require 'coveralls'
+
+require 'simplecov'
+require 'codecov'
+
+SimpleCov.start
+SimpleCov.formatter = SimpleCov::Formatter::Codecov
 
 using Susu.refines
 
-Coveralls.wear!
 
 # Turn off test unit's auto runner
 #

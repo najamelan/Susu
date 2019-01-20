@@ -35,9 +35,8 @@ Gem::Specification.new do |s|
 
 	# Development
 	#
-	s.add_development_dependency 'yard'     , '~> 0'
-	s.add_development_dependency 'coveralls', '~> 0'
-
+	s.add_development_dependency 'yard'   , '~> 0'
+	s.add_development_dependency 'codecov', '~> 0'
 
 	# If you need to check in files that aren't .rb files, add them here
 	#
